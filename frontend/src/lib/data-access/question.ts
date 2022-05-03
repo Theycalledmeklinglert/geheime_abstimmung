@@ -6,3 +6,6 @@ export interface Question{
   fixedAnswers?: string[];
   individualAnswer?: string;
 }
+
+
+
