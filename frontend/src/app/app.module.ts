@@ -3,8 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import {QuestionComponent} from "../lib/question/question.component";
 import {RouterModule, Routes} from "@angular/router";
-import {MainmenuComponent} from "./mainmenu/mainmenu.component";
-import {LoginComponent} from "./login/login.component";
+import {MainmenuComponent} from "../lib/mainmenu/mainmenu.component";
+import {LoginComponent} from "../lib/login/login.component";
 
 
 const myRoutes: Routes = [
@@ -15,7 +15,8 @@ const myRoutes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    QuestionComponent
+    QuestionComponent,
+    MainmenuComponent
   ],
   imports: [
     RouterModule.forRoot(myRoutes),
