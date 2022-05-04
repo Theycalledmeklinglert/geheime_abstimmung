@@ -1,6 +1,9 @@
 import {Question} from "./question";
 
 export interface Vote{
-  id: number;
-  questions: Question[];
+  id?: number;
+  name: string;
+  lifetime?: string;
+  position?: number;
+  questions?: Question[];
 }

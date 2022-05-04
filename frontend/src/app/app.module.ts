@@ -6,6 +6,8 @@ import {RouterModule, Routes} from "@angular/router";
 import {MainmenuComponent} from "../lib/mainmenu/mainmenu.component";
 import {LoginComponent} from "../lib/login/login.component";
 import {EditorComponent} from "../lib/editor/editor.component";
+import {VoteComponent} from "../lib/votelistmodule/vote/vote.component";
+import {VoteConainterComponent} from "../lib/votelistmodule/votecontainer/voteContainer.component";
 
 
 const myRoutes: Routes = [
@@ -20,7 +22,9 @@ const myRoutes: Routes = [
     QuestionComponent,
     MainmenuComponent,
     EditorComponent,
-    LoginComponent
+    LoginComponent,
+    VoteComponent,
+    VoteConainterComponent
   ],
   imports: [
     RouterModule.forRoot(myRoutes),
