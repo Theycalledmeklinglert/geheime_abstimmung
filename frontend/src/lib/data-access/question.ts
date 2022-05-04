@@ -5,6 +5,7 @@ export interface Question{
   yesNo?: boolean;
   fixedAnswers?: string[];
   individualAnswer?: string;
+  visible?:boolean;
 }
 
 

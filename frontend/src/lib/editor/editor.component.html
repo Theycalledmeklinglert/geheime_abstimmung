@@ -1,11 +1,29 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>editor</title>
+</head>
+<body>
 
-  <div class="vote" (click)="showVoteInfo()">
-    <div id = "name" title = "VOTE NAME">{{showVoteName()}}</div>
-    <div id = "lifetime" title = "VOTE LIFETIME">{{showVoteLifetime()}}</div>
-    <div id = "stopVote" title = "STOP VOTE">{{stopthisVote()}}</div>
+  <div class="container">
+    <div class="header">
+      <img  class="deleteButton" src="../../assets/deleteButton.png"/>
+      <!-- <div>{{this.editor.vote.questions.length}}</div> -->
+    </div>
+    <!-- <div class="pollContainer">
+        <vote></vote>
+    </div> -->
+    <div id="addButton" class="addReminderContainer">
+      <img class="addButton" src="../../assets/addButton.png"/>
+    </div>
   </div>
+</body>
 </html>
+<!-- (click)="deleteQuestion(question.id)" -->
+<!-- (click)="addQuestion()" -->
+<!-- (deleteQuestionEvent)="deleteQuestion($event)"
+(changeQuestionEvent)="changeQuestion($event)"
+                 [selectedOnCreate]="true"
+                  *ngIf="question.visible"-->

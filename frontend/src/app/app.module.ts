@@ -5,18 +5,22 @@ import {QuestionComponent} from "../lib/question/question.component";
 import {RouterModule, Routes} from "@angular/router";
 import {MainmenuComponent} from "../lib/mainmenu/mainmenu.component";
 import {LoginComponent} from "../lib/login/login.component";
+import {EditorComponent} from "../lib/editor/editor.component";
 
 
 const myRoutes: Routes = [
   {path:'main', component: MainmenuComponent},
-  {path:'login',component: LoginComponent}
+  {path:'login',component: LoginComponent},
+  {path:'editor', component:EditorComponent}
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
     QuestionComponent,
-    MainmenuComponent
+    MainmenuComponent,
+    EditorComponent,
+    LoginComponent
   ],
   imports: [
     RouterModule.forRoot(myRoutes),
