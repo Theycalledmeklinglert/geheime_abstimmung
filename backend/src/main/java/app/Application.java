@@ -19,7 +19,7 @@ public class Application extends ResourceConfig
 	{
 		final Set<Class<?>> returnValue = new HashSet<>( );
 
-		returnValue.add( Service.class );
+		returnValue.add( app.Service.class );
 
 		return returnValue;
 	}

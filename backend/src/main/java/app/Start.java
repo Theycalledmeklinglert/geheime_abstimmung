@@ -1,4 +1,4 @@
-package app;
+package main.java.app;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.WebResourceRoot;
