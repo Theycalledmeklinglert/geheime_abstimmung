@@ -13,6 +13,32 @@ import {Vote} from "../../data-access/vote";
   styleUrls: ['./vote.component.css'],
 })
 export class VoteComponent {
+ // @Input() voteObject: Vote;
+
+
+
+  showvoteinfo:boolean = false;
+
+
+  showVoteResult(): void {
+    this.showvoteinfo = true;
+  }
+
+  showVoteName(): void{
+    //return this.voteObject.name;
+  }
+
+
+  showVoteLifetime(): void{
+   // return this.voteObject.lifetime;
+  }
+
+  stopthisVote(): void{
+  }
+
+  deletethisVote(): void{
+  }
+
 
 
 }

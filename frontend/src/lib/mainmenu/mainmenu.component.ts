@@ -10,5 +10,8 @@ import { Component} from "@angular/core";
 
 export class MainmenuComponent{
 
+  getusername(): void{
+    //return this.backendService.getusername()
+  }
 
 }
