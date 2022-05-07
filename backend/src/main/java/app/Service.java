@@ -18,6 +18,4 @@ public class Service
 		System.out.println("Server is running");
 		return Response.ok().build( );
 	}
-
-
 }

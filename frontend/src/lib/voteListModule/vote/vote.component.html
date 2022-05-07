@@ -5,6 +5,20 @@
   <title>$Title$</title>
 </head>
 <body>
-$END$
+
+
+
+
+<div class="vote" (click)="showVoteResult()">
+  <div id="delete" title="DELETE LIST" (click)="deletethisVote()" >
+    <input type="image" src="../.././../../assets/trashcan.png" width="15vw" height="15vw">
+  </div>
+
+  <div id = "name" title = "VOTE NAME">{{showVoteName()}}</div>
+  <div id = "lifetime" title = "VOTE LIFETIME">{{showVoteLifetime()}}</div>
+
+</div>
+
+
 </body>
 </html>

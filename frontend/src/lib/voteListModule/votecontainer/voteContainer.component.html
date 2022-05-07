@@ -4,7 +4,19 @@
   <meta charset="UTF-8">
   <title>$Title$</title>
 </head>
-<body>
-$END$
-</body>
+
+
+<div id="body">
+  <ul>
+    <li *ngFor="let vote of vlcObject.votes">
+      <vote [voteObject]="vote"></vote>
+    </li>
+
+  </ul>
+</div>
+
+
+
+
+
 </html>
