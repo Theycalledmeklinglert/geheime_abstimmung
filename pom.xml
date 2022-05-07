@@ -124,5 +124,13 @@
             <artifactId>jersey-media-multipart</artifactId>
             <version>${jersey.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>4.4.2</version>
+        </dependency>
+
+
+
     </dependencies>
 </project>
