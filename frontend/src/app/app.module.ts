@@ -6,8 +6,8 @@ import {RouterModule, Routes} from "@angular/router";
 import {MainmenuComponent} from "../lib/mainmenu/mainmenu.component";
 import {LoginComponent} from "../lib/login/login.component";
 import {EditorComponent} from "../lib/editor/editor.component";
-import {VoteComponent} from "../lib/votelistmodule/vote/vote.component";
-import {VoteConainterComponent} from "../lib/votelistmodule/votecontainer/voteContainer.component";
+import {VoteComponent} from "../lib/voteListModule/vote/vote.component";
+import {VoteConainterComponent} from "../lib/voteListModule/votecontainer/voteContainer.component";
 
 
 const myRoutes: Routes = [

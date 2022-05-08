@@ -1,16 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import {Vote} from "../../data-access/vote";
+
 import { VoteContainer } from '../../data-access/voteContainer';
-import { VoteComponent } from '../vote/vote.component';
+
 @Component({
   selector: 'voteContainer',
   templateUrl: './voteContainer.component.html',
   styleUrls: ['./voteContainer.component.css'],
 })
-export class VoteConainterComponent {
+export class VoteConainterComponent implements OnInit{
   vlcObject?: VoteContainer;
 
   newListIndex?: number;
+
+  ngOnInit(): void {
+    this.vlcObject = {name:"name", votes:[]};
+  }
 
 
   generatetestvotes(): void{
