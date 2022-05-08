@@ -1,0 +1,32 @@
+.containerHeader #lifetime{
+  top: 10%;
+  position: absolute;
+  left: 52%;
+}
+.containerHeader #name{
+  top: 10%;
+  position: absolute;
+  left: 15%;
+}
+
+#body{
+  position: relative;
+  overflow-x: hidden;
+  background-color: transparent;
+  top: 25%;
+  color: transparent;
+}
+
+
+#body ul{
+  align-items: center;
+  position: relative;
+  background-color: transparent;
+}
+
+
+#body ul li {
+  background-color: transparent;
+  margin-bottom: 12px;
+}
+
