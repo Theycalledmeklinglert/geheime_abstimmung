@@ -24,13 +24,13 @@ export class VoteComponent {
     this.showvoteinfo = true;
   }
 
-  showVoteName(): void{
-    //return this.voteObject.name;
+  showVoteName(): String{
+    return this.voteObject.name;
   }
 
 
-  showVoteLifetime(): void{
-   // return this.voteObject.lifetime;
+  showVoteLifetime(): String{
+    return this.voteObject.lifetime;
   }
 
   stopthisVote(): void{
