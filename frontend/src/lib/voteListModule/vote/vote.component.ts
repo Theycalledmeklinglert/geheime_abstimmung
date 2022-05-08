@@ -37,6 +37,7 @@ export class VoteComponent {
   }
 
   deletethisVote(): void{
+    console.log("delete this Vote!");
   }
 
 

@@ -1,3 +1,9 @@
+
+.voteContainer{
+  bottom: 10px;
+  height: 1%;
+}
+
 .containerHeader #lifetime{
   top: 10%;
   position: absolute;
@@ -9,11 +15,12 @@
   left: 15%;
 }
 
-#body{
+.voteContainer #body{
   position: relative;
   overflow-x: hidden;
+  height: 30%;
   background-color: transparent;
-  top: 25%;
+  top: 10vh;
   color: transparent;
 }
 
@@ -22,11 +29,15 @@
   align-items: center;
   position: relative;
   background-color: transparent;
+  height: 50vh;
 }
 
 
 #body ul li {
+  overflow: auto;
   background-color: transparent;
-  margin-bottom: 12px;
+  display: inline-block;
+  width: 100%;
+
 }
 
