@@ -13,7 +13,7 @@ import {Vote} from "../../data-access/vote";
   styleUrls: ['./vote.component.css'],
 })
 export class VoteComponent {
- // @Input() voteObject: Vote;
+  @Input() voteObject: Vote;
 
 
 
