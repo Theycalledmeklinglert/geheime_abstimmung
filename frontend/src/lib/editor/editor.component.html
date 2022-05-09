@@ -1,29 +1,36 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
-  <title>editor</title>
+  <title>main</title>
 </head>
 <body>
-
-  <div class="container">
-    <div class="header">
-      <img  class="deleteButton" src="../../assets/deleteButton.png"/>
-      <!-- <div>{{this.editor.vote.questions.length}}</div> -->
-    </div>
-    <!-- <div class="pollContainer">
-        <vote></vote>
-    </div> -->
-    <div id="addButton" class="addReminderContainer">
-      <img class="addButton" src="../../assets/addButton.png"/>
-    </div>
+<div class="sidebar">
+  Create A New Vote <br/>
+  <div class="inputfields">
+    <label class="label" for="nameinputfield">Name:</label>
+    <input type="text" class = inputfield id="nameinputfield" required><br/>
+    <label class="label" for="timeinputfield">Expiration:</label>
+    <input  class="inputfield" type="datetime-local" id="timeinputfield" required><br/>
+    <label class="label" for="questionlist">Questions:</label>
+    <ul class="questionlist" id="questionlist">
+      <li *ngFor="let question of editor.vote.questions">
+        <div class="questiontitle" (click)="this.showQuestion(question)">{{question.title}}</div>
+      </li>
+    </ul>
+</div>
+<div class="listwindow">
+  <ul class="questioneditor">
+    <li *ngFor="let question of editor.vote.questions">
+      <question *ngIf="question.visible" [question]="question"></question>
+    </li>
+  </ul>
   </div>
+</div>
+
+<div class="newVoteButton">
+  <input type="image" src="../../assets/newVote_btn.png" width="125%" height="125%" (click)="addEmptyQuestion()"/>
+</div>
+
 </body>
 </html>
-<!-- (click)="deleteQuestion(question.id)" -->
-<!-- (click)="addQuestion()" -->
-<!-- (deleteQuestionEvent)="deleteQuestion($event)"
-(changeQuestionEvent)="changeQuestion($event)"
-                 [selectedOnCreate]="true"
-                  *ngIf="question.visible"-->

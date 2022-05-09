@@ -8,7 +8,7 @@ import {LoginComponent} from "../lib/login/login.component";
 import {EditorComponent} from "../lib/editor/editor.component";
 import {VoteComponent} from "../lib/voteListModule/vote/vote.component";
 import {VoteConainterComponent} from "../lib/voteListModule/votecontainer/voteContainer.component";
-
+import { FormsModule } from '@angular/forms';
 
 const myRoutes: Routes = [
   {path:'main', component: MainmenuComponent},
@@ -28,7 +28,8 @@ const myRoutes: Routes = [
   ],
   imports: [
     RouterModule.forRoot(myRoutes),
-    BrowserModule
+    BrowserModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

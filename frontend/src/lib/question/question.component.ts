@@ -1,4 +1,4 @@
-import { Component} from "@angular/core";
+import {Component, Input} from "@angular/core";
 import {Question} from "../data-access/question";
 
 
@@ -10,7 +10,20 @@ import {Question} from "../data-access/question";
 
 export class QuestionComponent{
 
- question: Question = {id: 1, title: "Wie gehts dir?"};
+ @Input()
+  question: Question;
 
+ fixedAnswers: boolean = false;
 
+ chooseFixedAnswers(){
+   this.question.yesNo = false;
+    this.fixedAnswers = true;
+    console.log("Chose fixed answers");
+ }
+ chooseYesNoAnswer(){
+   this.fixedAnswers = false;
+   this.question.yesNo = true;
+ }
 }
+
+

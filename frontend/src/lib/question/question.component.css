@@ -1,3 +1,53 @@
 .container {
-  background-color: #ffffff;
+  background-color: transparent;
+  font-size: 25px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+.questiontitle{
+  background-color: transparent;
+  font-size: 25px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+  width: 400px;
+  height: auto;
+  border-color: transparent;
+}
+.answer-selector input{
+  margin:0;padding:0;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+}
+.yesNo{background-image:url('/../../assets/yes:no_button.png');}
+.fixed{background-image:url('/../../assets/fixedAnswers_button.png');}
+
+.answer-selector input:active +.answerbutton{opacity: .9;}
+.answer-selector input:checked +.answerbutton{
+  -webkit-filter: none;
+  -moz-filter: none;
+  filter: none;
+}
+.answerbutton{
+  cursor:pointer;
+  background-size:contain;
+  background-repeat:no-repeat;
+  display:inline-block;
+  width:100px;height:70px;
+  -webkit-transition: all 100ms ease-in;
+  -moz-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+  -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
+  -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
+  filter: brightness(1.8) grayscale(1) opacity(.7);
+}
+.answerbutton:hover{
+  -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+  -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+  filter: brightness(1.2) grayscale(.5) opacity(.9);
 }

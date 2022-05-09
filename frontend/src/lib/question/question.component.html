@@ -1,3 +1,11 @@
 <div class="container">
-<span>Frage: {{this.question.title}}</span>
+<input class="questiontitle" type="text" [(ngModel)]="this.question.title" />
+  <form>
+  <div>
+      <input class="radio" type="radio" (click)="this.chooseYesNoAnswer()" id="yesNo" value="yesNo">
+    <label class="answerbutton yesNo" for="yesNo"></label>
+      <input class="radio" type="radio" (click)="this.chooseFixedAnswers()" id="fixed" value="fixed">
+      <label class="answerbutton fixed" for="fixed"></label>
+  </div>
+  </form>
 </div>
