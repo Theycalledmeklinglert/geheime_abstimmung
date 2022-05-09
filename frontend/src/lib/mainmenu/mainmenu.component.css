@@ -15,8 +15,15 @@
   width: 70%;
   height: 80%;
   top: 15%;
-  border: 3px solid #ea7609;
+  border: 3px solid #ff8200;
   border-radius: 40px 40px 40px 40px;
+}
+.headline{
+  background: #ff8200;
+  border-radius: 36px 36px 0px 0px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  color: white;
+  font-weight: 600;
 }
 
 .newVoteButton {

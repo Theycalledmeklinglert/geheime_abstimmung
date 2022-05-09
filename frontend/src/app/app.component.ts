@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
+import {LoginComponent} from "../lib/login/login.component";
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,12 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'frontend';
+
+  currentuser: string = "";
+
+
+  getusername(): String{
+    //return this.loggedInUser.username;
+    return this.currentuser;
+  }
 }

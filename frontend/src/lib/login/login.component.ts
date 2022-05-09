@@ -1,7 +1,9 @@
-import { Component} from "@angular/core";
+import {Component, Output} from "@angular/core";
 import {VoteContainer} from "../data-access/voteContainer";
 import {User} from "../data-access/user";
 import {RouterModule} from "@angular/router";
+import {AppComponent} from "../../app/app.component";
+import {AppModule} from "../../app/app.module";
 
 
 
@@ -13,8 +15,10 @@ import {RouterModule} from "@angular/router";
 
 export class LoginComponent{
 
-  username: string = "";
+  @Output()username: string = "";
   password: string = "";
+  userObject: User;
+  helpbuttonpressed: boolean;
 
   setUsername(event: any): void{
     this.username = event.target.value;
@@ -25,8 +29,15 @@ export class LoginComponent{
 
   submitlogin(): void{
    let userVoteContainer: VoteContainer = {name: ""};
-   let userObject: User = {username: this.username,password: this.password};
-    alert("Username: " +this.username + "\n" + "Password: " + this.password);
+   this.userObject= {username: this.username,password: this.password};
    //Server --> send userobject ---> server check--> send back Vote[] for userVoteContainer
+  }
+
+  presshelpbutton():void{
+    this.helpbuttonpressed = true;
+  }
+
+  pressokaybutton():void{
+    this.helpbuttonpressed = false;
   }
 }
