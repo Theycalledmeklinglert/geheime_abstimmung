@@ -15,6 +15,7 @@ import {Vote} from "../../data-access/vote";
 export class VoteComponent {
   @Input() voteObject: Vote;
 
+  lowlifetime: boolean;
 
 
   showvoteinfo:boolean = false;
@@ -30,6 +31,11 @@ export class VoteComponent {
 
 
   showVoteLifetime(): String{
+    /*
+    if (this.voteObject.lifetime < 3 days){
+      this.lowlifetime = true;
+    }
+     */
     return this.voteObject.lifetime;
   }
 

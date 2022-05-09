@@ -9,7 +9,6 @@
 
     <!-- Loginwindow -->
     <div class="loginfield" >
-
       <div id="loginwindow">
         <p>Login to your account</p>
         <div class="txt_field">
@@ -28,11 +27,28 @@
           <span></span>
           <label>Password</label>
         </div>
-        <div class="helpbutton"> Need help?</div>
+        <div class="helpbutton" (click)="presshelpbutton()"> Need help?</div>
         <input type="submit" value="Login"  (click)="submitlogin()" routerLink="/main">
       </div>
 
     </div>
+
+
+    <div class="helpwindow" *ngIf="helpbuttonpressed">
+
+      <div class="headline"> INFO</div>
+      <div class="infotext">
+        If you have problems logging in or do not yet have acess data, please contact FHWS-HELPCENTER
+      </div>
+
+      <div class="okaybutton" (click)="pressokaybutton()">
+        OKAY
+      </div>
+
+    </div>
+
+
+
   </div>
 <!-- </body>
 </html> -->
