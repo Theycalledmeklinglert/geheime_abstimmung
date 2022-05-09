@@ -6,23 +6,28 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
+import main.java.app.database.DBInstance;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
 public class MongoloidTest {
 
     public static void main(String[] args) {
-    MongoClient client = MongoClients.create("mongodb+srv://sampleUser:GeheimeAbstimmung@cluster0.eobux.mongodb.net/TestDB?retryWrites=true&w=majority");
+    MongoClient client = MongoClients.create("mongodb+srv://sampleUser:GeheimeAbstimmung@cluster0.eobux.mongodb.net/DB?retryWrites=true&w=majority");
 
-    MongoDatabase db = client.getDatabase("TestDB");
+    MongoDatabase db = client.getDatabase("DB");
 
-    MongoCollection<Document> col = db.getCollection("TestProjects");
+    MongoCollection<Document> col = db.getCollection("Polls");
+    DBInstance dbInstance = new DBInstance();
 
-        Bson projectionFields = Projections.fields();
+        Bson projection = Projections.fields(Projections.include("name"), Projections.excludeId());
+        Bson filter = Filters.empty();
+        col.find(filter).projection(projection).forEach(doc -> polls.put(doc.getLong("_id"), doc.getString("name")));
 
-        Document doc = col.find(eq("_id", "0"))
+      /*  Document doc = col.find(eq("_id", "0"))
                 .projection(projectionFields)
                 .first();
 
@@ -35,9 +40,20 @@ public class MongoloidTest {
             System.out.println(doc.toJson());
         }
 
-   // Document doc = new Document("_id", "6").append("name", "Oh the misery");
-    // col.insertOne(doc);
+    */
+    Document doc = new Document("_id", "6").append("name", "Oh the misery");
+    col.insertOne(doc);
     client.close();
+
+    /*
+    DBCollection collection = database.getCollection("customers");
+    BasicDBObject document = new BasicDBObject();
+    document.put("name", "Shubham");
+    document.put("company", "Baeldung");
+    collection.insert(document);
+     */
+
+
 
     }
 }
