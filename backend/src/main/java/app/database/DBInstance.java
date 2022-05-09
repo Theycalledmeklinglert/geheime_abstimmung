@@ -20,11 +20,12 @@ import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Filters.eq;
 
-public class DBInstance {
-
+public class DBInstance
+{
+        private static DBInstance INSTANCE;
         private static MongoClient client;
-        private static MongoDatabase db = client.getDatabase("DB");
-        private static MongoCollection<Document> col = db.getCollection("Polls");
+        private static MongoDatabase db;
+        private static MongoCollection<Document> col;
         private static ArrayList<String> pollNames;
 
         public static MongoCollection<Document> getCollection( )
@@ -37,7 +38,18 @@ public class DBInstance {
             return pollNames;
         }
 
-        public DBInstance( )
+        public DBInstance getDBInstance() {
+            if(INSTANCE == null)
+            {
+                return new DBInstance();
+            }
+            else
+            {
+                return INSTANCE;
+            }
+        }
+
+        private DBInstance( )
         {
             // The Mongo Connection URI is mostly provided by the mongodb cloud. It can change depending on what DB user logs into the DB from the application
             client = MongoClients.create("mongodb+srv://sampleUser:GeheimeAbstimmung@cluster0.eobux.mongodb.net/TestDB?retryWrites=true&w=majority");
