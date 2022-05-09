@@ -24,8 +24,8 @@
   -moz-appearance:none;
   appearance:none;
 }
-.yesNo{background-image:url('/../../assets/yes:no_button.png');}
-.fixed{background-image:url('/../../assets/fixedAnswers_button.png');}
+.yesNo{background-image:url('../../assets/yesNo_button.png');}
+.fixed{background-image:url('../../assets/fixedAnswers_button.png');}
 
 .answer-selector input:active +.answerbutton{opacity: .9;}
 .answer-selector input:checked +.answerbutton{
