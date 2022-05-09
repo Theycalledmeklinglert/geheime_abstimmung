@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { VoteContainer } from '../../data-access/voteContainer';
+import {Vote} from "../../data-access/vote";
 
 @Component({
   selector: 'voteContainer',
@@ -33,6 +34,10 @@ export class VoteConainterComponent implements OnInit{
       newVote.position = vote.position;
     });
      */
+  }
+
+  setVotes(votes: Vote[]){
+    this.vlcObject.votes = votes;
   }
 
 

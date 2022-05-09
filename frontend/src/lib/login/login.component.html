@@ -13,17 +13,23 @@
       <div id="loginwindow">
         <p>Login to your account</p>
         <div class="txt_field">
-          <input type="text" required>
+          <input type="text" required
+                 [value]="this.username"
+                 (change)="setUsername($event)"
+          >
           <span></span>
           <label>Username</label>
         </div>
         <div class="txt_field">
-          <input type="password" required>
+          <input type="password" required
+                 [value]="this.password"
+                 (change)="setPassword($event)"
+          >
           <span></span>
           <label>Password</label>
         </div>
         <div class="helpbutton"> Need help?</div>
-        <input type="submit" value="Login">
+        <input type="submit" value="Login"  (click)="submitlogin()" routerLink="/main">
       </div>
 
     </div>
