@@ -5,6 +5,7 @@ import {QuestionComponent} from "../lib/question/question.component";
 import {RouterModule, Routes} from "@angular/router";
 import {MainmenuComponent} from "../lib/mainmenu/mainmenu.component";
 import {LoginComponent} from "../lib/login/login.component";
+import { SurveyComponent } from '../lib/router/survey/survey.component';
 import {EditorComponent} from "../lib/editor/editor.component";
 import {VoteComponent} from "../lib/voteListModule/vote/vote.component";
 import {VoteConainterComponent} from "../lib/voteListModule/votecontainer/voteContainer.component";
@@ -13,7 +14,8 @@ import { FormsModule } from '@angular/forms';
 const myRoutes: Routes = [
   {path:'main', component: MainmenuComponent},
   {path:'login',component: LoginComponent},
-  {path:'editor', component:EditorComponent}
+  {path:'editor', component:EditorComponent},
+  {path:'survey', component:SurveyComponent}
 ];
 
 @NgModule({
@@ -23,6 +25,7 @@ const myRoutes: Routes = [
     MainmenuComponent,
     EditorComponent,
     LoginComponent,
+    SurveyComponent,
     VoteComponent,
     VoteConainterComponent
   ],
