@@ -15,7 +15,7 @@
   left: 2%;
 
 }
-.vote .lifetimecomponent #lifetime{
+.vote .lifetimecomponentgreen #lifetime{
   font-size: 60%;
   position: absolute;
   color: #ffffff;
@@ -23,7 +23,7 @@
   left: 10%;
 }
 
-.vote .lifetimecomponent{
+.vote .lifetimecomponentgreen{
   position: absolute;
   left: 50%;
   height: 45%;
