@@ -1,49 +1,37 @@
 package main.java.app;
 
-import com.mongodb.MongoException;
 import static com.mongodb.client.model.Filters.eq;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Projections;
-import com.mongodb.client.model.Sorts;
+import static main.java.app.database.DBInstance.getDBInstance;
+
 import main.java.app.database.DBInstance;
 import org.bson.Document;
-import org.bson.conversions.Bson;
+
+import java.util.Optional;
 
 public class MongoloidTest {
 
-    public static void main(String[] args) {
-    MongoClient client = MongoClients.create("mongodb+srv://sampleUser:GeheimeAbstimmung@cluster0.eobux.mongodb.net/DB?retryWrites=true&w=majority");
+    public static void main(String[] args)
+    {
+    DBInstance INSTANCE = getDBInstance();
+    Document doc = new Document("_id", "1").append("name", "Poll1");
+    INSTANCE.createPoll(doc);
+    Optional<Document> optPoll = INSTANCE.getPollAsOptDocumentByName("Poll1");
+    if(optPoll.isPresent())
+    {
+        System.out.println(optPoll.get().toJson());
+        //  System.out.println(optPoll.get().getString("name"));
+    }
 
-    MongoDatabase db = client.getDatabase("DB");
 
-    MongoCollection<Document> col = db.getCollection("Polls");
-    DBInstance dbInstance = new DBInstance();
-
-        Bson projection = Projections.fields(Projections.include("name"), Projections.excludeId());
-        Bson filter = Filters.empty();
-        col.find(filter).projection(projection).forEach(doc -> polls.put(doc.getLong("_id"), doc.getString("name")));
-
-      /*  Document doc = col.find(eq("_id", "0"))
-                .projection(projectionFields)
-                .first();
-
-        if (doc == null)
+        Document userDoc = new Document("_id", "1").append("name", "User1").append("role", "admin");
+        INSTANCE.createUser(userDoc);
+        Optional<Document> optUser = INSTANCE.getUserAsOptDocumentByName("User1");
+        if(optUser.isPresent())
         {
-            System.out.println("No results found.");
-        }
-        else
-        {
-            System.out.println(doc.toJson());
+            System.out.println(optUser.get().toJson());
+            //  System.out.println(optPoll.get().getString("name"));
         }
 
-    */
-    Document doc = new Document("_id", "6").append("name", "Oh the misery");
-    col.insertOne(doc);
-    client.close();
 
     /*
     DBCollection collection = database.getCollection("customers");

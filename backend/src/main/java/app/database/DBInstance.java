@@ -1,22 +1,12 @@
 package main.java.app.database;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
-import com.mongodb.client.result.UpdateResult;
-import com.sun.tools.javac.tree.DCTree;
-import org.apache.commons.lang.StringUtils;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -25,12 +15,16 @@ public class DBInstance
         private static DBInstance INSTANCE;
         private static MongoClient client;
         private static MongoDatabase db;
-        private static MongoCollection<Document> col;
-        private static ArrayList<String> pollNames;
+        private static MongoCollection<Document> pollCol;
+        private static MongoCollection<Document> userCol;
 
-        public static MongoCollection<Document> getCollection( )
+    private static ArrayList<String> pollNames;
+
+    private static ArrayList<String> userNames;
+
+    public static MongoCollection<Document> getCollection( )
         {
-                return col;
+                return pollCol;
         }
 
         public static ArrayList<String> getPollNames( )
@@ -38,7 +32,7 @@ public class DBInstance
             return pollNames;
         }
 
-        public DBInstance getDBInstance() {
+        public static DBInstance getDBInstance() {
             if(INSTANCE == null)
             {
                 return new DBInstance();
@@ -54,66 +48,191 @@ public class DBInstance
             // The Mongo Connection URI is mostly provided by the mongodb cloud. It can change depending on what DB user logs into the DB from the application
             client = MongoClients.create("mongodb+srv://sampleUser:GeheimeAbstimmung@cluster0.eobux.mongodb.net/TestDB?retryWrites=true&w=majority");
             db = client.getDatabase("DB");
-            col = db.getCollection("Polls");
+            pollCol = db.getCollection("Polls");
+            userCol = db.getCollection("Users");
             this.pollNames = new ArrayList<String>( );
+            this.userNames = new ArrayList<String>( );
+            initializePollNameCol();
+            initializeUserNameCol();
+        }
 
+        private void initializePollNameCol()
+        {
             Bson projection = Projections.fields(Projections.include("name"), Projections.excludeId());
             Bson filter = Filters.empty();
-            col.find(filter).projection(projection).forEach(doc -> pollNames.add(doc.getString("name")));
-
+            pollCol.find(filter).projection(projection).forEach(doc -> pollNames.add(doc.getString("name")));
         }
 
-        public void addNewPoll(Document poll) {
-            // Note to self: addNewPoll calls addNewPollToPollNames later
-        }
+    private void initializeUserNameCol()
+    {
+        Bson projection = Projections.fields(Projections.include("name"), Projections.excludeId());
+        Bson filter = Filters.empty();
+        userCol.find(filter).projection(projection).forEach(doc -> userNames.add(doc.getString("name")));
+    }
 
-
-        public void addNewPollToPollNames(String name)
+    public Optional<Document> getPollAsOptDocumentByName(final String name )
+    {
+        if (pollNames.contains(name))
         {
-            Bson projection = Projections.fields();
-            Document doc = col.find(eq("name", name))
-                    .projection(projection)
-                    .first();
-
-            if (doc == null)
-            {
-                System.out.println("Specified poll does not exist");
-                return;
-            }
-            else
-            {
-                pollNames.add(doc.getString("name"));
-            }
+            Optional<Document> optDoc = getSingleDocFromCollection(this.pollCol, Projections.fields(Projections.excludeId()), "name", name);
+            return optDoc;
         }
-
-        public Optional<Document> readByName(final String name )
+        else
         {
-            if ( pollNames.contains(name) )
-            {
-                Bson projection = Projections.fields();
-                Document doc = col.find(eq("name", name))
-                        .projection(projection)
-                        .first();
-
-                return Optional.of(doc);
-            }
-            else
-            {
-                return Optional.empty( );
-            }
+            return Optional.empty();
         }
+    }
 
-        public void update( final Document poll )
+    public boolean createPoll(Document poll)
+    {
+        String name = poll.getString("name");
+        if(pollNames.contains(name))
         {
-            final String name = poll.getString("name");
-            if ( pollNames.contains(name) ) {
-                Bson projection = Projections.fields();
-                Document doc = new Document().append("name", name);
+            System.out.println("Poll with identical name already exists. You have to choose a different title");
+            return false;
+        }
+        else
+        {
+            pollCol.insertOne(poll);
+            addNewPollToPollNames(name);
+            return true;
+        }
+    }
 
-                UpdateResult result = col.updateOne(doc, )
+    public void addNewPollToPollNames(String name)
+    {
+        updatePollCollection();
+        Optional<Document> optDoc = getSingleDocFromCollection(this.pollCol, Projections.fields(), "name", name);
 
+        if (optDoc.isPresent())
+        {
+            Document doc = optDoc.get();
+            pollNames.add(doc.getString("name"));
+        }
+        else
+        {
+            System.out.println("Specified poll was not inserted correctly into database");
+            return;
+        }
+    }
+
+
+    private void updatePollCollection()
+    {
+        this.pollCol = db.getCollection("Polls");
+    }
+
+    // This method also returns the username + password hash
+    public Optional<Document> getUserAsOptDocumentByName(final String name)
+        {
+            Optional<Document> optDoc = getSingleDocFromCollection(this.userCol, Projections.fields(Projections.excludeId()), "name", name);
+
+            if(optDoc.isPresent())
+            {
+                return optDoc;
+            }
+            else {
+                return Optional.empty();
             }
         }
+
+    // This method simply returns all registered usernames
+    public ArrayList<String> getAllUserNames(final String name)
+    {
+        ArrayList<String> users = new ArrayList<>();
+
+        // TODO: Check if cast works correctly
+        FindIterable<Document> iterDoc = userCol.find();
+        Iterator it = iterDoc.iterator();
+
+        while (it.hasNext()) {
+            Document userDoc = (Document) it.next();
+            users.add(userDoc.getString("name"));
+        }
+        this.userNames = users;
+        return userNames;
+    }
+
+        public Optional<ArrayList<Document>> getAllPollsOfUser(final String userName)
+        {
+            Bson projection = Projections.fields(Projections.excludeId());
+            FindIterable<Document> iterDoc = pollCol.find(eq("admin", userName))
+                    .projection(projection);
+
+            Iterator it = iterDoc.iterator();
+            ArrayList<Document> polls = new ArrayList<>();
+
+            while(it.hasNext())
+            {
+                Document poll = (Document) it.next();
+                polls.add(poll);
+            }
+
+            if(polls.isEmpty())
+            {
+                return Optional.empty();
+            }
+            else {
+                return Optional.of(polls);
+            }
+        }
+
+    public boolean createUser(Document user) {
+        String name = user.getString("name");
+        if(userNames.contains(name))
+        {
+            System.out.println("User with identical name already exists. You have to choose a different Username");
+            return false;
+        }
+        else
+        {
+            userCol.insertOne(user);
+            addNewUserToUserNames(name);
+            return true;
+        }
+    }
+
+    public void addNewUserToUserNames(String name)
+    {
+        updateUserCollection();
+        Optional<Document> optDoc = getSingleDocFromCollection(this.userCol, Projections.fields(), "name", name);
+
+        if (optDoc.isPresent())
+        {
+            Document doc = optDoc.get();
+            userNames.add(doc.getString("name"));
+        }
+        else
+        {
+            System.out.println("Specified user was not inserted correctly into database");
+            return;
+        }
+    }
+
+    private Optional<Document> getSingleDocFromCollection(MongoCollection<Document> col, Bson projection, String attributeName, String attributeVal)
+    {
+        Document doc = col.find(eq(attributeName, attributeVal))
+                .projection(projection)
+                .first();
+
+        if (doc == null)
+        {
+            return Optional.empty();
+        }
+        else
+        {
+            return Optional.of(doc);
+        }
+    }
+
+
+    private void updateUserCollection()
+    {
+        this.userCol = db.getCollection("Users");
+    }
+
+
+    /*
 
         public void delete( final Person person )
         {
@@ -164,6 +283,11 @@ public class DBInstance
         {
             return person -> StringUtils.isEmpty( emailAddress ) || person.getEmailAddress( ).equals( emailAddress );
         }
+
+
+     */
+
+
     }
 
 
