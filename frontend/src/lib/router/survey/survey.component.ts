@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Question } from 'src/lib/data-access/question';
+import { Question } from 'src/lib/data-access/models/question';
 
 @Component({
   selector: 'app-survey',

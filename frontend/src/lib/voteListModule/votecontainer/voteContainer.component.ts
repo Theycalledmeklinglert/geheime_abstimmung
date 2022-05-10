@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-import { VoteContainer } from '../../data-access/voteContainer';
-import {Vote} from "../../data-access/vote";
+import { VoteContainer } from '../../data-access/models/voteContainer';
+import {Vote} from "../../data-access/models/vote";
 
 @Component({
   selector: 'voteContainer',

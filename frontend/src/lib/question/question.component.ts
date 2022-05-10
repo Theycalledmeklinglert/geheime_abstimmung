@@ -1,5 +1,5 @@
 import {Component, Input} from "@angular/core";
-import {Question} from "../data-access/question";
+import {Question} from "../data-access/models/question";
 
 
 @Component({

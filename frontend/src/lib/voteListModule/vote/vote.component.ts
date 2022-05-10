@@ -5,7 +5,7 @@ import {
   Input,
   Output
 } from '@angular/core';
-import {Vote} from "../../data-access/vote";
+import {Vote} from "../../data-access/models/vote";
 
 @Component({
   selector: 'vote',

@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { Editor } from "../data-access/editor";
-import {Question} from "../data-access/question";
+import { Editor } from "../../data-access/models/editor";
+import {Question} from "../../data-access/models/question";
 
 
 @Component({

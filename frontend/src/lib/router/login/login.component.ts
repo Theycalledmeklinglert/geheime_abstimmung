@@ -1,9 +1,9 @@
 import {Component, Output} from "@angular/core";
-import {VoteContainer} from "../data-access/voteContainer";
-import {User} from "../data-access/user";
+import {VoteContainer} from "../../data-access/models/voteContainer";
+import {User} from "../../data-access/models/user";
 import {RouterModule} from "@angular/router";
-import {AppComponent} from "../../app/app.component";
-import {AppModule} from "../../app/app.module";
+import {AppComponent} from "../../../app/app.component";
+import {AppModule} from "../../../app/app.module";
 
 
 
