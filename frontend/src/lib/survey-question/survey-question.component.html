@@ -1,0 +1,31 @@
+<div id="head">
+  <h2>{{this.question.title}}</h2>
+</div>
+
+<div id="body">
+  <div class="yesNoAnswer" *ngIf="this.question.yesNo!=undefined">
+    <input type="checkbox" id="yesBox">
+    <label for="yesBox">yes</label>
+    <input type="checkbox" id="noBox">
+    <label for="noBox">no</label>
+  </div>
+  <div class="fixedAnswer" *ngIf="this.question.fixedAnswers!=undefined">
+    <ul>
+      <li *ngFor="let answer of this.question.fixedAnswers; let i = index">
+        <div class="answer">
+          <input type="checkbox" id="cbAnswer">
+          <label for="cbAnswer">{{this.question.fixedAnswers[i]}}</label><br>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="customAnswer" *ngIf="this.question.individualAnswer!=undefined">
+    <input
+      type="text"
+      (change)="setAnswer($event)"
+      >
+  </div>
+
+
+</div>
+

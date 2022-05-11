@@ -1,0 +1,33 @@
+*{
+  text-align: left;
+
+}
+
+#head h2{
+  font-size: medium;
+
+
+}
+#body {
+  font-size: small;
+  margin-bottom: 5vh;
+}
+
+#body ul{
+  list-style-type: none;
+}
+
+.yesNoAnswer{
+  position: relative;
+}
+
+.fixedAnswer{
+}
+
+
+.customAnswer{
+  margin-top: 0;
+  width: 30vw;
+}
+
+

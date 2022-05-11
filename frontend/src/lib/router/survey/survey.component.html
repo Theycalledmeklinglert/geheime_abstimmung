@@ -1,11 +1,15 @@
-<p>survey works!</p>
-
-<h1>Umfrage:</h1>
+<div id="head">
+  <h1>{{this.vote.name}}</h1>
+</div>
 
 <div id="body">
   <ul>
-    <li *ngFor="let question for this.questions">
-      <question></question>
+    <li *ngFor="let question of this.vote.questions">
+      <surveyQuestion
+        [question]="question"
+      ></surveyQuestion>
     </li>
   </ul>
 </div>
+
+<div id="submitButton" (click)="submitSurvey()">Submit</div>

@@ -10,6 +10,7 @@ import {EditorComponent} from "../lib/router/editor/editor.component";
 import {VoteComponent} from "../lib/voteListModule/vote/vote.component";
 import {VoteConainterComponent} from "../lib/voteListModule/votecontainer/voteContainer.component";
 import { FormsModule } from '@angular/forms';
+import { SurveyQuestionComponent } from 'src/lib/survey-question/survey-question.component';
 
 const myRoutes: Routes = [
   {path:'main', component: MainmenuComponent},
@@ -26,6 +27,7 @@ const myRoutes: Routes = [
     EditorComponent,
     LoginComponent,
     SurveyComponent,
+    SurveyQuestionComponent,
     VoteComponent,
     VoteConainterComponent
   ],

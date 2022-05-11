@@ -10,6 +10,7 @@
 
 
 .toolbar {
+  z-index: 10;
   position: fixed;
   top: 0;
   left: 0;
@@ -27,7 +28,7 @@
   font-size: 1.3ch;
 }
 
-.toolbar .username {;
+.toolbar .username {
   font-size: 0.9ch;
   position: fixed;
   right: 1%;
