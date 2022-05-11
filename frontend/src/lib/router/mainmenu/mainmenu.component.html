@@ -26,7 +26,7 @@
            (change)="setUsernameofnewAdmin($event)"
     >
     <span></span>
-    <label>Emailadress</label>
+    <label>Email</label>
   </div>
 
   <div class="txt_field">
@@ -54,11 +54,11 @@
 
   <div class="txt_field">
     <input type="text" required
-           [value]="this.newadminadress"
-           (change)="setUsernameofnewAdmin($event)"
+           [value]="this.deleteadminadress"
+           (change)="setUsernameoftoDeleteAdmin($event)"
     >
     <span></span>
-    <label>Emailadress</label>
+    <label>Email</label>
   </div>
 
   <div class="delete" (click)="sendDeleteAdminrequest()">

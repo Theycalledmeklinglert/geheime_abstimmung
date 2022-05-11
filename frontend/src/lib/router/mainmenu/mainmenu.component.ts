@@ -58,7 +58,7 @@ export class MainmenuComponent{
   }
 
   setUsernameoftoDeleteAdmin(event: any): void{
-    this.newadminadress = event.target.value;
+    this.deleteadminadress = event.target.value;
   }
 
 }
