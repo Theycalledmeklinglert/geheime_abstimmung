@@ -15,11 +15,14 @@
     <label class="label" for="questionlist">Questions:</label>
     <ul class="questionlist" id="questionlist">
       <li *ngFor="let question of editor.vote.questions">
-        <div class="questiontitle" (click)="this.showQuestion(question)">{{question.title}}</div>
+        <div class="questiontitle" (click)="this.next = false; this.showQuestion(question)">
+          {{question.title}}
+          <img src="../../../assets/deleteButton.png" width="20px" (click)="this.deleteQuestion(question)">
+        </div>
       </li>
     </ul>
 </div>
-<div class="listwindow">
+<div *ngIf="!this.next" class="questionwindow">
   <ul class="questioneditor">
     <li *ngFor="let question of editor.vote.questions">
       <question *ngIf="question.visible" [question]="question"></question>
@@ -27,10 +30,34 @@
   </ul>
   </div>
 </div>
+<div *ngIf="this.next" class="questionwindow">
+  <ul class="emaillist">
+    <li *ngFor="let email of this.editor.vote.emails" class="emailstyle">
+      {{email}}
+      <img src="../../../assets/deleteButton.png" width="20px" (click)="this.deleteEmail(email)">
+    </li>
+    <label class="label" for="emailInput">Enter an Email:</label>
+    <input type="email" class="inputfield" id="emailInput" [(ngModel)]="this.tempEmail">
+  </ul>
+</div>
+<div *ngIf="!this.next" class="nextButton">
+  <input type="image" src="../../../assets/next_btn.png" width="125%" height="125%" (click)="this.next = true">
+</div>
 
-<div class="newVoteButton">
+<div *ngIf="this.next" class="nextButton">
+  <input type="image" src="../../../assets/submit_btn.png" width="125%" height="125%" (click)="this.submitVote()">
+</div>
+
+<div *ngIf="!this.next" class="newQuestionButton">
   <input type="image" src="../../assets/addQuestion_btn.png" width="125%" height="125%" (click)="addEmptyQuestion()"/>
 </div>
 
+<div *ngIf="this.next" class="newQuestionButton">
+  <input type="image" src="../../assets/addVoter_btn.png" width="125%" height="125%" (click)="addEmail()"/>
+</div>
+
+<div class="returnToMainButton">
+  <img src="../../../assets/returnToMain_btn.png" width="125%" height="125%" routerLink="/main" (click)="this.deleteEverything()"/>
+</div>
 </body>
 </html>

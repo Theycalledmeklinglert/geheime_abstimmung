@@ -6,4 +6,5 @@ export interface Vote{
   lifetime: string;
   position?: number;
   questions?: Question[];
+  emails?: string[];
 }

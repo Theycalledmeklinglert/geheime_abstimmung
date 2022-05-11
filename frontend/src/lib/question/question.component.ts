@@ -14,15 +14,30 @@ export class QuestionComponent{
   question: Question;
 
  fixedAnswers: boolean = false;
+ tempAnswer?: string;
 
  chooseFixedAnswers(){
    this.question.yesNo = false;
-    this.fixedAnswers = true;
-    console.log("Chose fixed answers");
+   this.question.individualAnswer = undefined;
+   this.fixedAnswers = true;
  }
  chooseYesNoAnswer(){
    this.fixedAnswers = false;
    this.question.yesNo = true;
+   this.question.individualAnswer = undefined;
+ }
+ chooseIndividualAnswers(){
+  this.fixedAnswers = false;
+  this.question.yesNo = false;
+  this.question.individualAnswer = 'yes';
+ }
+ deleteAnswer(answer: string){
+   this.question.fixedAnswers = this.question.fixedAnswers.filter((a) => a != answer);
+ }
+ addAnswer(){
+   if(this.question.fixedAnswers == undefined) this.question.fixedAnswers = [];
+   if(this.tempAnswer == '' || this.tempAnswer == undefined) return;
+   this.question.fixedAnswers.push(this.tempAnswer);
  }
 }
 
