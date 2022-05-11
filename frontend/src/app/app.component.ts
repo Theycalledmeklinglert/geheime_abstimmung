@@ -9,8 +9,8 @@ import {LoginComponent} from "../lib/router/login/login.component";
 export class AppComponent {
   title = 'frontend';
 
-  currentuser: string = "";
-
+  currentuser: string = "Max Mustermann";
+  firststart : boolean;
 
   getusername(): String{
     //return this.loggedInUser.username;

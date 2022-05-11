@@ -15,7 +15,7 @@
   left: 2%;
 
 }
-.vote .lifetimecomponentgreen #lifetime{
+.vote .lifetimecomponentgreen #greenlifetime{
   font-size: 60%;
   position: absolute;
   color: #ffffff;
@@ -31,6 +31,28 @@
   border-radius: 10px 10px 10px 10px;
   background-color: #5bcb36;
 }
+
+.vote .lifetimecomponentred #redlifetime{
+  font-size: 60%;
+  position: absolute;
+  color: #ffffff;
+  text-align: left;
+  left: 10%;
+}
+
+.vote .lifetimecomponentred{
+  position: absolute;
+  left: 50%;
+  height: 45%;
+  width: 13%;
+  border-radius: 10px 10px 10px 10px;
+  background-color: rgba(255, 0, 0, 0.78);
+}
+
+
+
+
+
 .vote #delete{
   position: absolute;
   right: 2%;

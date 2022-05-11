@@ -32,4 +32,7 @@
   position: fixed;
   right: 10px;
 }
-
+.toolbar .usericon {
+  position: fixed;
+  left: 84%;
+}

@@ -9,10 +9,16 @@
   <div id = "name" title = "VOTE NAME">{{showVoteName()}}</div>
 
 
-  <div class="lifetimecomponentgreen">
-  <div id = "lifetime" title = "VOTE LIFETIME">{{showVoteLifetime()}}</div>
+  <div *ngIf="lowlifetime;else longlifetime">
+    <div class="lifetimecomponentred">
+      <div id = "redlifetime" title = "VOTE LIFETIME">{{showVoteLifetime()}}</div>
+    </div>
   </div>
-
+  <ng-template #longlifetime>
+    <div class="lifetimecomponentgreen">
+      <div id = "greenlifetime" title = "VOTE LIFETIME">{{showVoteLifetime()}}</div>
+    </div>
+  </ng-template>
 
   <div id="delete" title="DELETE VOTE" (click)="deletethisVote()" >
     <input type="image" src="../../../assets/deleteButton.png" width="30%" height="30%">

@@ -50,3 +50,282 @@
   margin-right: 55px;
   margin-top: 10px;
 }
+
+
+/*Add Admin page*/
+.adminGenerator{
+  text-align: center;
+  font-size: 40px;
+  position: fixed;
+  right: 32.5%;
+  background-color: rgba(239, 238, 238, 1);
+  width: 35%;
+  height: 55%;
+  top: 25%;
+  border: 3px solid #ff8200;
+  border-radius: 40px 40px 40px 40px;
+}
+
+
+
+
+.adminGenerator .txt_field{
+  position: relative;
+  top: 5%;
+  border-bottom: 2px solid #adadad;
+  margin: 50px 0;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+.adminGenerator .txt_field input{
+  width: 100%;
+  padding:0 5px;
+  height: 40px;
+  font-size: 16px;
+  border: none;
+  background: none;
+  outline: none;
+}
+/*Username and Password label*/
+.adminGenerator .txt_field label{
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  color: #adadad;
+  transform: translateY(-50%);
+  font-size: 16px;
+  pointer-events: none;
+  transition: .4s;
+}
+
+
+.adminGenerator.txt_field span::before{
+  content: "";
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: #2691d9;
+  transition: .4s;
+}
+
+
+.adminGenerator .txt_field input:focus~label,
+.adminGenerator input:valid ~label{
+  top: -5px;
+  color: #2691d9;
+}
+
+.adminGenerator .txt_field input:focus~span::before,
+.adminGenerator input:valid ~span::before{
+  width: 100%;
+}
+
+
+
+.adminGenerator .add{
+  color: white;
+  position: fixed;
+  top: 75%;
+  right: 34%;
+  width: 10%;
+  background: #2691d9;
+  border-radius: 40px 40px 40px 40px;
+}
+
+.adminGenerator .add_txt{
+  color: white;
+  font-size: 30px;
+}
+.adminGenerator .add:hover{
+   border-color: #ea7609;
+   border-width: 10px;
+   background: #ea7609;
+   transition: .5s;
+ }
+.adminGenerator .cancel{
+    color: white;
+    position: fixed;
+    top: 75%;
+    left: 34%;
+    width: 10%;
+    background: #2691d9;
+    border-radius: 40px 40px 40px 40px;
+  }
+
+.adminGenerator .cancel_txt{
+  color: white;
+  font-size: 30px;
+}
+
+.adminGenerator .cancel_txt:hover{
+  border-radius: 40px 40px 40px 40px;
+  border-color: #ea7609;
+  border-width: 10px;
+  background: #ea7609;
+  transition: .5s;
+}
+/*Add Admin page*/
+
+
+
+
+.taskbar{
+  position: fixed;
+  font-weight: 700;
+  top: 1.7%;
+  left: 12%;
+}
+.taskbar .addAdminButton{
+  color: White;
+  font-size: 20px;
+  border: 1px solid #ff8200;
+  border-left-color: #000000;
+  border-right-color: #000000;
+
+}
+.taskbar .addAdminButton:hover{
+  color: #07daff;
+}
+
+.taskbar .deleteAdminButton{
+  position: fixed;
+  top: 1.7%;
+  left: 19.5%;
+  color: White;
+  font-size: 20px;
+  border: 1px solid #ff8200;
+  border-left-color: #000000;
+  border-right-color: #000000;
+
+}
+.taskbar .deleteAdminButton:hover{
+  color: #07daff;
+}
+
+
+
+
+
+
+/*DELETE WINDOW*/
+.deleteAdmin{
+  text-align: center;
+  font-size: 40px;
+  position: fixed;
+  right: 32.5%;
+  background-color: rgba(239, 238, 238, 1);
+  width: 35%;
+  height: 30%;
+  top: 25%;
+  border: 3px solid #ff8200;
+  border-radius: 40px 40px 40px 40px;
+}
+
+
+
+
+.deleteAdmin .txt_field{
+  position: relative;
+  top: 5%;
+  border-bottom: 2px solid #adadad;
+  margin: 50px 0;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+.deleteAdmin .txt_field input{
+  width: 100%;
+  padding:0 5px;
+  height: 40px;
+  font-size: 16px;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+/*Username and Password label*/
+.deleteAdmin .txt_field label{
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  color: #adadad;
+  transform: translateY(-50%);
+  font-size: 16px;
+  pointer-events: none;
+  transition: .4s;
+}
+
+
+.deleteAdmin.txt_field span::before{
+  content: "";
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: #2691d9;
+  transition: .4s;
+}
+
+
+.deleteAdmin .txt_field input:focus~label,
+.deleteAdmin input:valid ~label{
+  top: -5px;
+  color: #2691d9;
+}
+
+.deleteAdmin .txt_field input:focus~span::before,
+.deleteAdmin input:valid ~span::before{
+  width: 100%;
+}
+
+
+
+.deleteAdmin .delete{
+  color: white;
+  position: fixed;
+  top: 50%;
+  right: 34%;
+  width: 10%;
+  background: #2691d9;
+  border-radius: 40px 40px 40px 40px;
+}
+
+.deleteAdmin .delete_txt{
+  color: white;
+  font-size: 30px;
+}
+.deleteAdmin .delete:hover{
+  border-color: #ea7609;
+  border-width: 10px;
+  background: #ea7609;
+  transition: .5s;
+}
+
+.deleteAdmin .cancel{
+  color: white;
+  position: fixed;
+  top: 50%;
+  left: 34%;
+  width: 10%;
+  background: #2691d9;
+  border-radius: 40px 40px 40px 40px;
+}
+
+.deleteAdmin .cancel_txt{
+  color: white;
+  font-size: 30px;
+}
+
+
+.deleteAdmin .cancel_txt:hover{
+  border-radius: 40px 40px 40px 40px;
+  border-color: #ea7609;
+  border-width: 10px;
+  background: #ea7609;
+  transition: .5s;
+}
+/*DELETE WINDOW*/

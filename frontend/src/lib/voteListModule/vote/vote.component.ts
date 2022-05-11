@@ -15,10 +15,9 @@ import {Vote} from "../../data-access/models/vote";
 export class VoteComponent {
   @Input() voteObject: Vote;
 
-  lowlifetime: boolean;
-
-
+  lowlifetime: boolean = false;
   showvoteinfo:boolean = false;
+  datum: Date;
 
 
   showVoteResult(): void {
@@ -32,10 +31,10 @@ export class VoteComponent {
 
   showVoteLifetime(): String{
     /*
-    if (this.voteObject.lifetime < 3 days){
-      this.lowlifetime = true;
-    }
+     this.datum = new Date(this.voteObject.lifetime);
+    if(this.datum.getDay() < 1){this.lowlifetime = true;}
      */
+
     return this.voteObject.lifetime;
   }
 

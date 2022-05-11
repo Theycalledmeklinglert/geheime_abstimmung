@@ -5,11 +5,72 @@
   <title>main</title>
 </head>
 <body>
+<div class="taskbar" *ngIf="isAdmin">
+  <div class="addAdminButton" (click)="showAddAdmin()">Add Admin</div>
+  <div class="deleteAdminButton" (click)="showDeleteAdmin()">Delete Admin</div>
+</div>
+
+
 <div class="listwindow">
   <div class="headline">Your Votes</div>
 
   <voteContainer></voteContainer>
 </div>
+
+<div class="adminGenerator" *ngIf="addAdmin">
+  <div class="headline">Add Admin</div>
+
+  <div class="txt_field">
+    <input type="text" required
+           [value]="this.newadminadress"
+           (change)="setUsernameofnewAdmin($event)"
+    >
+    <span></span>
+    <label>Emailadress</label>
+  </div>
+
+  <div class="txt_field">
+    <input type="password" required
+           [value]="this.newadminpassword"
+           (change)="setpasswortofnewAdmin($event)"
+    >
+    <span></span>
+    <label>Password</label>
+  </div>
+
+
+  <div class="add" (click)="sendAddAdminrequest()">
+    <div class="add_txt">Add</div>
+  </div>
+  <div class="cancel" (click)="hideAddAdmin()">
+    <div class="cancel_txt">Cancel</div>
+  </div>
+</div>
+
+
+
+<div class="deleteAdmin" *ngIf="deleteAdmin">
+  <div class="headline">Delete Admin</div>
+
+  <div class="txt_field">
+    <input type="text" required
+           [value]="this.newadminadress"
+           (change)="setUsernameofnewAdmin($event)"
+    >
+    <span></span>
+    <label>Emailadress</label>
+  </div>
+
+  <div class="delete" (click)="sendDeleteAdminrequest()">
+    <div class="delete_txt">Delete</div>
+  </div>
+  <div class="cancel" (click)="hideDeleteAdmin()">
+    <div class="cancel_txt">Cancel</div>
+  </div>
+</div>
+
+
+
 
 <div class="newVoteButton">
   <input type="image" src="../../assets/newVote_btn.png" width="125%" height="125%" routerLink="/editor"/>
