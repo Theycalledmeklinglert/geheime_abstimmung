@@ -173,6 +173,7 @@
 
 
 .taskbar{
+  z-index: 7;
   height: 60px;
   width: 320px;
   position: fixed;
