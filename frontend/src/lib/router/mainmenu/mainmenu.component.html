@@ -6,8 +6,13 @@
 </head>
 <body>
 <div class="taskbar" *ngIf="isAdmin">
-  <div class="addAdminButton" (click)="showAddAdmin()">Add Admin</div>
-  <div class="deleteAdminButton" (click)="showDeleteAdmin()">Delete Admin</div>
+  <div class="addAdminButton">
+    <input type="image" src="../../assets/addAdmin_btn.png" width="50%" height="50%"(click)="showAddAdmin()" />
+  </div>
+
+  <div class="deleteAdminButton">
+    <input type="image" src="../../assets/deleteAdmin_btn.png" width="50%" height="50%"(click)="showDeleteAdmin()" />
+  </div>
 </div>
 
 

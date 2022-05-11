@@ -173,37 +173,26 @@
 
 
 .taskbar{
+  height: 60px;
+  width: 320px;
   position: fixed;
   font-weight: 700;
-  top: 1.7%;
   left: 12%;
 }
 .taskbar .addAdminButton{
-  color: White;
-  font-size: 20px;
-  border: 1px solid #ff8200;
-  border-left-color: #000000;
-  border-right-color: #000000;
+  position: fixed;
+  left: 15%;
+  top: 0%;
 
-}
-.taskbar .addAdminButton:hover{
-  color: #07daff;
 }
 
 .taskbar .deleteAdminButton{
   position: fixed;
-  top: 1.7%;
-  left: 19.5%;
-  color: White;
-  font-size: 20px;
-  border: 1px solid #ff8200;
-  border-left-color: #000000;
-  border-right-color: #000000;
+  left: 25%;
+  top: 0%;
 
 }
-.taskbar .deleteAdminButton:hover{
-  color: #07daff;
-}
+
 
 
 
