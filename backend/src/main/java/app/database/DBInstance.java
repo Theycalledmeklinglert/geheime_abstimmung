@@ -13,7 +13,7 @@ import javax.print.Doc;
 import java.lang.reflect.Array;
 import java.util.*;
 
-import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.*;
 
 public class DBInstance
 {
@@ -23,6 +23,8 @@ public class DBInstance
         private static MongoCollection<Document> pollCol;
         private static MongoCollection<Document> userCol;
         private static MongoCollection<Document> answerCol;
+        private static MongoCollection<Document> emailCol;
+
 
     private static ArrayList<String> pollNames;
 
@@ -52,12 +54,13 @@ public class DBInstance
         private DBInstance( )
         {
             // The Mongo Connection URI is mostly provided by the mongodb cloud. It can change depending on what DB user logs into the DB from the application
-            // local Connection URI: "mongodb://localhost:27017"
+            // client = MongoClients.create("mongodb://localhost:27017");
             client = MongoClients.create("mongodb+srv://sampleUser:GeheimeAbstimmung@cluster0.eobux.mongodb.net/TestDB?retryWrites=true&w=majority");
             db = client.getDatabase("DB");
             pollCol = db.getCollection("Polls");
             userCol = db.getCollection("Users");
             answerCol = db.getCollection("Answers");
+            emailCol = db.getCollection("E-Mails");
             this.pollNames = new ArrayList<String>( );
             this.userNames = new ArrayList<String>( );
             initializePollNameList();
@@ -114,7 +117,7 @@ public class DBInstance
         deletePollByName(oldPoll.getString("name"));
         createPoll(update);
         //TODO: createPoll(Poll) HAS TO INCLUDE the _id from the oldPoll Doc. Otherwise the _id of the updated Poll
-        //does not match the _id of the original one!
+        // does not match the _id of the original one!
     }
 
 
@@ -194,8 +197,9 @@ public class DBInstance
         {
             Bson projection = Projections.fields(Projections.excludeId());
 
-            MongoCursor<Document> cursor = pollCol.find(eq("admin", userName))
-                    .projection(projection).cursor();
+            MongoCursor<Document> cursor = pollCol.find(or(eq("accessible by", userName), eq("created by", userName)))
+                    .projection(projection)
+                    .cursor();
 
             ArrayList<Document> polls = new ArrayList<>();
             while(cursor.hasNext())
@@ -300,17 +304,12 @@ public class DBInstance
         }
 
         Document poll = optPoll.get();
-        ArrayList<Document> tokenDocList = (ArrayList<Document>) poll.get("tokens");
-
-        ArrayList<String> tokens = new ArrayList<>();
-        for(Document obj : tokenDocList) {
-            tokens.add(obj.getString("val"));
-        }
+        ArrayList<String> tokens = (ArrayList<String>) poll.get("tokens");
 
         if(tokens.contains(answer.getString("token")))
         {
             Bson filter = Filters.eq("name", answer.getString("pollName"));
-            Bson delete = Updates.pull("tokens", new Document("val", answer.getString("token")));
+            Bson delete = Updates.pull("tokens", answer.getString("token"));
             pollCol.updateOne(filter, delete);
             answerCol.insertOne(answer);
             return true;
@@ -329,12 +328,45 @@ public class DBInstance
         updateAnswerCollection();
     }
 
+    public void deleteAllAnswers() {
+        Document doc = new Document();
+        this.answerCol.deleteMany(doc);
+        updateAnswerCollection();
+    }
+
 
     private void updateAnswerCollection()
     {
         this.answerCol = db.getCollection("Answers");
     }
 
+    public void postLastUsedEmails(List<Document> emails) {
+        ArrayList<Document> oldEmails = getAllEmails();
+        deleteAllEmails();
+        ArrayList<Document> newEmails = new ArrayList<>();
+
+        emails.stream().filter(e -> !oldEmails.contains(e)).forEach(e -> newEmails.add(e));
+        oldEmails.stream().forEach(e -> newEmails.add(e));
+
+        Document container = new Document("E-Mails", newEmails);
+        emailCol.insertOne(container);
+    }
+
+    public void deleteAllEmails() {
+        this.emailCol.deleteMany(new Document());
+    }
+
+    private ArrayList<Document> getAllEmails() {
+        MongoCursor cursor = this.emailCol.find().cursor();
+        ArrayList<Document> emails = new ArrayList<>();
+
+        while(cursor.hasNext())
+        {
+            Document doc = (Document) cursor.next();
+            ArrayList<Document> list = (ArrayList<Document>) doc.get("E-Mails");
+        }
+        return emails;
+    }
     /*
 
         public void delete( final Person person )

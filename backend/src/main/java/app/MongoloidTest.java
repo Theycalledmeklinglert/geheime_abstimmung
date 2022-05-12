@@ -9,11 +9,14 @@ import main.java.app.database.DBInstance;
 import org.bson.BsonArray;
 import org.bson.Document;
 
+import javax.print.Doc;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.DoubleConsumer;
+import java.util.function.DoubleToIntFunction;
 
 public class MongoloidTest {
 
@@ -23,11 +26,21 @@ public class MongoloidTest {
 
     INSTANCE.deleteAllUsers();
     INSTANCE.deleteAllPolls();
+    INSTANCE.deleteAllAnswers();
+    // INSTANCE.deleteAllEmails();
 
-    Document doc = new Document().append("name", "Poll1").append("admin", "Blofeld");
-    Document doc2 = new Document().append("name", "Poll2").append("admin", "Blofeld");
-    Document doc3 = new Document().append("name", "Poll3").append("admin", "Blofeld");
-    Document doc4 = new Document().append("name", "Poll4").append("admin", "Bond");
+
+    Document doc = new Document().append("name", "Poll1").append("created by", "Blofeld").append("accessible by", "Bond");;
+    Document doc2 = new Document().append("name", "Poll2").append("created by", "adasdsa").append("accessible by", "Blofeld");
+    Document doc3 = new Document().append("name", "Poll3").append("created by", "Bond").append("accessible by", "asdsadsad");
+    Document doc4 = new Document().append("name", "Poll4").append("created by", "");
+    ArrayList<String> l = new ArrayList<>();
+    l.add("Bond");
+    l.add("Blofeld");
+    doc4.put("created by", l);
+
+
+
     INSTANCE.createPoll(doc);
     INSTANCE.createPoll(doc2);
     INSTANCE.createPoll(doc3);
@@ -36,7 +49,7 @@ public class MongoloidTest {
     if(optPoll.isPresent())
     {
         System.out.println(optPoll.get().toJson());
-        //  System.out.println(optPoll.get().getString("name"));
+        System.out.println(optPoll.get().getString("name"));
     }
 
         Document userDoc = new Document().append("name", "Blofeld").append("role", "admin");
@@ -45,7 +58,7 @@ public class MongoloidTest {
         if(optUser.isPresent())
         {
             System.out.println(optUser.get().toJson());
-            //  System.out.println(optPoll.get().getString("name"));
+            System.out.println(optPoll.get().getString("name"));
         }
 
         System.out.println();
@@ -55,6 +68,7 @@ public class MongoloidTest {
         Optional<ArrayList<Document>> polls = INSTANCE.getAllPollsOfUser("Blofeld");
         if(polls.isPresent())
         {
+            System.out.println("GetAllTest hier: ");
             ArrayList<Document> list = polls.get();
             for(Document poll : list){
                 System.out.println(poll.toJson());
@@ -79,15 +93,15 @@ public class MongoloidTest {
         System.out.println();
         System.out.println();
 
-        BasicDBObject tk1 = new BasicDBObject("val", "aaabbb");
-        BasicDBObject tk2 = new BasicDBObject("val", "aaabbbccc");
 
 
         doc = new Document().append("name", "AnswerTestPoll").append("admin", "Blofeld");
-        List<BasicDBObject> list = new ArrayList<>();
-        list.add(tk1);
-        list.add(tk2);
-        doc.put("tokens", list);
+        String[] tokens = {"aaabbb", "aaabbbccc"};
+        doc.put("tokens", Arrays.asList(tokens));
+
+        List<BasicDBObject> adminsAndSupervisors = new ArrayList<>();
+        doc.put("accessible by", Arrays.asList(new String[]{"Ernst Blofeld", "James Bondy", "Hier keonnte ihr Nutzername stehen!"}));
+
 
         System.out.println(doc.toJson());
         INSTANCE.createPoll(doc);
@@ -102,17 +116,31 @@ public class MongoloidTest {
 
         doc = new Document().append("name", "AnswerTestPoll2").append("admin", "Blofeld");
         Document answer3 = new Document("pollName", "AnswerTestPoll2").append("token", "MyToken");
-        List<BasicDBObject> list2 = new ArrayList<>();
-        BasicDBObject tk3 = new BasicDBObject("val", "MyToken");
-        list2.add(tk3);
-        doc.put("tokens", list2);
+        doc.put("tokens", Arrays.asList(new String[]{"MyToken"}));
         INSTANCE.createPoll(doc);
-
         INSTANCE.createAnswer(answer3);
 
 
+        ArrayList<Document> res = INSTANCE.getAllPollsOfUser("Ernst Blofeld").get();
+        res.stream().forEach(poll -> System.out.println(poll.toJson()));
+
+        Document newPoll = new Document("name", "newPoll").append("admin", "James Bond");
+        newPoll.put("accessible by", Arrays.asList(new String[]{"Ernst Blofeld"}));
+        INSTANCE.createPoll(newPoll);
+
+        ArrayList<Document> list = new ArrayList<>();
+        Document email = new Document("email", "test@test.com");
+        list.add(email);
+        email = new Document("email", "test@fhws.de");
+        list.add(email);
+        email = new Document("email", "test@gmail.com");
+        list.add(email);
+        INSTANCE.postLastUsedEmails(list);
 
 
+        //doc = new Document("name", "Hi");
+       // doc.put("name", "hello");
+       // System.out.println(doc.toJson());
 
     /*
     DBCollection collection = database.getCollection("customers");

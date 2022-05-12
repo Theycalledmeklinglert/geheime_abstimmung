@@ -1,4 +1,4 @@
-package app;
+package main.java.app;
 
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -19,7 +19,7 @@ public class Application extends ResourceConfig
 	{
 		final Set<Class<?>> returnValue = new HashSet<>( );
 
-		returnValue.add( app.Service.class );
+		returnValue.add( main.java.app.Service.class );
 
 		return returnValue;
 	}
