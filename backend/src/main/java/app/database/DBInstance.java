@@ -52,7 +52,7 @@ public class DBInstance
         private DBInstance( )
         {
             // The Mongo Connection URI is mostly provided by the mongodb cloud. It can change depending on what DB user logs into the DB from the application
-            client = MongoClients.create("mongodb+srv://sampleUser:GeheimeAbstimmung@cluster0.eobux.mongodb.net/TestDB?retryWrites=true&w=majority");
+            client = MongoClients.create("mongodb://localhost:27017");
             db = client.getDatabase("DB");
             pollCol = db.getCollection("Polls");
             userCol = db.getCollection("Users");
@@ -314,9 +314,19 @@ public class DBInstance
             answerCol.insertOne(answer);
             return true;
         }
-        else return false;
+        else
+        {
+            System.out.println("Answer does not contain a valid token. Answer will not be posted");
+            return false;
+        }
     }
 
+
+    public void deleteAnswersOfPollByPollName(String pollName) {
+        Bson query = eq("pollName", pollName);
+        this.answerCol.deleteMany(query);
+        updateAnswerCollection();
+    }
 
 
     private void updateAnswerCollection()

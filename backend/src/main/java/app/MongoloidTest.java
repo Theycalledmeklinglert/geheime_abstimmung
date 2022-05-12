@@ -89,12 +89,27 @@ public class MongoloidTest {
         list.add(tk2);
         doc.put("tokens", list);
 
-
-
         System.out.println(doc.toJson());
         INSTANCE.createPoll(doc);
         Document answer = new Document("pollName", "AnswerTestPoll").append("token", "aaabbb");
+        Document answer2 = new Document("pollName", "AnswerTestPoll").append("token", "aaabbbccc");
+
         INSTANCE.createAnswer(answer);
+        INSTANCE.createAnswer(answer2);
+
+        INSTANCE.deleteAnswersOfPollByPollName("AnswerTestPoll");
+
+
+        doc = new Document().append("name", "AnswerTestPoll2").append("admin", "Blofeld");
+        Document answer3 = new Document("pollName", "AnswerTestPoll2").append("token", "MyToken");
+        List<BasicDBObject> list2 = new ArrayList<>();
+        BasicDBObject tk3 = new BasicDBObject("val", "MyToken");
+        list2.add(tk3);
+        doc.put("tokens", list2);
+        INSTANCE.createPoll(doc);
+
+        INSTANCE.createAnswer(answer3);
+
 
 
 
