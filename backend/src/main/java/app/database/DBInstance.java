@@ -52,7 +52,8 @@ public class DBInstance
         private DBInstance( )
         {
             // The Mongo Connection URI is mostly provided by the mongodb cloud. It can change depending on what DB user logs into the DB from the application
-            client = MongoClients.create("mongodb://localhost:27017");
+            // local Connection URI: "mongodb://localhost:27017"
+            client = MongoClients.create("mongodb+srv://sampleUser:GeheimeAbstimmung@cluster0.eobux.mongodb.net/TestDB?retryWrites=true&w=majority");
             db = client.getDatabase("DB");
             pollCol = db.getCollection("Polls");
             userCol = db.getCollection("Users");
