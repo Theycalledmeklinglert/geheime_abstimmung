@@ -1,7 +1,7 @@
 import {Component, Output} from "@angular/core";
 import {VoteContainer} from "../../data-access/models/voteContainer";
 import {SurveyLeader} from "../../data-access/models/surveyLeader";
-import {RouterModule} from "@angular/router";
+import {Router, RouterModule} from "@angular/router";
 import {AppComponent} from "../../../app/app.component";
 import {AppModule} from "../../../app/app.module";
 import {AuthenticationService} from "../../data-access/authentication.service";
@@ -38,6 +38,7 @@ export class LoginComponent{
     }else {
       alert("Emailadress or Password is empty!");
     }
+
   }
 
   presshelpbutton():void{

@@ -66,12 +66,9 @@
   border-radius: 40px 40px 40px 40px;
 }
 
-
-
-
 .adminGenerator .txt_field{
   position: relative;
-  top: 5%;
+  top: 3%;
   border-bottom: 2px solid #adadad;
   margin: 50px 0;
   margin-left: 30px;
@@ -103,7 +100,7 @@
 .adminGenerator .txt_field span::before{
   content: "";
   position: absolute;
-  top: 54px;
+  top: 53px;
   left: 0;
   width: 0%;
   height: 2px;
@@ -204,9 +201,6 @@
 
 
 
-
-
-
 /*DELETE WINDOW*/
 .deleteAdmin{
   text-align: center;
@@ -259,7 +253,7 @@
 .deleteAdmin .txt_field span::before{
   content: "";
   position: absolute;
-  top: 54px;
+  top: 53px;
   left: 0;
   width: 0%;
   height: 2px;
@@ -331,10 +325,6 @@
 
 
 
-
-
-
-
 /*ChangePassword WINDOW*/
 .changePassword{
   text-align: center;
@@ -348,8 +338,6 @@
   border: 3px solid #ff8200;
   border-radius: 40px 40px 40px 40px;
 }
-
-
 
 
 .changePassword .txt_field{
@@ -387,7 +375,7 @@
 .changePassword .txt_field span::before{
   content: "";
   position: absolute;
-  top: 54px;
+  top: 53px;
   left: 0;
   width: 0%;
   height: 2px;

@@ -6,6 +6,7 @@ import {
   Output
 } from '@angular/core';
 import {Vote} from "../../data-access/models/vote";
+import {BackendService} from "../../data-access/backend.service";
 
 @Component({
   selector: 'vote',
@@ -18,9 +19,12 @@ export class VoteComponent {
   lowlifetime: boolean = false;
   showvoteinfo:boolean = false;
   datum: Date;
+  backendS: BackendService = new BackendService();
 
 
   showVoteResult(): void {
+
+    //  this.backendS.getSurvey(this.voteObject.id,localStorage.getItem("sessionid"))
     this.showvoteinfo = true;
   }
 
@@ -43,6 +47,7 @@ export class VoteComponent {
 
   deletethisVote(): void{
     console.log("delete this Vote!");
+  //  this.backendS.deleteSurvey(this.voteObject.id,localStorage.getItem("sessionid"))
   }
 
 
