@@ -20,10 +20,9 @@
     </ul>
   </div>
   <div class="customAnswer" *ngIf="this.question.individualAnswer!=undefined">
-    <input
-      type="text"
-      (change)="setAnswer($event)"
-      >
+    <mat-form-field>
+      <input matInput placeholder="Your Answer" formControlName="customAnswer">
+    </mat-form-field>
   </div>
 
 

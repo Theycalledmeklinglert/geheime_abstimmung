@@ -1,6 +1,13 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
+
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field'
+import {MatButtonModule} from '@angular/material/button'
+
 import {QuestionComponent} from "../lib/question/question.component";
 import {RouterModule, Routes} from "@angular/router";
 import {MainmenuComponent} from "../lib/router/mainmenu/mainmenu.component";
@@ -9,15 +16,10 @@ import { SurveyComponent } from '../lib/router/survey/survey.component';
 import {EditorComponent} from "../lib/router/editor/editor.component";
 import {VoteComponent} from "../lib/voteListModule/vote/vote.component";
 import {VoteConainterComponent} from "../lib/voteListModule/votecontainer/voteContainer.component";
-import { FormsModule } from '@angular/forms';
 import { SurveyQuestionComponent } from 'src/lib/survey-question/survey-question.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule } from './app-routing.module';
 
-const myRoutes: Routes = [
-  {path:'main', component: MainmenuComponent},
-  {path:'login',component: LoginComponent},
-  {path:'editor', component:EditorComponent},
-  {path:'survey', component:SurveyComponent}
-];
 
 @NgModule({
   declarations: [
@@ -30,11 +32,20 @@ const myRoutes: Routes = [
     SurveyQuestionComponent,
     VoteComponent,
     VoteConainterComponent
+
   ],
   imports: [
-    RouterModule.forRoot(myRoutes),
     BrowserModule,
-    FormsModule
+    BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    BrowserAnimationsModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
