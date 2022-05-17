@@ -9,7 +9,8 @@ export class BackendService {
   getVotecontainerofsurveyLeader(): void {
   }
 
-  getUsernameofsurveyLeader():void{
+  getUsernameofsurveyLeader():string{
+    return "No Connection";
   }
 
   setpasswordofSurveyLeader(): void{
@@ -21,8 +22,8 @@ export class BackendService {
   }
 
   setnewVote(): void{
-
   }
+
 
 
 

@@ -33,7 +33,11 @@ export class LoginComponent{
   submitlogin(): void{
     localStorage.removeItem("sessionid");
     localStorage.removeItem("backendpublickey");
-   this.ats.getSessionid(this.username,this.password);
+    if(this.username != "" && this.password != ""){
+      this.ats.getSessionid(this.username,this.password);
+    }else {
+      alert("Emailadress or Password is empty!");
+    }
   }
 
   presshelpbutton():void{
