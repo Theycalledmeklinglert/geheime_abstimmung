@@ -1,24 +1,39 @@
-<div class="questionContainer">
-<input class="questiontitle" type="text" [(ngModel)]="this.question.title" />
+<div id="head">
+  <input class="questiontitle" type="text" [(ngModel)]="this.question.title" />
+</div>
+
+
+<div id="body">
   <form>
-  <div>
-      <input type="image" src="../../assets/yesNo_btn.png" (click)="this.chooseYesNoAnswer()" id="yesNo" value="yesNo" class="answerTypeButton" alt="Choose Yes/No Answers">
-    <label class="answerbutton yesNo" for="yesNo"></label>
-    <input type="image" src="../../assets/fixedAnswers_btn.png" (click)="this.chooseFixedAnswers()" id="fixed" value="fixed" class="answerTypeButton" alt="Choose fixed Answers"/>
-      <label class="answerbutton fixed" for="fixed"></label>
-    <input type="image" src="../../assets/individualAnswer_btn.png" (click)="this.chooseIndividualAnswers()" id="individual" value="individual" class="answerTypeButton" alt="Choose individual Answers">
-    <label class="answerbutton fixed" for="individual"></label>
-  </div>
+    <mat-radio-group aria-label="Select an option">
+      <mat-radio-button value="1" (click)="chooseYesNoAnswer()" >Yes/No  Answer</mat-radio-button>
+      <mat-radio-button value="2" (click)="chooseFixedAnswers()">Fixed Answer</mat-radio-button>
+      <mat-radio-button value="3" (click)="chooseIndividualAnswers()">individual Answer</mat-radio-button>
+    </mat-radio-group>
   </form>
+
   <div *ngIf="this.fixedAnswers" class="questionwindow">
     <ul class="answerlist">
       <li *ngFor="let answer of this.question.fixedAnswers" class="answerstyle">
         {{answer}}
-        <img src="../../../assets/deleteButton.png" width="20px" (click)="this.deleteAnswer(answer)">
+
+        <button mat-icon-button (click)="deleteAnswer(answer)">
+          <mat-icon>delete</mat-icon>
+        </button>
       </li>
-      <label class="label" for="answerInput">Enter an answer:</label>
-      <input type="text" class="inputfield" id="answerInput" [(ngModel)]="this.tempAnswer">
+
+
+      <div id="customAnswer">
+       <mat-form-field>
+          <mat-label>Enter an answer:</mat-label>
+          <input matInput placeholder="Your Answer" [(ngModel)]="this.tempAnswer">
+        </mat-form-field>
+    </div>
+
     </ul>
-    <img src="../../assets/addButton.png" width="40px" (click)="this.addAnswer()"/>
+    <button mat-icon-button (click)="addAnswer()">
+      <mat-icon>add</mat-icon>
+    </button>
   </div>
+
 </div>

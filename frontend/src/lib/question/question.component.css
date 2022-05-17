@@ -1,11 +1,10 @@
-.questionContainer {
+#head {
   background-color: transparent;
-  font-size: 25px;
-  font-weight: bold;
   text-align: center;
   margin-top: 10px;
   margin-right: 10px;
 }
+
 .questiontitle{
   background-color: transparent;
   font-size: 25px;
@@ -13,11 +12,26 @@
   text-align: center;
   margin-top: 10px;
   margin-right: 10px;
+  margin-bottom: 2vh;
   cursor: pointer;
   width: 400px;
   height: auto;
   border-color: transparent;
 }
+
+.mat-radio-button {
+  margin-left: 16px;
+  font-size: medium;
+  font-weight: normal;
+}
+
+
+#body{
+  font-size: medium;
+  font-weight: normal;
+  margin-bottom: 1vh;
+}
+
 /*.answer-selector input{*/
 /*  margin:0;padding:0;*/
 /*  -webkit-appearance:none;*/
@@ -62,10 +76,8 @@
   list-style: none;
   align-items: center;
 }
-.answerstyle{
-  font-size: 20px;
-  border: 3px solid #ea7609;
-  border-radius: 40px 40px 40px 40px;
+#customAnswer{
+margin-top: 2vh;
 }
 
 input[id=yesNo]:checked {
