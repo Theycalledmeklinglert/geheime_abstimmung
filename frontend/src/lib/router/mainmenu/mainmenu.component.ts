@@ -12,7 +12,7 @@ export class MainmenuComponent{
 
   isAdmin: boolean = true;
   addAdmin: boolean;
-  deleteAdmin:boolean
+  deleteAdmin:boolean;
   newadminadress: string = "";
   newadminpassword: string= "";
   deleteadminadress: string= "";

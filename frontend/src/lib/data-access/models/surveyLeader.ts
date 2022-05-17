@@ -1,5 +1,5 @@
 import {VoteContainer} from "./voteContainer";
-export interface User{
+export interface SurveyLeader {
   id?: number;
   username: string;
   password: string;

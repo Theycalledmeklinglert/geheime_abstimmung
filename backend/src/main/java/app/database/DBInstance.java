@@ -221,7 +221,7 @@ public class DBInstance
         String name = user.getString("name");
         if(userNames.contains(name))
         {
-            System.out.println("User with identical name already exists. You have to choose a different Username");
+            System.out.println("SurveyLeader with identical name already exists. You have to choose a different Username");
             return false;
         }
         else
@@ -237,7 +237,7 @@ public class DBInstance
     public void updateUser(Document oldUser, Document update) {
             deleteUserByName(oldUser.getString("name"));
             createUser(update);
-            //TODO: createUser(update) HAS TO INCLUDE the _id from the oldUser Doc. Otherwise the _id of the updated User
+            //TODO: createUser(update) HAS TO INCLUDE the _id from the oldUser Doc. Otherwise the _id of the updated SurveyLeader
             //does not match the _id of the original one!
     }
 

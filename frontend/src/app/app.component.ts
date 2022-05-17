@@ -11,9 +11,15 @@ export class AppComponent {
 
   currentuser: string = "Max Mustermann";
   firststart : boolean;
+  constructor() {
+    localStorage.removeItem("sessionid");
+    localStorage.removeItem("backendpublickey");
+  }
 
   getusername(): String{
     //return this.loggedInUser.username;
+    this.currentuser = localStorage.getItem("sessionid");
     return this.currentuser;
   }
+
 }

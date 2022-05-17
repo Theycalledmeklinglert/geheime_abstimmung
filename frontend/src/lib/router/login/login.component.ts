@@ -1,9 +1,10 @@
 import {Component, Output} from "@angular/core";
 import {VoteContainer} from "../../data-access/models/voteContainer";
-import {User} from "../../data-access/models/user";
+import {SurveyLeader} from "../../data-access/models/surveyLeader";
 import {RouterModule} from "@angular/router";
 import {AppComponent} from "../../../app/app.component";
 import {AppModule} from "../../../app/app.module";
+import {AuthenticationService} from "../../data-access/authentication.service";
 
 
 
@@ -17,8 +18,10 @@ export class LoginComponent{
 
   @Output()username: string = "";
   password: string = "";
-  userObject: User;
+  userObject: SurveyLeader;
   helpbuttonpressed: boolean;
+  ats: AuthenticationService = new AuthenticationService();
+
 
   setUsername(event: any): void{
     this.username = event.target.value;
@@ -28,9 +31,9 @@ export class LoginComponent{
   }
 
   submitlogin(): void{
-   let userVoteContainer: VoteContainer = {name: ""};
-   this.userObject= {username: this.username,password: this.password};
-   //Server --> send userobject ---> server check--> send back Vote[] for userVoteContainer
+    localStorage.removeItem("sessionid");
+    localStorage.removeItem("backendpublickey");
+   this.ats.getSessionid(this.username,this.password);
   }
 
   presshelpbutton():void{
@@ -40,4 +43,6 @@ export class LoginComponent{
   pressokaybutton():void{
     this.helpbuttonpressed = false;
   }
+
+
 }
