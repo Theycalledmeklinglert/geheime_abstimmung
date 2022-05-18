@@ -3,29 +3,31 @@
 </div>
 
 <div id="body">
-  <div class="yesNoAnswer" *ngIf="this.question.yesNo!=undefined">
-    <input type="checkbox" id="yesBox">
-    <label for="yesBox">yes</label>
-    <input type="checkbox" id="noBox">
-    <label for="noBox">no</label>
-  </div>
-  <div class="fixedAnswer" *ngIf="this.question.fixedAnswers!=undefined">
+
+  <section class="yesNoAnswer" *ngIf="this.question.type=='yesNoAnswer' ">
+    <mat-radio-group [(ngModel)]="labelPosition">
+      <mat-radio-button class="example-margin" value="yes">yes</mat-radio-button>
+      <mat-radio-button class="example-margin" value="no">no</mat-radio-button>
+    </mat-radio-group>
+  </section>
+
+  <section class="fixedAnswer" *ngIf="this.question.type=='fixedAnswer'">
     <ul>
       <li *ngFor="let answer of this.question.fixedAnswers; let i = index">
         <div class="answer">
-          <input type="checkbox" id="cbAnswer">
-          <label for="cbAnswer">{{this.question.fixedAnswers[i]}}</label><br>
+          <mat-checkbox (change)="updateFixedAnswer()">
+          {{answer}}
+        </mat-checkbox>
         </div>
       </li>
     </ul>
-  </div>
-  <div class="customAnswer" *ngIf="this.question.individualAnswer!=undefined">
-    <input
-      type="text"
-      (change)="setAnswer($event)"
-      >
-  </div>
+  </section>
 
+  <section class="customAnswer" *ngIf="this.question.type=='individualAnswer' ">
+    <mat-form-field>
+      <input matInput placeholder="Your Answer">
+    </mat-form-field>
+  </section>
 
 </div>
 

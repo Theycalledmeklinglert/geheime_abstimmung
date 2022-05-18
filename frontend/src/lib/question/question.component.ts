@@ -38,6 +38,8 @@ export class QuestionComponent{
    if(this.question.fixedAnswers == undefined) this.question.fixedAnswers = [];
    if(this.tempAnswer == '' || this.tempAnswer == undefined) return;
    this.question.fixedAnswers.push(this.tempAnswer);
+
+   this.tempAnswer="";
  }
 }
 

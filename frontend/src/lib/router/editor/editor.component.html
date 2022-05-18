@@ -5,35 +5,55 @@
   <title>main</title>
 </head>
 <body>
+
+
 <div class="sidebar">
-  Create A New Vote <br/>
-  <div class="inputfields">
-    <label class="label" for="nameinputfield">Name:</label>
-    <input type="text" class = inputfield id="nameinputfield" [(ngModel)]="this.editor.vote.name" required placeholder="Enter here..."><br/>
-    <label class="label" for="timeinputfield">Expiration:</label>
-    <input  class="inputfield" type="datetime-local" id="timeinputfield" [(ngModel)]="this.editor.vote.lifetime" required><br/>
-    <label class="label" for="questionlist">Questions:</label>
-    <ul class="questionlist" id="questionlist">
+
+  <section id="head">
+    <h1>Create new Vote:</h1>
+
+    <div id="surveyNameInput">
+      <mat-form-field>
+        <input matInput placeholder="Survey Name" required>
+      </mat-form-field> <br>
+    </div>
+
+    <div id="expirationDateInput">
+      <label class="label" for="timeinputfield">Expiration:</label> <br>
+
+      <input  class="inputfield" type="datetime-local" id="timeinputfield" required><br/>
+    </div>
+
+  </section>
+
+
+    <section id="questionList">
+      <h2>Questions:</h2>
+      <ul>
+        <li *ngFor="let question of editor.vote.questions">
+          <div class="questiontitle" (click)="this.next = false; showQuestion(question)">
+            {{question.title}}
+
+            <button id="delte" mat-icon-button (click)="deleteQuestion(question)">
+              <mat-icon>delete</mat-icon>
+            </button>
+
+          </div>
+        </li>
+      </ul>
+    </section>
+
+
+  <div *ngIf="!this.next" class="questionwindow">
+
+    <ul class="questioneditor">
       <li *ngFor="let question of editor.vote.questions">
-        <div class="questiontitle" (click)="this.next = false; this.showQuestion(question)">
-          {{question.title}}
-          <img src="../../../assets/deleteButton.png" width="20px" (click)="this.deleteQuestion(question)">
-        </div>
+        <question *ngIf="question.visible" [question]="question"></question>
       </li>
     </ul>
-</div>
-<div *ngIf="!this.next" class="questionwindow">
-  <ul class="questioneditor">
-    <li *ngFor="let question of editor.vote.questions">
-      <question *ngIf="question.visible" [question]="question"></question>
-    </li>
-  </ul>
-  <form>
-  <label class="label" for="text">Add a description:</label>
-  <br>
-  <textarea id="text" name="text" class="textarea" [(ngModel)]="this.tempDescr" (blur)="this.setDescription()" placeholder="Enter a description..."></textarea>
-  </form>
+
   </div>
+
 </div>
 <div *ngIf="this.next" class="questionwindow">
   <ul class="emaillist">
