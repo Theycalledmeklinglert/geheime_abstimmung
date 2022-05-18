@@ -6,20 +6,38 @@
 </head>
 <body>
 <div class="taskbar">
-  <div class="changePasswordButton">
-    <input type="image" src="../../assets/changePassword_btn.png" width="50%" height="50%"(click)="showChangePassword()" />
-  </div>
 
-  <div class="sysadminfunctions" *ngIf="isAdmin">
-  <div class="addAdminButton">
-    <input type="image" src="../../assets/addAdmin_btn.png" width="50%" height="50%"(click)="showAddAdmin()" />
-  </div>
+  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+    <mat-icon>more_vert</mat-icon>
+    Menu
+  </button>
+  <mat-menu #menu="matMenu">
 
-  <div class="deleteAdminButton">
-    <input type="image" src="../../assets/deleteAdmin_btn.png" width="50%" height="50%"(click)="showDeleteAdmin()" />
-  </div>
+    <div class="test" *ngIf="isSysAdmin" >
+    <button mat-menu-item (click)="showAddAdmin()" >
+      <mat-icon>perm_identity</mat-icon>
+      <span>Add Admin</span>
+    </button>
 
-  </div>
+    <button mat-menu-item (click)="showDeleteAdmin()">
+      <mat-icon>delete_forever</mat-icon>
+      <span>Delete Admin</span>
+    </button>
+    </div>
+
+    <button mat-menu-item (click)="showChangePassword()">
+      <mat-icon>https</mat-icon>
+      <span>Change Password</span>
+    </button>
+
+    <button mat-menu-item (click)="showChangeUsername()">
+      <mat-icon>face</mat-icon>
+      <span>Change Username</span>
+    </button>
+
+  </mat-menu>
+
+
 </div>
 
 
@@ -79,6 +97,7 @@
 
 
 
+
 <div class="deleteAdmin" *ngIf="deleteAdmin">
   <div class="headline">Delete Admin</div>
 
@@ -91,13 +110,30 @@
     <label>Email</label>
   </div>
 
-  <div class="delete" (click)="sendDeleteAdminrequest()">
+  <div class="delete" (click)="DeleteAdmin()">
     <div class="delete_txt">Delete</div>
   </div>
   <div class="cancel" (click)="hideDeleteAdmin()">
     <div class="cancel_txt">Cancel</div>
   </div>
 </div>
+
+<div class="sureDelete" *ngIf="sureDeleteAdmin">
+
+  <h1 mat-dialog-title>Info</h1>
+  <div mat-dialog-content>Are you sure you want to delete admin?</div>
+  <div class="delete_btn"mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="sendDeleteAdminrequest()">Delete </button>
+  </div>
+  <div  class="cancel_btn" mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="hidesureDeleteAdmin()">Cancel </button>
+  </div>
+
+</div>
+
+
+
+
 
 
 
@@ -114,13 +150,76 @@
     <label>New Password</label>
   </div>
 
-  <div class="change" (click)="sendChangePasswordrequest()">
+  <div class="change" (click)="changemyPassword()">
     <div class="change_txt">Change</div>
   </div>
   <div class="cancel" (click)="hideChangePassword()">
     <div class="cancel_txt">Cancel</div>
   </div>
 </div>
+
+
+<div class="sureChangePassword" *ngIf="sureChangePassword">
+
+  <h1 mat-dialog-title>Info</h1>
+  <div mat-dialog-content>Are you sure you want to change your Password?</div>
+  <div class="change_btn"mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="sendChangePasswordrequest()">Change </button>
+  </div>
+  <div  class="cancel_btn" mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="hidesureChangePassword()">Cancel </button>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+<div class="changeUsername" *ngIf="changeUsername">
+  <div class="headline">Change Username</div>
+
+  <div class="txt_field">
+    <input type="text" required
+           [value]="this.changedUsername"
+           (change)="setnewUsername($event)"
+    >
+    <span></span>
+    <label>New Username</label>
+  </div>
+
+  <div class="change" (click)="changemyUsername()">
+    <div class="change_txt">Change</div>
+  </div>
+  <div class="cancel" (click)="hideChangeUsername()">
+    <div class="cancel_txt">Cancel</div>
+  </div>
+</div>
+
+
+
+<div class="sureChangeUsername" *ngIf="sureChangeUsername">
+
+  <h1 mat-dialog-title>Info</h1>
+  <div mat-dialog-content>Are you sure you want to change your Username?</div>
+  <div class="change_btn"mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="sendChangeUsernamerequest()">Change </button>
+  </div>
+  <div  class="cancel_btn" mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="hidesureChangeUsername()">Cancel </button>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
 
 
 <div class="newVoteButton">

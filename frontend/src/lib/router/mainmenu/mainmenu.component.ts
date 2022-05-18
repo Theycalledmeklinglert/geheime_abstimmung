@@ -12,14 +12,33 @@ import {BackendService} from "../../data-access/backend.service";
 
 export class MainmenuComponent{
 
-  isAdmin: boolean = true;
+  //SysAdmin?
+  isSysAdmin: boolean = true;
+
+  //Formula
   addAdmin: boolean;
   deleteAdmin:boolean;
   changePassword: boolean;
+  changeUsername: boolean;
+
+  //
+  sureAddAdmin: boolean;
+  sureDeleteAdmin: boolean;
+  sureChangePassword: boolean;
+  sureChangeUsername: boolean;
+
+  //change Password
   changedPassword: string= "";
+
+  //change Username
+  changedUsername: string= "";
+
+  //new Admin
   newadminadress: string = "";
   newadminpassword: string= "";
   newadminusername: string= "";
+
+  //delete Admin
   deleteadminadress: string= "";
   backendS: BackendService = new BackendService();
 
@@ -40,13 +59,35 @@ export class MainmenuComponent{
     this.deleteAdmin= false;
   }
 
-
   showChangePassword(): void{
     this.changePassword = true;
+  }
+  showChangeUsername(): void{
+    this.changeUsername = true;
   }
 
   hideChangePassword():void{
     this.changePassword = false;
+  }
+
+  hideChangeUsername(): void{
+    this.changeUsername= false;
+  }
+
+
+  hidesureDeleteAdmin(): void{
+    this.deleteAdmin= true;
+    this.sureDeleteAdmin = false;
+  }
+
+  hidesureChangePassword(): void{
+    this.changePassword =true;
+    this.sureChangePassword =false;
+  }
+
+  hidesureChangeUsername(): void{
+    this.changeUsername =true;
+    this.sureChangeUsername =false;
   }
 
   sendAddAdminrequest(): void{
@@ -56,16 +97,43 @@ export class MainmenuComponent{
   }
 
 
-  sendDeleteAdminrequest(): void{
+  DeleteAdmin(): void{
     //INFO if delete was sucessfull
     //this.backendS.deleteSurveyLeader(this.deleteadminadress,localStorage.getItem("sessionid"))
     this.deleteAdmin = false;
+    this.sureDeleteAdmin = true
   }
+
+  changemyPassword(): void{
+    this.changePassword = false;
+    this.sureChangePassword = true;
+  }
+
+  changemyUsername(): void{
+    this.changeUsername = false;
+    this.sureChangeUsername = true;
+  }
+
+
+
+
+  sendDeleteAdminrequest(): void{
+    //INFO if change was sucessfull
+    //send to backend
+    this.sureDeleteAdmin = false;
+  }
+
 
   sendChangePasswordrequest(): void{
     //INFO if change was sucessfull
     //this.backendS.deleteSurveyLeader(this.changedPasswort,localStorage.getItem("sessionid"))
-    this.changePassword = false;
+    this.sureChangePassword = false;
+  }
+
+  sendChangeUsernamerequest(): void{
+    //INFO if change was sucessfull
+    //this.backendS.deleteSurveyLeader(this.changedPasswort,localStorage.getItem("sessionid"))
+    this.sureChangeUsername = false;
   }
 
 
@@ -86,6 +154,10 @@ export class MainmenuComponent{
 
   setnewPassword(event: any): void{
     this.changedPassword = event.target.value;
+  }
+
+  setnewUsername(event: any): void{
+    this.changedUsername = event.target.value;
   }
 
 }

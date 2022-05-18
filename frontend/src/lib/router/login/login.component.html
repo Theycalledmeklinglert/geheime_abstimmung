@@ -36,13 +36,10 @@
 
     <div class="helpwindow" *ngIf="helpbuttonpressed">
 
-      <div class="headline"> INFO</div>
-      <div class="infotext">
-        If you have problems logging in or do not yet have acess data, please contact FHWS-HELPCENTER
-      </div>
-
-      <div class="okaybutton" (click)="pressokaybutton()">
-        <div class="okay_txt">OKAY</div>
+      <h1 mat-dialog-title>INFO</h1>
+      <div mat-dialog-content>If you have problems logging in or do not yet have acess data, please contact FHWS-HELPCENTER.</div>
+      <div mat-dialog-actions>
+        <button mat-flat-button color="primary" (click)="pressokaybutton()">OKAY </button>
       </div>
 
     </div>

@@ -58,7 +58,6 @@ background:  linear-gradient(to right, red, purple);
   bottom: 5%;
 
   align-items:flex-end;
-
 }
 
 
@@ -183,8 +182,6 @@ background:  linear-gradient(to right, red, purple);
 .adminGenerator .cancel_txt:hover{
 
   border-radius: 40px 40px 40px 40px;
-
-
   border-color: #ea7609;
   border-width: 10px;
   background: #ea7609;
@@ -201,31 +198,10 @@ background:  linear-gradient(to right, red, purple);
   width: 320px;
   position: fixed;
   font-weight: 700;
-  left: 12%;
-}
-
-.taskbar .changePasswordButton{
-  position: fixed;
   left: 15%;
-  top: 0%;
+  color: white;
 
 }
-.taskbar .addAdminButton{
-  position: fixed;
-  left: 25%;
-  top: 0%;
-
-}
-
-.taskbar .deleteAdminButton{
-  position: fixed;
-  left: 35%;
-  top: 0%;
-
-}
-
-
-
 
 /*DELETE WINDOW*/
 .deleteAdmin{
@@ -240,9 +216,6 @@ background:  linear-gradient(to right, red, purple);
   border: 3px solid #ff8200;
   border-radius: 15px 15px 15px 15px;
 }
-
-
-
 
 .deleteAdmin .txt_field{
   position: relative;
@@ -275,7 +248,6 @@ background:  linear-gradient(to right, red, purple);
   transition: .4s;
 }
 
-
 .deleteAdmin .txt_field span::before{
   content: "";
   position: absolute;
@@ -286,7 +258,6 @@ background:  linear-gradient(to right, red, purple);
   background: #2691d9;
   transition: .4s;
 }
-
 
 .deleteAdmin .txt_field input:focus~label,
 .deleteAdmin input:valid ~label{
@@ -365,7 +336,6 @@ background:  linear-gradient(to right, red, purple);
   border-radius: 15px 15px 15px 15px;
 }
 
-
 .changePassword .txt_field {
   position: relative;
   top: 5%;
@@ -374,8 +344,6 @@ background:  linear-gradient(to right, red, purple);
   margin-left: 30px;
   margin-right: 30px;
 }
-
-
 
 .changePassword .txt_field{
   position: relative;
@@ -408,7 +376,6 @@ background:  linear-gradient(to right, red, purple);
   transition: .4s;
 }
 
-
 .changePassword .txt_field span::before{
   content: "";
   position: absolute;
@@ -420,7 +387,6 @@ background:  linear-gradient(to right, red, purple);
   transition: .4s;
 }
 
-
 .changePassword .txt_field input:focus~label,
 .changePassword input:valid ~label{
   top: -5px;
@@ -431,8 +397,6 @@ background:  linear-gradient(to right, red, purple);
 .changePassword input:valid ~span::before{
   width: 100%;
 }
-
-
 
 .changePassword .change{
   color: white;
@@ -474,7 +438,230 @@ background:  linear-gradient(to right, red, purple);
   border-width: 10px;
   background: #ea7609;
   transition: .5s;
+}
+/*Change Password window*/
 
+
+
+
+/*ChangeUsername WINDOW*/
+.changeUsername{
+  text-align: center;
+  font-size: 40px;
+  position: fixed;
+  right: 32.5%;
+  background-color: rgba(239, 238, 238, 1);
+  width: 35%;
+  height: 30%;
+  top: 25%;
+  border: 3px solid #ff8200;
+  border-radius: 15px 15px 15px 15px;
 }
 
-/*Change Password window*/
+.changeUsername .txt_field {
+  position: relative;
+  top: 5%;
+  border-bottom: 2px solid #adadad;
+  margin: 50px 0;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+.changeUsername .txt_field{
+  position: relative;
+  top: 5%;
+  border-bottom: 2px solid #adadad;
+  margin: 50px 0;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+.changeUsername .txt_field input{
+  width: 100%;
+  padding:0 5px;
+  height: 40px;
+  font-size: 16px;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+/*Username and Password label*/
+.changeUsername .txt_field label{
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  color: #adadad;
+  transform: translateY(-50%);
+  font-size: 16px;
+  pointer-events: none;
+  transition: .4s;
+}
+
+.changeUsername .txt_field span::before{
+  content: "";
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: #2691d9;
+  transition: .4s;
+}
+
+.changeUsername .txt_field input:focus~label,
+.changeUsername input:valid ~label{
+  top: -5px;
+  color: #2691d9;
+}
+
+.changeUsername .txt_field input:focus~span::before,
+.changeUsername input:valid ~span::before{
+  width: 100%;
+}
+
+.changeUsername .change{
+  color: white;
+  position: fixed;
+  top: 50%;
+  right: 34%;
+  width: 10%;
+  background: #2691d9;
+  border-radius: 40px 40px 40px 40px;
+}
+
+.changeUsername .change_txt{
+  color: white;
+  font-size: 20px;
+}
+.changeUsername .change:hover{
+  border-color: #ea7609;
+  border-width: 10px;
+  background: #ea7609;
+  transition: .5s;
+}
+
+.changeUsername .cancel{
+  color: white;
+  position: fixed;
+  top: 50%;
+  left: 34%;
+  width: 10%;
+  background: #2691d9;
+  border-radius: 40px 40px 40px 40px;
+}
+
+.changeUsername .cancel_txt{
+  color: white;
+  font-size: 20px;
+}
+.changeUsername .cancel:hover{
+  border-color: #ea7609;
+  border-width: 10px;
+  background: #ea7609;
+  transition: .5s;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Sure Delete field*/
+.sureDelete{
+  text-align: center;
+  position: fixed;
+  right: 40%;
+  background-color: rgba(239, 238, 238, 1);
+  width: 20%;
+  top: 40%;
+  height: 20%;
+  color: black;
+  border: 3px solid #ff8200;
+  border-radius: 15px 15px 15px 15px;
+}
+
+.sureDelete .cancel_btn{
+  position: absolute;
+  bottom: 5%;
+  left: 10%;
+  cursor: pointer;
+}
+
+.sureDelete .delete_btn{
+  position: absolute;
+  bottom: 5%;
+  right: 10%;
+  cursor: pointer;
+}
+
+
+/* Sure change Password field*/
+.sureChangePassword{
+  text-align: center;
+  position: fixed;
+  right: 40%;
+  background-color: rgba(239, 238, 238, 1);
+  width: 20%;
+  top: 40%;
+  height: 20%;
+  color: black;
+  border: 3px solid #ff8200;
+  border-radius: 15px 15px 15px 15px;
+}
+
+.sureChangePassword .cancel_btn{
+  position: absolute;
+  bottom: 5%;
+  left: 10%;
+  cursor: pointer;
+}
+
+.sureChangePassword .change_btn{
+  position: absolute;
+  bottom: 5%;
+  right: 10%;
+  cursor: pointer;
+}
+
+
+/* Sure change Username field*/
+.sureChangeUsername{
+  text-align: center;
+  position: fixed;
+  right: 40%;
+  background-color: rgba(239, 238, 238, 1);
+  width: 20%;
+  top: 40%;
+  height: 20%;
+  color: black;
+  border: 3px solid #ff8200;
+  border-radius: 15px 15px 15px 15px;
+}
+
+.sureChangeUsername .cancel_btn{
+  position: absolute;
+  bottom: 5%;
+  left: 10%;
+  cursor: pointer;
+}
+
+.sureChangeUsername .change_btn{
+  position: absolute;
+  bottom: 5%;
+  right: 10%;
+  cursor: pointer;
+}
+
+
+
