@@ -84,8 +84,10 @@ export class EditorComponent {
       console.log(this.tempDescr);
     }
     printEncrypted(){
-      let pub = this.cryptService.generateKeys();
-      let textFile = "This is the generated private key for this survey. Please save it somewhere inaccessible for others:\n \n"+pub.toString()+"\n\n You will need" +
+      let pair = this.cryptService.generateKeyPair();
+      let publicKey = pair.publicKey;
+      let privateKey = pair.secretKey;
+      let textFile = "This is the generated private key for this survey. Please save it somewhere inaccessible for others:\n \n"+privateKey.toString()+"\n\n You will need" +
         " it for accessing the results of this survey";
       var data = new Blob([textFile], {type: 'text/plain'});
       if (textFile !== null) {
@@ -94,6 +96,6 @@ export class EditorComponent {
       textFile = window.URL.createObjectURL(data);
       window.open(textFile);
 
-      console.log(this.cryptService.encryptMessage(pub, this.editor));
+      console.log(this.cryptService.encryptMessage(publicKey, this.editor));
     }
 }

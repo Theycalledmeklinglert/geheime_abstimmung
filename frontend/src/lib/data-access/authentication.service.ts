@@ -14,7 +14,9 @@ export class AuthenticationService {
 
   getSessionid(username: string, password: string): void {
     //-> call encryption service to generate public key
-    let myPublicKey: string = this.cryptService.generateKeys().toString();
+    let keyPair = this.cryptService.generateKeyPair();
+    let myPublicKey: string = keyPair.publicKey.toString();
+    let myPrivateKey: string = keyPair.secretKey.toString();
     //-> call backend with postRequest(public Key of frontend) to get response (public key of Backend)
     let backendPublicKey: string = "test"; // (casttostring) this.backendS.setFrontendPublicKey(myPublicKey);
     //-> store  public Key of Backend in local storage

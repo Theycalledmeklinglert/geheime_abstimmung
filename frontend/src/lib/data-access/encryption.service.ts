@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {box, randomBytes} from "tweetnacl";
+import {box, BoxKeyPair, randomBytes} from "tweetnacl";
 import {decodeBase64, decodeUTF8, encodeBase64, encodeUTF8} from "tweetnacl-util";
 
 @Injectable({
@@ -65,10 +65,5 @@ export class EncryptionService {
     const encrypted = this.encryptMessage(sharedA, obj);
     const decrypted = this.decryptMessage(sharedB, encrypted);
     console.log(obj, encrypted , decrypted);
-  }
-
-  generateKeys(): Uint8Array {
-    let pair = this.generateKeyPair();
-    return pair.publicKey;
   }
 }

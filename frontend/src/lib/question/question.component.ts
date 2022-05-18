@@ -17,19 +17,16 @@ export class QuestionComponent{
  tempAnswer?: string;
 
  chooseFixedAnswers(){
-   this.question.yesNo = false;
-   this.question.individualAnswer = undefined;
+   this.question.type="fixed";
    this.fixedAnswers = true;
  }
  chooseYesNoAnswer(){
+   this.question.type="yesNo";
    this.fixedAnswers = false;
-   this.question.yesNo = true;
-   this.question.individualAnswer = undefined;
  }
  chooseIndividualAnswers(){
+  this.question.type="individual";
   this.fixedAnswers = false;
-  this.question.yesNo = false;
-  this.question.individualAnswer = 'yes';
  }
  deleteAnswer(answer: string){
    this.question.fixedAnswers = this.question.fixedAnswers.filter((a) => a != answer);
