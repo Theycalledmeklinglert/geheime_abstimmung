@@ -10,6 +10,7 @@ import {MatButtonModule} from '@angular/material/button'
 import {MatRadioModule} from '@angular/material/radio';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatIconModule} from '@angular/material/icon';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 
 import {QuestionComponent} from "../lib/question/question.component";
 import {MainmenuComponent} from "../lib/router/mainmenu/mainmenu.component";
@@ -52,6 +53,7 @@ import { AppRoutingModule } from './app-routing.module';
     MatCheckboxModule,
     BrowserAnimationsModule,
     MatIconModule,
+    MatDatepickerModule,
 
 
   ],

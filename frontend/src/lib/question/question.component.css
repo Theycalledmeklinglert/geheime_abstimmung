@@ -29,9 +29,12 @@
 #body{
   font-size: medium;
   font-weight: normal;
-  margin-bottom: 1vh;
+
 }
 
+#questionSelect{
+  margin-bottom: 2vh;
+}
 /*.answer-selector input{*/
 /*  margin:0;padding:0;*/
 /*  -webkit-appearance:none;*/
