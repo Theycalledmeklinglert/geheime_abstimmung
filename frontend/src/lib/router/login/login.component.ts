@@ -1,10 +1,10 @@
-import {Component, OnInit, Output} from "@angular/core";
+import {Component, Output} from "@angular/core";
 import {VoteContainer} from "../../data-access/models/voteContainer";
-import {User} from "../../data-access/models/user";
+import {SurveyLeader} from "../../data-access/models/surveyLeader";
 import {Router, RouterModule} from "@angular/router";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { AuthenticationService } from "src/lib/data-access/authentication.service";
-import {map} from "rxjs/operators"
+import {AppComponent} from "../../../app/app.component";
+import {AppModule} from "../../../app/app.module";
+import {AuthenticationService} from "../../data-access/authentication.service";
 
 
 
@@ -14,48 +14,13 @@ import {map} from "rxjs/operators"
   styleUrls: ['./login.component.css'],
 })
 
-export class LoginComponent implements OnInit {
-  @Output() username: string = "";
+export class LoginComponent{
 
+  @Output()username: string = "";
   password: string = "";
-  userObject: User;
+  userObject: SurveyLeader;
   helpbuttonpressed: boolean;
-  loginForm: FormGroup;
-
-  constructor(
-    private authService: AuthenticationService,
-    private router: Router
-  ) {
-
-  }
-
-  ngOnInit(): void {
-
-   this.loginForm = new FormGroup({
-     email: new FormControl(null, [
-       Validators.required,
-       Validators.email,
-       Validators.minLength(6)
-     ]),
-     password: new FormControl(null, [
-       Validators.required,
-       Validators.minLength(3)
-     ])
-   })
-
-  }
-
-  onSubmit() {
-    if(this.loginForm.invalid) {
-      return;
-    }
-    this.router.navigate(['main'])
-
-    /*
-    this.authService.login(this.loginForm.value).pipe(
-      map(token => this.router.navigate(['main']))
-    ).subscribe()
-    */
+  constructor(private authService: AuthenticationService) {
   }
 
 
@@ -67,9 +32,14 @@ export class LoginComponent implements OnInit {
   }
 
   submitlogin(): void{
-   let userVoteContainer: VoteContainer = {name: ""};
-   this.userObject= {username: this.username,password: this.password};
-   //Server --> send userobject ---> server check--> send back Vote[] for userVoteContainer
+    localStorage.removeItem("sessionid");
+    localStorage.removeItem("backendpublickey");
+    if(this.username != "" && this.password != ""){
+      this.authService.getSessionid(this.username,this.password);
+    }else {
+      alert("Emailadress or Password is empty!");
+    }
+
   }
 
   presshelpbutton():void{
@@ -79,4 +49,6 @@ export class LoginComponent implements OnInit {
   pressokaybutton():void{
     this.helpbuttonpressed = false;
   }
+
+
 }
