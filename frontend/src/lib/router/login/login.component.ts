@@ -20,7 +20,8 @@ export class LoginComponent{
   password: string = "";
   userObject: SurveyLeader;
   helpbuttonpressed: boolean;
-  ats: AuthenticationService = new AuthenticationService();
+  constructor(private authService: AuthenticationService) {
+  }
 
 
   setUsername(event: any): void{
@@ -34,7 +35,7 @@ export class LoginComponent{
     localStorage.removeItem("sessionid");
     localStorage.removeItem("backendpublickey");
     if(this.username != "" && this.password != ""){
-      this.ats.getSessionid(this.username,this.password);
+      this.authService.getSessionid(this.username,this.password);
     }else {
       alert("Emailadress or Password is empty!");
     }
