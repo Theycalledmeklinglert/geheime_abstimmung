@@ -14,24 +14,37 @@ export class AuthenticationService {
 
   getSessionid(username: string, password: string): void {
     //-> call encryption service to generate public key
+
     let keyPair = this.cryptService.generateKeyPair();
     let myPublicKey: string = keyPair.publicKey.toString();
     let myPrivateKey: string = keyPair.secretKey.toString();
-    //-> call backend with postRequest(public Key of frontend) to get response (public key of Backend)
-    let backendPublicKey: string = "test"; // (casttostring) this.backendS.setFrontendPublicKey(myPublicKey);
-    //-> store  public Key of Backend in local storage
-    //-> here:
-    localStorage.setItem("backendpublickey",backendPublicKey);
+
+    //send Frontend publicKey to Backend, and get Backend publicKey
+    localStorage.setItem("privateKey", myPrivateKey);
+    let myPublicKeyJSON: JSON = JSON.parse('{"Public Key":'+myPublicKey+'}');
+    let backendPublicKeyJSON: JSON = this.backendS.postPublicKey(myPublicKeyJSON);
+
+    //safe backend PublicKey as String
+    let backendPublicKeyAsString: string = backendPublicKeyJSON["Public Key"]; //toDo check return
+    localStorage.setItem("backendKey",backendPublicKeyAsString);
+
+    //format string in Keyformat
+    let backendPublicKey: Uint8Array = new TextEncoder().encode(backendPublicKeyAsString);
+
+    // generate and send encrypted Password and Username
+    //toDo hash password
+    let PasswordandUsername: JSON = JSON.parse('{"Password":'+password+', "Username" :'+username+'}');
+    let encryptedPasswordandUsernameAsString: string = this.cryptService.encryptMessage(backendPublicKey,PasswordandUsername);
+    let encryptedPasswordandUsernameJSON: JSON = JSON.parse('{"Encrypted Username and Password":'+encryptedPasswordandUsernameAsString+'}');
+    let myCurrentSessionJSON: JSON = this.backendS.getSessionID(encryptedPasswordandUsernameJSON);
 
 
-    //let user: string = this.cryptService.encryptMessage(backendPublicKey,jsonofusernameandpasssord,);
+    //safe SessionID
+    let myCurrentSessionasString: string = JSON.stringify(myCurrentSessionJSON);
 
-    //-> call backend with get(encrypted username and userpassword)[queryparameter] to get sessionid
-    //this.backendS.getSessionKey
-    //-> store sessionid in local storage
-    //-> here:
-    localStorage.setItem("sessionid","SERVERRESPONSE");
+    localStorage.setItem("sessionID",myCurrentSessionasString); //toDo need to clear all objects if session ends
   }
+
 
 
 

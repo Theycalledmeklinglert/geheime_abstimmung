@@ -16,7 +16,8 @@ export class BackendService {
   setpasswordofSurveyLeader(): void{
   }
 
-  setSurveyLeader(): void{}
+  setSurveyLeader(): void{
+  }
 
   deleteSurveyLeader(): void{
   }
@@ -24,6 +25,15 @@ export class BackendService {
   setnewVote(): void{
   }
 
+  postPublicKey(myPublicKey: JSON): JSON{
+    let test: JSON = JSON.parse("Serverresponse");
+    return test;
+  }
+
+  getSessionID(myUserData: JSON): JSON{
+    let test: JSON = JSON.parse("Serverresponse -> SessionId");
+    return test;
+  }
 
 
 
