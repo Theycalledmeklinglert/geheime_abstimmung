@@ -17,7 +17,7 @@
         <img src="../../../assets/deleteButton.png" width="20px" (click)="this.deleteAnswer(answer)">
       </li>
       <label class="label" for="answerInput">Enter an answer:</label>
-      <input type="text" class="inputfield" id="answerInput" [(ngModel)]="this.tempAnswer">
+      <input type="text" class="inputfield" id="answerInput" [(ngModel)]="this.tempAnswer" placeholder="Enter here...">
     </ul>
     <img src="../../assets/addButton.png" width="40px" (click)="this.addAnswer()"/>
   </div>

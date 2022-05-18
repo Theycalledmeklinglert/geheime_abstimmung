@@ -6,7 +6,7 @@
   color: white;
 }
 
-.listwindow  {
+.questionwindow  {
   text-align: center;
   font-size: 40px;
   position: fixed;
@@ -26,7 +26,7 @@
   font-weight: 600;
 }
 
-.newVoteButton {
+.newQuestionButton {
   text-align: center;
   position: absolute;
   right: 5%;

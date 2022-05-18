@@ -9,9 +9,9 @@
   Create A New Vote <br/>
   <div class="inputfields">
     <label class="label" for="nameinputfield">Name:</label>
-    <input type="text" class = inputfield id="nameinputfield" required><br/>
+    <input type="text" class = inputfield id="nameinputfield" [(ngModel)]="this.editor.vote.name" required placeholder="Enter here..."><br/>
     <label class="label" for="timeinputfield">Expiration:</label>
-    <input  class="inputfield" type="datetime-local" id="timeinputfield" required><br/>
+    <input  class="inputfield" type="datetime-local" id="timeinputfield" [(ngModel)]="this.editor.vote.lifetime" required><br/>
     <label class="label" for="questionlist">Questions:</label>
     <ul class="questionlist" id="questionlist">
       <li *ngFor="let question of editor.vote.questions">
@@ -28,6 +28,11 @@
       <question *ngIf="question.visible" [question]="question"></question>
     </li>
   </ul>
+  <form>
+  <label class="label" for="text">Add a description:</label>
+  <br>
+  <textarea id="text" name="text" class="textarea" [(ngModel)]="this.tempDescr" (blur)="this.setDescription()" placeholder="Enter a description..."></textarea>
+  </form>
   </div>
 </div>
 <div *ngIf="this.next" class="questionwindow">
@@ -37,7 +42,7 @@
       <img src="../../../assets/deleteButton.png" width="20px" (click)="this.deleteEmail(email)">
     </li>
     <label class="label" for="emailInput">Enter an Email:</label>
-    <input type="email" class="inputfield" id="emailInput" [(ngModel)]="this.tempEmail">
+    <input type="email" class="inputfield" id="emailInput" [(ngModel)]="this.tempEmail" placeholder="Enter here...">
   </ul>
 </div>
 <div *ngIf="!this.next" class="nextButton">
@@ -45,8 +50,9 @@
 </div>
 
 <div *ngIf="this.next" class="nextButton">
-  <input type="image" src="../../../assets/submit_btn.png" width="125%" height="125%" (click)="this.submitVote()">
+  <input type="image" src="../../../assets/submit_btn.png" width="125%" height="125%" (click)="printEncrypted()">
 </div>
+
 
 <div *ngIf="!this.next" class="newQuestionButton">
   <input type="image" src="../../assets/addQuestion_btn.png" width="125%" height="125%" (click)="addEmptyQuestion()"/>
@@ -56,8 +62,13 @@
   <input type="image" src="../../assets/addVoter_btn.png" width="125%" height="125%" (click)="addEmail()"/>
 </div>
 
+<div *ngIf="this.next" class="backButton">
+  <input type="image" src="../../assets/back_btn.png" width="125%" height="125%" (click)="this.next = false"/>
+</div>
+
 <div class="returnToMainButton">
   <img src="../../../assets/returnToMain_btn.png" width="125%" height="125%" routerLink="/main" (click)="this.deleteEverything()"/>
 </div>
 </body>
 </html>
+

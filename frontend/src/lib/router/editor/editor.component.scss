@@ -12,12 +12,15 @@
   position: fixed;
   left:40%;
   background-color: rgba(239, 238, 238, 1);
-  width: 50%;
-  height: 25%;
-  top: 15%;
+  width: 55%;
+  height: 65%;
+  top: 17%;
   border: 3px solid #ea7609;
   border-radius: 40px 40px 40px 40px;
   align-items: flex-end;
+  scroll-behavior: smooth;
+  overflow: scroll;
+
 }
 .sidebar{
   text-align: center;
@@ -27,10 +30,11 @@
   background-color: rgba(239, 238, 238, 1);
   width: 30%;
   height: 80%;
-  top: 15%;
+  top: 17%;
   border: 3px solid #ea7609;
   border-radius: 40px 40px 40px 40px;
   align-items: center;
+  overflow: scroll;
 }
 
 
@@ -41,22 +45,25 @@
   width: 7%;
   height: 7%;
   bottom: 5%;
-
-  align-items:flex-end;
-
 }
 
  .newQuestionButton{
   text-align: center;
   position: absolute;
-  right: 5%;
+  top: 7%;
   width: 7%;
   height: 7%;
-  bottom: 15%;
-
-  align-items:flex-end;
-
+  left: 15%;
 }
+.backButton{
+  text-align: center;
+  position: absolute;
+  bottom: 5%;
+  width: 7%;
+  height: 7%;
+  left: 40%;
+}
+
 
 .nameinputfield{
   text-align: center;
@@ -65,9 +72,9 @@
   margin-left: 100px;
   margin-right: 100px;
   background-color: rgba(239, 238, 238, 1);
-  width: 400px;
+  width: 40%;
   height: 20px;
-  //top: 15%;
+  word-wrap: break-word;
   border-radius: 40px 40px 40px 40px;
 }
 
@@ -86,17 +93,16 @@
   font-size: 20px;
   position: center;
   font-weight: bold;
+  margin-left: 20px;
 }
 
 .inputfield{
-  margin-left: 40px;
+  margin-left: 10px;
   font-size: 15px;
   height: 20px;
   width: 200px;
   border-radius: 40px 40px 40px 40px;
   border: 3px solid #ea7609;
-
-
 }
 .questionlist{
   background-color: rgba(239, 238, 238, 1);
@@ -109,9 +115,9 @@
 }
 .questiontitle{
   background-color: transparent;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: bold;
-  border: 3px solid #ea7609;
+  border: 3px solid gray;
   border-radius: 40px 40px 40px 40px;
   text-align: center;
   margin-top: 10px;
@@ -119,21 +125,30 @@
   cursor: pointer;
   width: auto;
   height: auto;
+  word-wrap: break-word;
+  padding: 5px;
 }
 .emaillist{
-  list-style: none;
-  align-items: center;
+  //list-style: none;
+  position: center;
 }
 .emailstyle{
   font-size: 20px;
-  border: 3px solid #ea7609;
+  border: 3px solid gray;
+  width: 200px;
   border-radius: 40px 40px 40px 40px;
+  position: center;
 }
 .returnToMainButton{
   text-align: center;
   position: absolute;
-  right: 5%;
+  left: 2%;
   width: 7%;
   height: 7%;
-  bottom: 25%;
+  top: 7%;
+}
+.textarea{
+  width: 300px;
+  max-width: 400px;
+  max-height: 400px;
 }

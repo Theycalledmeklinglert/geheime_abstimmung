@@ -1,7 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { Editor } from "../../data-access/models/editor";
+import {Component} from "@angular/core";
+import {Editor} from "../../data-access/models/editor";
 import {Question} from "../../data-access/models/question";
-
+import {box, randomBytes} from 'tweetnacl';
+import {decodeBase64, decodeUTF8, encodeBase64, encodeUTF8} from 'tweetnacl-util';
+import {EncryptionService} from "../../data-access/encryption.service";
 
 @Component({
   selector: 'editor',
@@ -11,7 +13,7 @@ import {Question} from "../../data-access/models/question";
 
 export class EditorComponent {
 
-  // constructor(private appService: AppService){}
+  constructor(private cryptService: EncryptionService){}
   editor?: Editor = {
     vote: {
       name: "",
@@ -35,6 +37,7 @@ export class EditorComponent {
   listPos?: number;
   next: boolean = false;
   tempEmail?: string;
+  tempDescr?: string;
   // focus: boolean = false;
 
 
@@ -58,6 +61,7 @@ export class EditorComponent {
   addEmail(){
     if(this.tempEmail == '' || this.tempEmail == undefined) return;
     this.editor.vote.emails.push(this.tempEmail);
+    this.tempEmail='';
   }
   deleteEmail(email: string){
     this.editor.vote.emails = this.editor.vote.emails.filter((e) => e != email);
@@ -75,4 +79,21 @@ export class EditorComponent {
       }
     };
   }
+
+    setDescription(){
+      console.log(this.tempDescr);
+    }
+    printEncrypted(){
+      let pub = this.cryptService.generateKeys();
+      let textFile = "This is the generated private key for this survey. Please save it somewhere inaccessible for others:\n \n"+pub.toString()+"\n\n You will need" +
+        " it for accessing the results of this survey";
+      var data = new Blob([textFile], {type: 'text/plain'});
+      if (textFile !== null) {
+        window.URL.revokeObjectURL(textFile);
+      }
+      textFile = window.URL.createObjectURL(data);
+      window.open(textFile);
+
+      console.log(this.cryptService.encryptMessage(pub, this.editor));
+    }
 }
