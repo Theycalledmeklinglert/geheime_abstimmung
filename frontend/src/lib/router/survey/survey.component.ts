@@ -27,9 +27,9 @@ export class SurveyComponent implements OnInit {
 
   loadTestQuestions():void {
     this.vote= {name:"Testumfrage", lifetime:"1650250688", questions:[]};
-    this.vote.questions.push({title:"FrageText1", id:1,yesNo:false});
-    this.vote.questions.push({title:"FrageText2", id:2, fixedAnswers:["AntwortText1", "AntwortText2","AntwortText3"]});
-    this.vote.questions.push({title:"FrageText3", id:3, individualAnswer:""});
+    this.vote.questions.push({title:"FrageText1", id:1, type:"yesNoAnswer"});
+    this.vote.questions.push({title:"FrageText2", id:2, type:"fixedAnswer", fixedAnswers:["AntwortText1", "AntwortText2","AntwortText3"]});
+    this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
   }
 
 }
