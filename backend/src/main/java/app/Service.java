@@ -172,11 +172,12 @@ public class Service
 			throw new WebApplicationException(Response.status(404).build());
 		}
 		System.out.println("Not fucked yet");
-		this.INSTANCE.generateAndSetSessID(user);
+		INSTANCE.generateAndSetSessID(user);
 
 		// TODO: Encrypt before sending back
 
 		return Response.ok(user).build();
+
 	}
 
 

@@ -6,6 +6,7 @@ import static main.java.app.database.DBInstance.getDBInstance;
 import com.mongodb.BasicDBObject;
 import main.java.app.database.DBInstance;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.eclipse.jdt.internal.compiler.env.IBinaryNestedType;
 
 import java.util.ArrayList;
@@ -40,7 +41,8 @@ public class MongoloidTest {
     INSTANCE.createPoll(doc2);
     INSTANCE.createPoll(doc3);
     INSTANCE.createPoll(doc4);
-        Optional<Document> optPoll = INSTANCE.getPollAsOptDocumentByID("Poll1");
+
+    Optional<Document> optPoll = INSTANCE.getPollAsOptDocumentByID(doc.get("_id").toString());
     if(optPoll.isPresent())
     {
         System.out.println(optPoll.get().toJson());
@@ -100,8 +102,11 @@ public class MongoloidTest {
 
         System.out.println(doc.toJson());
         INSTANCE.createPoll(doc);
-        Document answer = new Document("pollName", "AnswerTestPoll").append("token", "aaabbb");
-        Document answer2 = new Document("pollName", "AnswerTestPoll").append("token", "aaabbbccc");
+        Document answer = new Document("poll_id", doc.get("_id").toString()).append("token", "aaabbb");     //TODO: Muesste poll_id nicht eigentlich question_id sein??
+        Document answer2 = new Document("poll_id", doc.get("_id").toString()).append("token", "aaabbbccc"); //TODO: Muesste poll_id nicht eigentlich question_id sein??
+
+        System.out.println(doc.get("_id").toString());
+        System.out.println(answer.getString("poll_id"));
 
         INSTANCE.createAnswer(answer);
         INSTANCE.createAnswer(answer2);
@@ -109,11 +114,12 @@ public class MongoloidTest {
         INSTANCE.deleteAnswersOfPollByPollName("AnswerTestPoll");
 
 
-        doc = new Document().append("name", "AnswerTestPoll2").append("admin", "Blofeld");
-        Document answer3 = new Document("pollName", "AnswerTestPoll2").append("token", "MyToken");
-        doc.put("tokens", Arrays.asList(new String[]{"MyToken"}));
+        doc = new Document().append("name", "AnswerTestPoll2").append("admin", "Blofeld").append("tokens", Arrays.asList(new String[]{"MyTokens"}));
         INSTANCE.createPoll(doc);
-        INSTANCE.createAnswer(answer3);
+        Document answer3 = new Document("poll_id", doc.get("_id").toString()).append("token", "MyToken");
+        doc.put("tokens", Arrays.asList(new String[]{"MyToken"}));
+
+        INSTANCE.createAnswer(answer3);     // TODO: Polls MUESSEN ein ArrayFeld names "tokens" enthalten
 
 
         ArrayList<Document> res = INSTANCE.getAllPollsOfUser("Ernst Blofeld").get();
@@ -123,14 +129,8 @@ public class MongoloidTest {
         newPoll.put("accessible by", Arrays.asList(new String[]{"Ernst Blofeld"}));
         INSTANCE.createPoll(newPoll);
 
-        ArrayList<Document> list = new ArrayList<>();
-        Document email = new Document("email", "test@test.com");
-        list.add(email);
-        email = new Document("email", "test@fhws.de");
-        list.add(email);
-        email = new Document("email", "test@gmail.com");
-        list.add(email);
-        INSTANCE.postLastUsedEmails(list);
+        String[] emails = {"test@test.com", "test@fhws.de", "test@gmail.com"};
+        INSTANCE.postLastUsedEmails(Arrays.asList(emails));
 
         Document user4 = new Document("name", "meRN").append("pwHash", "asdf");
         INSTANCE.createUser(user4);

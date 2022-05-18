@@ -13,6 +13,10 @@
   border: 3px solid #ea7609;
   border-radius: 15px 15px 15px 15px;
 }
+.loginfield .headline{
+  margin-top: 5%;
+  text-align: center;
+}
 
  .helpwindow{
    text-align: center;
@@ -134,7 +138,7 @@
 
 .loginfield #loginwindow .helpbutton{
   position: absolute;
-  bottom: 37%;
+  bottom: 35%;
   left: 5%;
   color: #a6a6a6;
   cursor: pointer;

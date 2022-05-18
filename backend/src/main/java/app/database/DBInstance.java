@@ -5,6 +5,7 @@ import com.mongodb.client.*;
 import com.mongodb.client.model.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -61,6 +62,7 @@ public class DBInstance
             answerCol = db.getCollection("Answers");
             emailCol = db.getCollection("E-Mails");
             sessIDCol = db.getCollection("SessIDs");
+            sessIDCol.dropIndex(Indexes.ascending("created at"));
             sessIDCol.createIndex(Indexes.ascending("created at"), new IndexOptions().expireAfter(30L, TimeUnit.MINUTES));
 
             this.pollNames = new ArrayList<String>( );
@@ -86,8 +88,18 @@ public class DBInstance
 
     public Optional<Document> getPollAsOptDocumentByID(final String id )
     {
-            Optional<Document> optDoc = getSingleDocFromCollection(this.pollCol, Projections.fields(Projections.fields()), "_id", id);
-            return optDoc;
+        Document doc = pollCol.find(eq("_id", new ObjectId(id)))
+                .projection(Projections.fields())
+                .first();
+
+        if (doc == null)
+        {
+            return Optional.empty();
+        }
+        else
+        {
+            return Optional.of(doc);
+        }
     }
 
     public boolean createPoll(Document poll)
@@ -294,6 +306,7 @@ public class DBInstance
         // + Attribut namens "token"
         // Konstruktion des Answer-JSON muss mit FrontEnd abgestimmt werden
         Optional<Document> optPoll = getPollAsOptDocumentByID(answer.getString("poll_id"));
+
         if(!optPoll.isPresent())
         {
             System.out.println("This answer does not belong to an exisitng poll");
@@ -305,7 +318,7 @@ public class DBInstance
 
         if(tokens.contains(answer.getString("token")))
         {
-            Bson filter = Filters.eq("name", poll.getString("_id"));
+            Bson filter = Filters.eq("poll_id", poll.get("_id").toString());
             Bson delete = Updates.pull("tokens", answer.getString("token"));
             pollCol.updateOne(filter, delete);
             answerCol.insertOne(answer);
@@ -329,15 +342,13 @@ public class DBInstance
         this.answerCol.deleteMany(doc);
     }
 
-    public void postLastUsedEmails(List<Document> emails) {
-        ArrayList<Document> oldEmails = getAllEmails();
+    public void postLastUsedEmails(List<String> emails) {
+        ArrayList<String> oldEmails = getAllEmails();
         deleteAllEmails();
-        ArrayList<Document> newEmails = new ArrayList<>();
 
-        emails.stream().filter(e -> !oldEmails.contains(e)).forEach(e -> newEmails.add(e));
-        oldEmails.stream().forEach(e -> newEmails.add(e));
+        emails.stream().filter(e -> !oldEmails.contains(e)).forEach(e -> oldEmails.add(e));
 
-        Document container = new Document("E-Mails", newEmails);
+        Document container = new Document("E-Mails", oldEmails);
         emailCol.insertOne(container);
     }
 
@@ -345,24 +356,34 @@ public class DBInstance
         this.emailCol.deleteMany(new Document());
     }
 
-    private ArrayList<Document> getAllEmails() {
-        MongoCursor cursor = this.emailCol.find().cursor();
-        ArrayList<Document> emails = new ArrayList<>();
+    private ArrayList<String> getAllEmails() {
+        Optional<Document> optDoc = Optional.ofNullable(this.emailCol.find().first());
 
-        while(cursor.hasNext())
+        if(optDoc.isPresent())
         {
-            Document doc = (Document) cursor.next();
-            ArrayList<Document> list = (ArrayList<Document>) doc.get("E-Mails");
+            Document doc =optDoc.get();
+            ArrayList<String> emails = (ArrayList<String>) doc.get("E-Mails");
+            return emails;
         }
-        return emails;
+        else
+        {
+            return new ArrayList<String>();
+        }
     }
 
     public void generateAndSetSessID(Document user) {   // TODO: Test if sessionIDs are deleted after 30 minutes
+
+      if(checkIfUserHasSessID(user))
+        {
+            this.sessIDCol.deleteOne(and(eq("name", user.getString("name")), eq("pwHash", user.getString("pwHash"))));
+        }
+
+
         String sessID = String.valueOf(System.currentTimeMillis()).substring(8, 13) + UUID.randomUUID().toString().substring(1,10);
         user.append("created at", new Date());
         user.append("Session ID", sessID);
 
-        sessIDCol.insertOne(user);  // TODO: WARUM STATUSCODE 500????
+        sessIDCol.insertOne(user);
 
     }
 
@@ -380,6 +401,14 @@ public class DBInstance
             return Optional.of(doc);
         }
     }
+
+    private boolean checkIfUserHasSessID(Document user)
+    {
+        Optional<Document> optDoc = getSingleDocFromCollection(sessIDCol, Projections.fields(), "name", user.getString("name"));
+        if(optDoc.isPresent()) return true;
+        else return false;
+    }
+
 
     /*
 
