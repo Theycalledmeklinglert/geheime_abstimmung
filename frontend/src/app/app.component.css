@@ -24,6 +24,7 @@
 }
 
 .toolbar .text {
+  font-family: STIXSizeOneSym;
   margin-left: 10px;
   font-size: 1.3ch;
 }

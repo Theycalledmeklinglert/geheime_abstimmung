@@ -5,7 +5,12 @@
   <title>main</title>
 </head>
 <body>
-<div class="taskbar" *ngIf="isAdmin">
+<div class="taskbar">
+  <div class="changePasswordButton">
+    <input type="image" src="../../assets/changePassword_btn.png" width="50%" height="50%"(click)="showChangePassword()" />
+  </div>
+
+  <div class="sysadminfunctions" *ngIf="isAdmin">
   <div class="addAdminButton">
     <input type="image" src="../../assets/addAdmin_btn.png" width="50%" height="50%"(click)="showAddAdmin()" />
   </div>
@@ -13,13 +18,18 @@
   <div class="deleteAdminButton">
     <input type="image" src="../../assets/deleteAdmin_btn.png" width="50%" height="50%"(click)="showDeleteAdmin()" />
   </div>
+
+  </div>
 </div>
 
 
 <div class="listwindow">
-  <div class="headline">Your Votes</div>
+  <div class="background" >
+    <div class="headline">Your Votes</div>
 
-  <voteContainer></voteContainer>
+    <voteContainer></voteContainer>
+  </div>
+
 </div>
 
 <div class="adminGenerator" *ngIf="addAdmin">
@@ -28,20 +38,33 @@
   <div class="txt_field">
     <input type="text" required
            [value]="this.newadminadress"
-           (change)="setUsernameofnewAdmin($event)"
+           (change)="setUseradressofnewAdmin($event)"
     >
     <span></span>
     <label>Email</label>
   </div>
 
   <div class="txt_field">
-    <input type="password" required
+    <input type="text" required
            [value]="this.newadminpassword"
            (change)="setpasswortofnewAdmin($event)"
     >
     <span></span>
     <label>Password</label>
   </div>
+
+
+  <div class="txt_field">
+    <input type="text" required
+           [value]="this.newadminusername"
+           (change)="setUsernameofnewAdmin($event)"
+    >
+    <span></span>
+
+    <label>Username</label>
+
+  </div>
+
 
 
   <div class="add" (click)="sendAddAdminrequest()">
@@ -75,6 +98,27 @@
 </div>
 
 
+
+
+<div class="changePassword" *ngIf="changePassword">
+  <div class="headline">Change Password</div>
+
+  <div class="txt_field">
+    <input type="text" required
+           [value]="this.changedPassword"
+           (change)="setnewPassword($event)"
+    >
+    <span></span>
+    <label>New Password</label>
+  </div>
+
+  <div class="change" (click)="sendChangePasswordrequest()">
+    <div class="change_txt">Change</div>
+  </div>
+  <div class="cancel" (click)="hideChangePassword()">
+    <div class="cancel_txt">Cancel</div>
+  </div>
+</div>
 
 
 <div class="newVoteButton">

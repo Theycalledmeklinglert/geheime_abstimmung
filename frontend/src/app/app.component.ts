@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {LoginComponent} from "../lib/router/login/login.component";
+import {BackendService} from "../lib/data-access/backend.service";
 
 @Component({
   selector: 'app-root',
@@ -9,8 +10,9 @@ import {LoginComponent} from "../lib/router/login/login.component";
 export class AppComponent {
   title = 'frontend';
 
-  currentuser: string = "Max Mustermann";
+  currentuser: string = "";
   firststart : boolean;
+  backendS: BackendService = new BackendService();
   constructor() {
     localStorage.removeItem("sessionid");
     localStorage.removeItem("backendpublickey");
@@ -18,8 +20,9 @@ export class AppComponent {
 
   getusername(): String{
     //return this.loggedInUser.username;
-    this.currentuser = localStorage.getItem("sessionid");
+    this.currentuser = this.backendS.getUsernameofsurveyLeader();
     return this.currentuser;
   }
+
 
 }

@@ -11,7 +11,7 @@
   height: 70%;
   top: 20%;
   border: 3px solid #ea7609;
-  border-radius: 40px 40px 40px 40px;
+  border-radius: 15px 15px 15px 15px;
 }
 
  .helpwindow{
@@ -38,24 +38,29 @@
  }
 
 
- .helpwindow .okaybutton{
-   position: absolute;
-   text-align: center;
-   color: white;
-   font-weight: 700;
-   bottom: 10%;
-   right: 10%;
-   width: 20%;
-   height: 15%;
-   background: #2691d9;
-   border-radius: 25px;
-   border-radius: 40px 40px 40px 40px;
- }
 
  .helpwindow .okaybutton:hover{
    background: #ff8200;
    transition: .5s;
  }
+
+.helpwindow .okaybutton{
+  color: white;
+  position: fixed;
+  top: 52%;
+  left: 53%;
+  width: 5%;
+  background: #2691d9;
+  border-radius: 40px 40px 40px 40px;
+}
+
+.helpwindow .okay_txt{
+  color: white;
+  font-size: 20px;
+}
+
+
+
  .helpwindow .infotext{
 
    font-size: 130%;

@@ -1,17 +1,14 @@
 package main.java.app.database;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.*;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Projections;
-import com.mongodb.client.model.Updates;
+import com.mongodb.client.model.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import javax.print.Doc;
-import java.lang.reflect.Array;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static com.mongodb.client.model.Filters.*;
 
@@ -24,6 +21,8 @@ public class DBInstance
         private static MongoCollection<Document> userCol;
         private static MongoCollection<Document> answerCol;
         private static MongoCollection<Document> emailCol;
+        private static MongoCollection<Document> sessIDCol;
+
 
 
     private static ArrayList<String> pollNames;
@@ -61,6 +60,9 @@ public class DBInstance
             userCol = db.getCollection("Users");
             answerCol = db.getCollection("Answers");
             emailCol = db.getCollection("E-Mails");
+            sessIDCol = db.getCollection("SessIDs");
+            sessIDCol.createIndex(Indexes.ascending("created at"), new IndexOptions().expireAfter(30L, TimeUnit.MINUTES));
+
             this.pollNames = new ArrayList<String>( );
             this.userNames = new ArrayList<String>( );
             initializePollNameList();
@@ -82,17 +84,10 @@ public class DBInstance
     }
 
 
-    public Optional<Document> getPollAsOptDocumentByName(final String name )
+    public Optional<Document> getPollAsOptDocumentByID(final String id )
     {
-        if (pollNames.contains(name))
-        {
-            Optional<Document> optDoc = getSingleDocFromCollection(this.pollCol, Projections.fields(Projections.excludeId()), "name", name);
+            Optional<Document> optDoc = getSingleDocFromCollection(this.pollCol, Projections.fields(Projections.fields()), "_id", id);
             return optDoc;
-        }
-        else
-        {
-            return Optional.empty();
-        }
     }
 
     public boolean createPoll(Document poll)
@@ -109,15 +104,6 @@ public class DBInstance
             addNewPollToPollNames(name);
             return true;
         }
-    }
-
-    // updatePoll() receives the oldUser document of the Poll to be updated by the getPollAsOptDocumentByName(id)
-    // update has to be a complete and valid Poll document. Aside from not having the _id
-    public void updatePoll(Document oldPoll, Document update) {
-        deletePollByName(oldPoll.getString("name"));
-        createPoll(update);
-        //TODO: createPoll(Poll) HAS TO INCLUDE the _id from the oldPoll Doc. Otherwise the _id of the updated Poll
-        // does not match the _id of the original one!
     }
 
 
@@ -167,6 +153,21 @@ public class DBInstance
             }
         }
 
+    // This method also returns the username + password hash
+    public Optional<Document> getUserAsOptDocumentByNameWithoutID(final String name)
+    {
+        Optional<Document> optDoc = getSingleDocFromCollection(this.userCol, Projections.fields(Projections.excludeId()), "name", name);
+
+        if(optDoc.isPresent())
+        {
+            return optDoc;
+        }
+        else {
+            return Optional.empty();
+        }
+    }
+
+
     public Optional<Document> getUserAsOptDocumentByID(final long id)
     {
         Optional<Document> optDoc = getSingleDocFromCollection(this.userCol, Projections.fields(), "_id", Long.toString(id));
@@ -195,7 +196,7 @@ public class DBInstance
 
         public Optional<ArrayList<Document>> getAllPollsOfUser(final String userName)
         {
-            Bson projection = Projections.fields(Projections.excludeId());
+            Bson projection = Projections.fields(Projections.fields());
 
             MongoCursor<Document> cursor = pollCol.find(or(eq("accessible by", userName), eq("created by", userName)))
                     .projection(projection)
@@ -234,6 +235,7 @@ public class DBInstance
 
     // updateUser() receives the oldUser document of the user to be updated by the getUserAsOptDocumentByID(id)
     // update has to be a complete and valid user document. Aside from not having the _id
+    // Do we even need an updateUser() Method? I don't think so
     public void updateUser(Document oldUser, Document update) {
             deleteUserByName(oldUser.getString("name"));
             createUser(update);
@@ -254,7 +256,6 @@ public class DBInstance
 
     public void addNewUserToUserNames(String name)
     {
-        updateUserCollection();
         Optional<Document> optDoc = getSingleDocFromCollection(this.userCol, Projections.fields(), "name", name);
 
         if (optDoc.isPresent())
@@ -268,8 +269,7 @@ public class DBInstance
             return;
         }
     }
-
-
+    
 
     private Optional<Document> getSingleDocFromCollection(MongoCollection<Document> col, Bson projection, String attributeName, String attributeVal)
     {
@@ -288,15 +288,12 @@ public class DBInstance
     }
 
 
-    private void updateUserCollection()
-    {
-        this.userCol = db.getCollection("Users");
-    }
-
-
     public boolean createAnswer(Document answer)
     {
-        Optional<Document> optPoll = getPollAsOptDocumentByName(answer.getString("pollName"));
+        // TODO: Answer MUSS ein Attribut namens poll_id enthalten!!!
+        // + Attribut namens "token"
+        // Konstruktion des Answer-JSON muss mit FrontEnd abgestimmt werden
+        Optional<Document> optPoll = getPollAsOptDocumentByID(answer.getString("poll_id"));
         if(!optPoll.isPresent())
         {
             System.out.println("This answer does not belong to an exisitng poll");
@@ -308,7 +305,7 @@ public class DBInstance
 
         if(tokens.contains(answer.getString("token")))
         {
-            Bson filter = Filters.eq("name", answer.getString("pollName"));
+            Bson filter = Filters.eq("name", poll.getString("_id"));
             Bson delete = Updates.pull("tokens", answer.getString("token"));
             pollCol.updateOne(filter, delete);
             answerCol.insertOne(answer);
@@ -325,19 +322,11 @@ public class DBInstance
     public void deleteAnswersOfPollByPollName(String pollName) {
         Bson query = eq("pollName", pollName);
         this.answerCol.deleteMany(query);
-        updateAnswerCollection();
     }
 
     public void deleteAllAnswers() {
         Document doc = new Document();
         this.answerCol.deleteMany(doc);
-        updateAnswerCollection();
-    }
-
-
-    private void updateAnswerCollection()
-    {
-        this.answerCol = db.getCollection("Answers");
     }
 
     public void postLastUsedEmails(List<Document> emails) {
@@ -367,6 +356,31 @@ public class DBInstance
         }
         return emails;
     }
+
+    public void generateAndSetSessID(Document user) {   // TODO: Test if sessionIDs are deleted after 30 minutes
+        String sessID = String.valueOf(System.currentTimeMillis()).substring(8, 13) + UUID.randomUUID().toString().substring(1,10);
+        user.append("created at", new Date());
+        user.append("Session ID", sessID);
+
+        sessIDCol.insertOne(user);  // TODO: WARUM STATUSCODE 500????
+
+    }
+
+    public Optional<Document> getUserBySessionID(final String sessID) {
+        Document doc = sessIDCol.find(eq("Session ID", sessID))
+                .projection(Projections.fields())
+                .first();
+
+        if (doc == null)
+        {
+            return Optional.empty();
+        }
+        else
+        {
+            return Optional.of(doc);
+        }
+    }
+
     /*
 
         public void delete( final Person person )

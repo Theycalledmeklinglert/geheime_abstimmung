@@ -3,20 +3,15 @@ package main.java.app;
 import static com.mongodb.client.model.Filters.eq;
 import static main.java.app.database.DBInstance.getDBInstance;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import main.java.app.database.DBInstance;
-import org.bson.BsonArray;
 import org.bson.Document;
+import org.eclipse.jdt.internal.compiler.env.IBinaryNestedType;
 
-import javax.print.Doc;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.DoubleConsumer;
-import java.util.function.DoubleToIntFunction;
 
 public class MongoloidTest {
 
@@ -45,7 +40,7 @@ public class MongoloidTest {
     INSTANCE.createPoll(doc2);
     INSTANCE.createPoll(doc3);
     INSTANCE.createPoll(doc4);
-        Optional<Document> optPoll = INSTANCE.getPollAsOptDocumentByName("Poll1");
+        Optional<Document> optPoll = INSTANCE.getPollAsOptDocumentByID("Poll1");
     if(optPoll.isPresent())
     {
         System.out.println(optPoll.get().toJson());
@@ -137,6 +132,8 @@ public class MongoloidTest {
         list.add(email);
         INSTANCE.postLastUsedEmails(list);
 
+        Document user4 = new Document("name", "meRN").append("pwHash", "asdf");
+        INSTANCE.createUser(user4);
 
         //doc = new Document("name", "Hi");
        // doc.put("name", "hello");
