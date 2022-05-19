@@ -36,9 +36,9 @@
     </button>
 
   </mat-menu>
-
-
 </div>
+
+
 
 
 <div class="listwindow">
@@ -51,6 +51,9 @@
   </div>
 
 </div>
+
+
+
 
 <div class="adminGenerator" *ngIf="addAdmin">
   <div class="headline">Add Admin</div>
@@ -73,7 +76,6 @@
     <label>Password</label>
   </div>
 
-
   <div class="txt_field">
     <input type="text" required
            [value]="this.newadminusername"
@@ -85,13 +87,11 @@
 
   </div>
 
-
-
   <div class="add" (click)="sendAddAdminrequest()">
-    <div class="add_txt">Add</div>
+    <button mat-flat-button color="primary" (click)="sendAddAdminrequest()"> Add </button>
   </div>
-  <div class="cancel" (click)="hideAddAdmin()">
-    <div class="cancel_txt">Cancel</div>
+  <div class="cancel">
+    <button mat-flat-button color="primary" (click)="hideAddAdmin()">Cancel </button>
   </div>
 </div>
 
@@ -110,11 +110,11 @@
     <label>Email</label>
   </div>
 
-  <div class="delete" (click)="DeleteAdmin()">
-    <div class="delete_txt">Delete</div>
+  <div class="delete" >
+    <button mat-flat-button color="primary" (click)="DeleteAdmin()">Delete </button>
   </div>
-  <div class="cancel" (click)="hideDeleteAdmin()">
-    <div class="cancel_txt">Cancel</div>
+  <div class="cancel">
+    <button mat-flat-button color="primary" (click)="hideDeleteAdmin()">Cancel </button>
   </div>
 </div>
 
@@ -150,17 +150,17 @@
     <label>New Password</label>
   </div>
 
-  <div class="change" (click)="changemyPassword()">
-    <div class="change_txt">Change</div>
+  <div class="change" >
+    <button mat-flat-button color="primary" (click)="changemyPassword()">Change </button>
   </div>
-  <div class="cancel" (click)="hideChangePassword()">
-    <div class="cancel_txt">Cancel</div>
+  <div class="cancel" >
+    <button mat-flat-button color="primary" (click)="hideChangePassword()">Cancel </button>
   </div>
 </div>
 
 
-<div class="sureChangePassword" *ngIf="sureChangePassword">
 
+<div class="sureChangePassword" *ngIf="sureChangePassword">
   <h1 mat-dialog-title>Info</h1>
   <div mat-dialog-content>Are you sure you want to change your Password?</div>
   <div class="change_btn"mat-dialog-actions>
@@ -169,7 +169,6 @@
   <div  class="cancel_btn" mat-dialog-actions>
     <button mat-flat-button color="primary" (click)="hidesureChangePassword()">Cancel </button>
   </div>
-
 </div>
 
 
@@ -190,11 +189,11 @@
     <label>New Username</label>
   </div>
 
-  <div class="change" (click)="changemyUsername()">
-    <div class="change_txt">Change</div>
+  <div class="change" >
+    <button mat-flat-button color="primary" (click)="changemyUsername()">Change </button>
   </div>
-  <div class="cancel" (click)="hideChangeUsername()">
-    <div class="cancel_txt">Cancel</div>
+  <div class="cancel" >
+    <button mat-flat-button color="primary" (click)="hideChangeUsername()">Cancel </button>
   </div>
 </div>
 
