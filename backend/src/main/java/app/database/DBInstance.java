@@ -1,17 +1,25 @@
 package main.java.app.database;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.mongodb.client.*;
 import com.mongodb.client.model.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.mongodb.client.model.Filters.*;
+import org.apache.commons.codec.binary.Base64;
 
 public class DBInstance
 {
@@ -63,7 +71,7 @@ public class DBInstance
             emailCol = db.getCollection("E-Mails");
             sessIDCol = db.getCollection("SessIDs");
             sessIDCol.dropIndex(Indexes.ascending("created at"));
-            sessIDCol.createIndex(Indexes.ascending("created at"), new IndexOptions().expireAfter(30L, TimeUnit.MINUTES));
+            sessIDCol.createIndex(Indexes.ascending("created at"), new IndexOptions().expireAfter(60L, TimeUnit.MINUTES));
 
             this.pollNames = new ArrayList<String>( );
             this.userNames = new ArrayList<String>( );
@@ -231,7 +239,9 @@ public class DBInstance
         }
 
     public boolean createUser(Document user) {
+
         String name = user.getString("name");
+
         if(userNames.contains(name))
         {
             System.out.println("SurveyLeader with identical name already exists. You have to choose a different Username");
@@ -239,7 +249,24 @@ public class DBInstance
         }
         else
         {
-            userCol.insertOne(user);
+
+            SecureRandom random = new SecureRandom();
+            byte[] salt = new byte[16];
+            random.nextBytes(salt);
+
+            String pwHash = generatePWHash(user.getString("password"), salt);
+
+            String saltString = Base64.encodeBase64String(salt);
+
+            user.put("salt", saltString);
+            user.put("pwHash", pwHash);
+
+            userCol.insertOne(user);        // Sicherheitsluecke da PW in PlainText in DB aber ich weiss gerade nicht wie es anders geht ¯\_(ツ)_/¯
+
+            Bson query = Filters.eq("name", name);
+            Bson update = Updates.unset("password");
+            userCol.updateOne(query, update);
+
             addNewUserToUserNames(name);
             return true;
         }
@@ -407,6 +434,36 @@ public class DBInstance
         Optional<Document> optDoc = getSingleDocFromCollection(sessIDCol, Projections.fields(), "name", user.getString("name"));
         if(optDoc.isPresent()) return true;
         else return false;
+    }
+
+    // Hashing Algorith used: PBKDF2
+    public String generatePWHash(final String pw, byte[] salt)    // returns hashedPW
+    {
+        try {
+
+            KeySpec spec = new PBEKeySpec(pw.toCharArray(), salt, 65536, 128);
+            SecretKeyFactory factory = null;
+
+            factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+
+            byte[] hash = factory.generateSecret(spec).getEncoded();
+            return Base64.encodeBase64String(hash);
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            System.out.println("Hashing failed");
+            throw new RuntimeException(e);
+        }
+        catch (InvalidKeySpecException e)
+        {
+            System.out.println("Hashing failed");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean comparePWHash(String hashInDB, String givenHash)
+    {
+        return hashInDB.equals(givenHash);
     }
 
 

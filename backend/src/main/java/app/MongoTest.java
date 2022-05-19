@@ -6,15 +6,13 @@ import static main.java.app.database.DBInstance.getDBInstance;
 import com.mongodb.BasicDBObject;
 import main.java.app.database.DBInstance;
 import org.bson.Document;
-import org.bson.types.ObjectId;
-import org.eclipse.jdt.internal.compiler.env.IBinaryNestedType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class MongoloidTest {
+public class MongoTest {
 
     public static void main(String[] args)
     {
@@ -49,7 +47,7 @@ public class MongoloidTest {
         System.out.println(optPoll.get().getString("name"));
     }
 
-        Document userDoc = new Document().append("name", "Blofeld").append("role", "admin");
+        Document userDoc = new Document().append("name", "Blofeld").append("password", "12345").append("role", "admin");
         INSTANCE.createUser(userDoc);
         Optional<Document> optUser = INSTANCE.getUserAsOptDocumentByName("User1");
         if(optUser.isPresent())
@@ -77,7 +75,7 @@ public class MongoloidTest {
 
 
 
-        userDoc = new Document().append("name", "Bond").append("role", "admin");
+        userDoc = new Document().append("name", "Bond").append("password", "12345").append("role", "admin");
         INSTANCE.createUser(userDoc);
 
         ArrayList<String> users = INSTANCE.getAllUserNames();
@@ -132,7 +130,7 @@ public class MongoloidTest {
         String[] emails = {"test@test.com", "test@fhws.de", "test@gmail.com"};
         INSTANCE.postLastUsedEmails(Arrays.asList(emails));
 
-        Document user4 = new Document("name", "meRN").append("pwHash", "asdf");
+        Document user4 = new Document("name", "meRN").append("password", "12345").append("pwHash", "asdf");
         INSTANCE.createUser(user4);
 
         //doc = new Document("name", "Hi");

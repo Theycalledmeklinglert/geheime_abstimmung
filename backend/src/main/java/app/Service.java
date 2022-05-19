@@ -3,13 +3,18 @@ package main.java.app;
 import main.java.app.database.DBInstance;
 import org.bson.Document;
 
+import javax.print.Doc;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import org.apache.commons.codec.binary.Base64;
+
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -118,71 +123,87 @@ public class Service
 
 
 
-	@POST	//TODO
+	@POST
 	@Path("/user")
 	@Consumes( MediaType.APPLICATION_JSON )
-	public Response createUser(final String json, @DefaultValue("") @QueryParam("userName") final String userName, @DefaultValue("-1") @QueryParam("sessionID") final int sessID)
+	public Response createUser(final String json,@DefaultValue("") @QueryParam("sessionID") final String sessID)
 	{
-		if(!json.contains("name") || !json.contains("role") || !json.contains("password-hash"))
+
+		Optional<Document> opt = INSTANCE.getUserBySessionID(sessID);
+
+		if(!opt.isPresent())
+		{
+			throw new WebApplicationException(Response.status(401).build()); // Session ID doesn't exist. User has to login on website again
+		}
+
+		// TODO: Decrypt JSON
+
+		if(!json.contains("userName") || !json.contains("password"))
 		{
 			throw new WebApplicationException(Response.status(422).build());
 		}
 
-		//TODO
+		Document user = Document.parse(json);
+		INSTANCE.createUser(user);
 
-		Optional<Document> user = INSTANCE.getUserAsOptDocumentByName(userName);
+		Optional<Document> optRes = INSTANCE.getUserAsOptDocumentByName(user.getString("userName"));
 
-		if(!user.isPresent())
+		if(!optRes.isPresent())
 		{
-			throw new WebApplicationException(Response.status(404).build());
+			throw new WebApplicationException(Response.status(500).build());
 		}
 
-		Document userDoc = user.get();
-		Document poll = Document.parse(json);
-		poll.put("created by", userDoc.getString("name"));
-
-		INSTANCE.createPoll(poll);
 		return Response.ok().build();
 	}
 
 
 
 
-	// Session ID of user lasts for 30 Minutes
-	@GET	// TODO: Check if pwHash is too long for URI
+	// Session ID of user lasts for 60 Minutes
+	@GET
 	@Path("/session")
+	@Consumes( MediaType.APPLICATION_JSON )
 	@Produces( MediaType.APPLICATION_JSON )
-	public Response getSessIDForUser( @DefaultValue( "" ) @QueryParam( "userName" ) final String userName, @DefaultValue("") @QueryParam("pwHash") final String pwHash)
+	public Response getSessIDForUser(final String json)
 	{
 
 		// TODO: Decryption
-		System.out.println(userName);
-		System.out.println(pwHash);
+
+		Document doc = Document.parse(json);
+		String userName = doc.getString("userName");
+		String password = doc.getString("password");
+
 		final Optional<Document> optUser = INSTANCE.getUserAsOptDocumentByNameWithoutID(userName);
 
 		if(!optUser.isPresent())
 		{
 			throw new WebApplicationException(Response.status(404).build());
 		}
+
 		Document user = optUser.get();
 
-		if(!pwHash.equals(user.getString("pwHash")))
+		if(!INSTANCE.comparePWHash(user.getString("pwHash"), INSTANCE.generatePWHash(password, Base64.decodeBase64(user.getString("salt")))))
 		{
 			System.out.println("Incorrect Password");
 			throw new WebApplicationException(Response.status(404).build());
 		}
-		System.out.println("Not fucked yet");
+
 		INSTANCE.generateAndSetSessID(user);
 
-		// TODO: Encrypt before sending back
+		Document res = new Document().append("Session ID", user.getString("Session ID"));
+		String unencryptedJSON = res.toJson();
 
-		return Response.ok(user).build();
+		// TODO: Encrypt JSON before sending back
+
+		String encryptedJSON = "Placeholder";
+
+		return Response.ok(encryptedJSON).build();
 
 	}
 
 
 	@POST
-	@Path("/answer")		// TODO: Funktioniert das so?
+	@Path("/answer")
 	@Consumes( MediaType.APPLICATION_JSON )
 	public Response postAnswer(final String json)
 	{
@@ -205,6 +226,28 @@ public class Service
 		this.INSTANCE.createAnswer(answer);
 		return Response.ok().build();
 	}
+
+
+	@POST
+	@Path("/connect")
+	@Consumes( MediaType.APPLICATION_JSON )
+	public Response postPublicKey(final String json)	// This method will be used to send exchange the public keys between client and server
+	{
+
+		Document doc = Document.parse(json);
+		String publicKeyClient = doc.getString("Public Key");
+		// TODO: Wo soll der PK gespeichert werden? Wie lange? Jede Anfrage neuer PK oder nur jede neue SessionID?
+		// TODO: PK in SessID Col speichern?
+
+		// TODO: Generate Public Key
+
+		String publicKeyServer = "Placeholder";
+		doc = new Document().append("Public Key", publicKeyServer);
+
+		return Response.ok(doc).build();
+	}
+
+
 
 
 
