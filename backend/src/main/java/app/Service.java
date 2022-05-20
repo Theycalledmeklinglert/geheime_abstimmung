@@ -13,6 +13,7 @@ import javax.ws.rs.core.UriInfo;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import org.apache.commons.codec.binary.Base64;
+import org.bson.types.ObjectId;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,13 +30,34 @@ public class Service
 	protected UriInfo uriInfo;
 
 
+	@POST
+	@Path("/connect")
+	@Consumes( MediaType.APPLICATION_JSON )
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response postPublicKey(final String json)	// This method will be used to send exchange the public keys between client and server
+	{
+
+		Document doc = Document.parse(json);
+		String publicKeyClient = doc.getString("Public Key");
+		// TODO: Wo soll der PK gespeichert werden? Wie lange? Jede Anfrage neuer PK oder nur jede neue SessionID?
+		// TODO: PK in SessID Col speichern?
+
+		// TODO: Generate Public Key
+
+		String publicKeyServer = "Placeholder";
+		doc = new Document().append("Public Key", publicKeyServer);
+
+		return Response.ok(doc).build();
+	}
+
+
 	@GET
 	@Path("{pollID}")
 	@Produces( MediaType.APPLICATION_JSON )
-	public Response getSinglePollByUser(@DefaultValue("") @QueryParam("SessionID") final String sessID, @DefaultValue( "" ) @PathParam( "pollID" ) final String poll_id)
+	public Response getSinglePollByUser(@DefaultValue("") @QueryParam("sessionID") final String sessID, @DefaultValue( "" ) @PathParam( "pollID" ) final String poll_id)
 	{
 		final Optional<Document> optPoll = INSTANCE.getPollAsOptDocumentByID(poll_id);
-		final Optional<Document> optUser = INSTANCE.getUserBySessionID(sessID);
+		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
 
 		if(!optUser.isPresent())
 		{
@@ -45,129 +67,172 @@ public class Service
 		if(optPoll.isPresent())
 		{
 			Document poll = optPoll.get();
+			poll.append("Session ID", optUser.get().getString("session ID"));	// Neue Session ID des Users wird mitgesendet und muss von FrontEnd ausgelesen und gespeichert werden
+
+			// TODO: Decrypt JSON
+
 			return Response.ok( poll ).build( );
 		}
+
+		// TODO: Decrypt JSON
+
 		return Response.status(404).build();
 	}
 
 
 	@GET
 	@Produces( MediaType.APPLICATION_JSON )
-	public Response getPollsByUser(@DefaultValue("") @QueryParam("sessionID") final String sessID, @DefaultValue( "" ) @QueryParam( "userName" ) final String userName)
+	public Response getAllPollsByUser(@DefaultValue("") @QueryParam("sessionID") final String sessID)
 	{
-		final Optional<ArrayList<Document>> optPolls = INSTANCE.getAllPollsOfUser(userName);
+		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
+		if(!optUser.isPresent())
+		{
+			throw new WebApplicationException(Response.status(401).build());
+		}
+
+		final Optional<ArrayList<Document>> optPolls = INSTANCE.getAllPollsOfUser(optUser.get().getString("name"));
 
 		if(optPolls.isPresent())
 		{
 			Collection<Document> polls = optPolls.get();
+			polls.add(new Document().append("Session ID", optUser.get().getString("Session ID")));	// s. getByID()
+			// TODO: encrypt JSON
+
 			return Response.ok( polls ).build( );
 		}
+
+		// TODO: encrypt JSON
+
 		return Response.status(404).build();
 	}
-
-
-
-
-	// TODO: "Erste" GET Methode die UserName und PW-Hash nimmt, abgleicht und dann Session ID + AllPollsOfUser zuruecksendet
 
 
 	@POST
 	@Consumes( MediaType.APPLICATION_JSON )
 	@Produces( MediaType.APPLICATION_JSON )
-	public Response createPoll(final String json, @DefaultValue("") @QueryParam("userName") final String userName, @DefaultValue("-1") @QueryParam("sessionID") final int sessID)
+	public Response createPoll(final String json, @DefaultValue("") @QueryParam("sessionID") final String sessID)
 	{
-		//TODO: Kommen der UserName und SessionID als QueryParam oder als PathParam?
-		//TODO: Checks für UserName und SessionID einbauen
-		//TODO: Ver-/ Entschluesselung implementieren
+		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
 
-		if(!json.contains("name") || !json.contains("accessible by") || !json.contains("created by") || !json.contains("tokens"))
+		if(!optUser.isPresent())
+		{
+			throw new WebApplicationException(Response.status(401).build());
+		}
+
+		// TODO: Decrypt JSON
+
+		if(!json.contains("name") || !json.contains("accessible by") || !json.contains("created by") || !json.contains("tokens") || !json.contains("questions"))
 		{
 			throw new WebApplicationException(Response.status(422).build());
 		}
 
-		Optional<Document> user = INSTANCE.getUserAsOptDocumentByName(userName);
-
-		if(!user.isPresent())
-		{
-			throw new WebApplicationException(Response.status(404).build());
-		}
-
-		Document userDoc = user.get();
+		Document user = optUser.get();
 		Document poll = Document.parse(json);
-		poll.put("created by", userDoc.getString("name"));
+		poll.put("created by", user.getString("name"));
+		poll.append("Session ID", user.getString("Session ID"));	// s. getByID()
+
+		// TODO: encrypt JSON
 
 		INSTANCE.createPoll(poll);
-		return Response.ok(INSTANCE.getPollAsOptDocumentByID(poll.getString("_id")).get()).build(); 	//TODO: Checken ob der Muell funktioniert
+		return Response.ok(poll.toJson()).build(); 	//TODO: Checken ob der Muell funktioniert
 	}
 
 	@DELETE
-	public Response deletePoll(@DefaultValue("") @QueryParam("pollName") final String pollToDelete)
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response deletePollByID(@DefaultValue("") @QueryParam("pollID")final String pollID, @DefaultValue("") @QueryParam("sessionID") final String sessID)
 	{
-		Optional<Document> opt = this.INSTANCE.getPollAsOptDocumentByID(pollToDelete);
+		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
+
+		if(!optUser.isPresent())
+		{
+			throw new WebApplicationException(Response.status(401).build());
+		}
+
+		// TODO: Decrypt JSON
+
+		Optional<Document> opt = this.INSTANCE.getPollAsOptDocumentByID(pollID);
 		if(!opt.isPresent())
 		{
 			throw new WebApplicationException(Response.status(404).build());
 		}
-		this.INSTANCE.deletePollByName(pollToDelete);
-		return Response.noContent().build();
+		this.INSTANCE.deletePollByID(pollID);
+
+		Document newSessID = new Document().append("Session ID", optUser.get().getString("Session ID"));
+
+		// TODO: encrypt Response
+
+		return Response.ok(newSessID).build();
 	}
-
-	/*
-
-	@DELETE	//TODO
-	public Response deleteUser(@DefaultValue("") @QueryParam("pollName") final String pollToDelete) {
-	}
-
-
-	 */
-
-
 
 	@POST
-	@Path("/user")
+	@Path("/users")
 	@Consumes( MediaType.APPLICATION_JSON )
-	public Response createUser(final String json,@DefaultValue("") @QueryParam("sessionID") final String sessID)
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response createUser(final String json, @DefaultValue("") @QueryParam("sessionID") final String sessID)
 	{
 
-		Optional<Document> opt = INSTANCE.getUserBySessionID(sessID);
+		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
 
-		if(!opt.isPresent())
+		if(!optUser.isPresent())
 		{
 			throw new WebApplicationException(Response.status(401).build()); // Session ID doesn't exist. User has to login on website again
 		}
 
 		// TODO: Decrypt JSON
 
-		if(!json.contains("userName") || !json.contains("password"))
+		if(!json.contains("userName") || !json.contains("password") || !json.contains("role"))
 		{
 			throw new WebApplicationException(Response.status(422).build());
 		}
 
 		Document user = Document.parse(json);
 		INSTANCE.createUser(user);
+		user.append("Session ID", optUser.get().getString("SessionID"));
 
-		Optional<Document> optRes = INSTANCE.getUserAsOptDocumentByName(user.getString("userName"));
+		// TODO: encrypt Response?
 
-		if(!optRes.isPresent())
+		return Response.ok(user).build();
+	}
+
+	@DELETE
+	@Path("/users")
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response deleteUser(@DefaultValue("") @QueryParam("userName") final String userToDelete, @DefaultValue("") @QueryParam("sessionID") final String sessID)
+	{
+		Optional<Document> optUser = INSTANCE.authenticate(sessID);
+
+		if(!optUser.isPresent())
 		{
-			throw new WebApplicationException(Response.status(500).build());
+			throw new WebApplicationException(Response.status(401).build());
+		}
+		Document user = optUser.get();
+
+		if(!user.getString("role").equals("admin"))
+		{
+			System.out.println("User does not have the neccessary permissions to delete an user");
+			throw new WebApplicationException(Response.status(401).build());
 		}
 
-		return Response.ok().build();
+		optUser = INSTANCE.getUserAsOptDocumentByNameWithoutID(userToDelete);
+		if(!optUser.isPresent())
+		{
+			throw new WebApplicationException(Response.status(404).build());
+		}
+
+		INSTANCE.deleteUserByName(userToDelete);
+		return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();
 	}
 
 
-
-
 	// Session ID of user lasts for 60 Minutes
-	@GET
+	@POST
 	@Path("/session")
 	@Consumes( MediaType.APPLICATION_JSON )
 	@Produces( MediaType.APPLICATION_JSON )
 	public Response getSessIDForUser(final String json)
 	{
 
-		// TODO: Decryption
+		// TODO: Decrypt JSON
 
 		Document doc = Document.parse(json);
 		String userName = doc.getString("userName");
@@ -197,20 +262,27 @@ public class Service
 
 		String encryptedJSON = "Placeholder";
 
-		return Response.ok(encryptedJSON).build();
+		return Response.ok(unencryptedJSON).build();
 
 	}
 
 
 	@POST
-	@Path("/answer")
+	@Path("/answers")
 	@Consumes( MediaType.APPLICATION_JSON )
-	public Response postAnswer(final String json)
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response postAnswer(final String json, @DefaultValue("") @QueryParam("sessionID") final String sessID)
 	{
+		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
 
-		// TODO: Decryption
+		if(!optUser.isPresent())
+		{
+			throw new WebApplicationException(Response.status(401).build()); // Session ID doesn't exist. User has to login on website again
+		}
 
-		if(!json.contains("poll_id") || !json.contains("token"))
+		// TODO: Decrypt JSON
+
+		if(!json.contains("poll_id") || !json.contains("token") || !json.contains("question_id") || !json.contains("content"))
 		{
 			throw new WebApplicationException(Response.status(422).build());
 		}
@@ -223,31 +295,74 @@ public class Service
 			throw new WebApplicationException(Response.status(404).build());
 		}
 
-		this.INSTANCE.createAnswer(answer);
-		return Response.ok().build();
+		// TODO: encrypt JSON
+
+		if(!this.INSTANCE.createAnswer(answer))
+		{
+			throw new WebApplicationException(Response.status(404).build());
+		}
+		Document user = optUser.get();
+		return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();
+	}
+
+	@DELETE
+	@Path("/answers")
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response deleteAllAnswersOfPollByID(@DefaultValue("") @QueryParam("pollID") final String pollID, @DefaultValue("") @QueryParam("sessionID") final String sessID)
+	{
+		Optional<Document> optUser = INSTANCE.authenticate(sessID);
+
+		if(!optUser.isPresent())
+		{
+			throw new WebApplicationException(Response.status(401).build());
+		}
+		Document user = optUser.get();
+
+		optUser = INSTANCE.getPollAsOptDocumentByID(pollID);
+
+		if(!optUser.isPresent())
+		{
+			System.out.println("Specified Poll does not exist");
+			throw new WebApplicationException(Response.status(404).build());
+		}
+
+		INSTANCE.deleteAnswersOfPollByPollID(pollID);
+		return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();
 	}
 
 
 	@POST
-	@Path("/connect")
+	@Path("/questions")
 	@Consumes( MediaType.APPLICATION_JSON )
-	public Response postPublicKey(final String json)	// This method will be used to send exchange the public keys between client and server
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response createQuestion(final String json, @DefaultValue("") @QueryParam("pollID") final String pollID, @DefaultValue("") @QueryParam("sessionID") final String sessID)
 	{
+		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
 
-		Document doc = Document.parse(json);
-		String publicKeyClient = doc.getString("Public Key");
-		// TODO: Wo soll der PK gespeichert werden? Wie lange? Jede Anfrage neuer PK oder nur jede neue SessionID?
-		// TODO: PK in SessID Col speichern?
+		if(!optUser.isPresent())
+		{
+			throw new WebApplicationException(Response.status(401).build());
+		}
 
-		// TODO: Generate Public Key
+		// TODO: Decrypt JSON
 
-		String publicKeyServer = "Placeholder";
-		doc = new Document().append("Public Key", publicKeyServer);
+		if(!json.contains("title") || !json.contains("description") || !json.contains("type") || !json.contains("poll_id"))	//TODO: Evtl. abaendern --> FrontEnd
+		{
+			throw new WebApplicationException(Response.status(422).build());
+		}
 
-		return Response.ok(doc).build();
+		Document user = optUser.get();
+		Document question = Document.parse(json);
+
+		if(!this.INSTANCE.createQuestion(question))
+		{
+			throw new WebApplicationException(Response.status(404).build());
+		}
+
+		// TODO: encrypt JSON
+
+		return Response.ok(new Document().append("Session ID", user.getString("Session ID"))).build();
 	}
-
-
 
 
 

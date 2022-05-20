@@ -73,17 +73,8 @@ public class DBInstance
             sessIDCol.dropIndex(Indexes.ascending("created at"));
             sessIDCol.createIndex(Indexes.ascending("created at"), new IndexOptions().expireAfter(60L, TimeUnit.MINUTES));
 
-            this.pollNames = new ArrayList<String>( );
             this.userNames = new ArrayList<String>( );
-            initializePollNameList();
             initializeUserNameList();
-        }
-
-        private void initializePollNameList()
-        {
-            Bson projection = Projections.fields(Projections.include("name"), Projections.excludeId());
-            Bson filter = Filters.empty();
-            pollCol.find(filter).projection(projection).forEach(doc -> pollNames.add(doc.getString("name")));
         }
 
     private void initializeUserNameList()
@@ -113,22 +104,14 @@ public class DBInstance
     public boolean createPoll(Document poll)
     {
         String name = poll.getString("name");
-        if(pollNames.contains(name))
-        {
-            System.out.println("Poll with identical name already exists. You have to choose a different title");
-            return false;
-        }
-        else
-        {
-            pollCol.insertOne(poll);
-            addNewPollToPollNames(name);
-            return true;
-        }
+
+        pollCol.insertOne(poll);
+        return true;
     }
 
 
-    public void deletePollByName(String name) {
-        Bson query = eq("name", name);
+    public void deletePollByID(String id) {
+        Bson query = eq("_id", new ObjectId(id));
         this.pollCol.deleteOne(query);
     }
 
@@ -137,41 +120,8 @@ public class DBInstance
         this.pollNames = new ArrayList<>();
     }
 
-    private void updatePollCollection()
-    {
-        this.pollCol = db.getCollection("Polls");
-    }
-
-    public void addNewPollToPollNames(String name)
-    {
-        updatePollCollection();
-        Optional<Document> optDoc = getSingleDocFromCollection(this.pollCol, Projections.fields(), "name", name);
-
-        if (optDoc.isPresent())
-        {
-            Document doc = optDoc.get();
-            pollNames.add(doc.getString("name"));
-        }
-        else
-        {
-            System.out.println("Specified poll was not inserted correctly into database");
-            return;
-        }
-    }
 
     // This method also returns the username + password hash
-    public Optional<Document> getUserAsOptDocumentByName(final String name)
-        {
-            Optional<Document> optDoc = getSingleDocFromCollection(this.userCol, Projections.fields(), "name", name);
-
-            if(optDoc.isPresent())
-            {
-                return optDoc;
-            }
-            else {
-                return Optional.empty();
-            }
-        }
 
     // This method also returns the username + password hash
     public Optional<Document> getUserAsOptDocumentByNameWithoutID(final String name)
@@ -216,10 +166,8 @@ public class DBInstance
 
         public Optional<ArrayList<Document>> getAllPollsOfUser(final String userName)
         {
-            Bson projection = Projections.fields(Projections.fields());
-
             MongoCursor<Document> cursor = pollCol.find(or(eq("accessible by", userName), eq("created by", userName)))
-                    .projection(projection)
+                    .projection(Projections.fields())
                     .cursor();
 
             ArrayList<Document> polls = new ArrayList<>();
@@ -329,7 +277,7 @@ public class DBInstance
 
     public boolean createAnswer(Document answer)
     {
-        // TODO: Answer MUSS ein Attribut namens poll_id enthalten!!!
+        // TODO: Answer MUSS ein Attribut namens poll_id UND ein Attribut question_id UND ein Attribut content enthalten!!!
         // + Attribut namens "token"
         // Konstruktion des Answer-JSON muss mit FrontEnd abgestimmt werden
         Optional<Document> optPoll = getPollAsOptDocumentByID(answer.getString("poll_id"));
@@ -359,8 +307,8 @@ public class DBInstance
     }
 
 
-    public void deleteAnswersOfPollByPollName(String pollName) {
-        Bson query = eq("pollName", pollName);
+    public void deleteAnswersOfPollByPollID(String pollID) {
+        Bson query = eq("poll_id", pollID);
         this.answerCol.deleteMany(query);
     }
 
@@ -397,6 +345,44 @@ public class DBInstance
             return new ArrayList<String>();
         }
     }
+
+    public boolean createQuestion(Document question)
+    {
+        // TODO: question MUSS ein Attribut namens poll_id enthalten!!!
+        // Konstruktion des question-JSON muss mit FrontEnd abgestimmt werden
+        Optional<Document> optPoll = getPollAsOptDocumentByID(question.getString("poll_id"));
+
+        if(!optPoll.isPresent())
+        {
+            System.out.println("This answer does not belong to an exisitng poll");
+            return false;
+        }
+
+        Bson filter = Filters.eq("_id", new ObjectId(question.getString("poll_id")));
+        DBObject listItem = new BasicDBObject("questions", question);
+        Bson pushToQuestList = new BasicDBObject("$push", listItem);
+
+        pollCol.updateOne(filter, pushToQuestList);
+        return true;
+        }
+
+
+
+
+
+    public Optional<Document> authenticate(final String sessID)
+    {
+        final Optional<Document> optUser = getUserBySessionID(sessID);
+
+        if(!optUser.isPresent())
+        {
+            return Optional.empty();
+        }
+        Document user = optUser.get();
+        generateAndSetSessID(user);
+        return Optional.of(user);
+    }
+
 
     public void generateAndSetSessID(Document user) {   // TODO: Test if sessionIDs are deleted after 30 minutes
 
@@ -465,6 +451,8 @@ public class DBInstance
     {
         return hashInDB.equals(givenHash);
     }
+
+
 
 
     /*

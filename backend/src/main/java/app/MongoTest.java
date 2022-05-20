@@ -49,12 +49,6 @@ public class MongoTest {
 
         Document userDoc = new Document().append("name", "Blofeld").append("password", "12345").append("role", "admin");
         INSTANCE.createUser(userDoc);
-        Optional<Document> optUser = INSTANCE.getUserAsOptDocumentByName("User1");
-        if(optUser.isPresent())
-        {
-            System.out.println(optUser.get().toJson());
-            System.out.println(optPoll.get().getString("name"));
-        }
 
         System.out.println();
         System.out.println();
@@ -109,7 +103,7 @@ public class MongoTest {
         INSTANCE.createAnswer(answer);
         INSTANCE.createAnswer(answer2);
 
-        INSTANCE.deleteAnswersOfPollByPollName("AnswerTestPoll");
+        INSTANCE.deleteAnswersOfPollByPollID("AnswerTestPoll");
 
 
         doc = new Document().append("name", "AnswerTestPoll2").append("admin", "Blofeld").append("tokens", Arrays.asList(new String[]{"MyTokens"}));
