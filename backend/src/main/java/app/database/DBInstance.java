@@ -14,7 +14,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -73,16 +72,7 @@ public class DBInstance
             sessIDCol.dropIndex(Indexes.ascending("created at"));
             sessIDCol.createIndex(Indexes.ascending("created at"), new IndexOptions().expireAfter(60L, TimeUnit.MINUTES));
 
-            this.userNames = new ArrayList<String>( );
-            initializeUserNameList();
         }
-
-    private void initializeUserNameList()
-    {
-        Bson projection = Projections.fields(Projections.include("name"), Projections.excludeId());
-        Bson filter = Filters.empty();
-        userCol.find(filter).projection(projection).forEach(doc -> userNames.add(doc.getString("name")));
-    }
 
 
     public Optional<Document> getPollAsOptDocumentByID(final String id )
@@ -124,9 +114,9 @@ public class DBInstance
     // This method also returns the username + password hash
 
     // This method also returns the username + password hash
-    public Optional<Document> getUserAsOptDocumentByNameWithoutID(final String name)
+    public Optional<Document> getUserAsOptDocumentByName(final String name)
     {
-        Optional<Document> optDoc = getSingleDocFromCollection(this.userCol, Projections.fields(Projections.excludeId()), "name", name);
+        Optional<Document> optDoc = getSingleDocFromCollection(this.userCol, Projections.fields(Projections.fields()), "name", name);
 
         if(optDoc.isPresent())
         {
@@ -190,9 +180,9 @@ public class DBInstance
 
         String name = user.getString("name");
 
-        if(userNames.contains(name))
+        if(checkUserNameExistence(name))
         {
-            System.out.println("SurveyLeader with identical name already exists. You have to choose a different Username");
+            System.out.println("User with identical name already exists. You have to choose a different Username");
             return false;
         }
         else
@@ -215,24 +205,70 @@ public class DBInstance
             Bson update = Updates.unset("password");
             userCol.updateOne(query, update);
 
-            addNewUserToUserNames(name);
             return true;
         }
+    }
+
+    public boolean checkUserNameExistence(String name)
+    {
+        return getUserAsOptDocumentByName(name).isPresent();
     }
 
     // updateUser() receives the oldUser document of the user to be updated by the getUserAsOptDocumentByID(id)
     // update has to be a complete and valid user document. Aside from not having the _id
     // Do we even need an updateUser() Method? I don't think so
-    public void updateUser(Document oldUser, Document update) {
-            deleteUserByName(oldUser.getString("name"));
-            createUser(update);
+
+    public void updateUserInUserCol(String originalUserID, Document updatedInfo) {
+        Bson filter = Filters.eq("_id", new ObjectId(originalUserID));
+        BasicDBObject update = new BasicDBObject("$set", updatedInfo);
+        userCol.updateOne(filter, update);                  // TODO: Test if this works
+
             //TODO: createUser(update) HAS TO INCLUDE the _id from the oldUser Doc. Otherwise the _id of the updated SurveyLeader
             //does not match the _id of the original one!
     }
 
+    public void updateUserInPollCol(String originalUserName, String newUserName) {
+        Bson filter = Filters.eq("created by", originalUserName);       // TODO: Test if this deletes all other content in array or just adds the new UserName
+        BasicDBObject update = new BasicDBObject("$set", new Document("created by", newUserName));
+        pollCol.updateMany(filter, update);
 
-    public void deleteUserByName(String name) {
-        Bson query = eq("name", name);
+        /*
+        Bson deleteOldUserName = Updates.pull("created by", originalUserName);
+        pollCol.updateOne(filter, deleteOldUserName);
+
+         */
+
+        filter = Filters.eq("accessible by", originalUserName);       // TODO: Test if this deletes all other content in array or just adds the new UserName
+        update = new BasicDBObject("$push", new Document("accessible by", newUserName));
+        pollCol.updateMany(filter, update);
+
+        Bson deleteOldUserName = Updates.pull("accessible by", originalUserName);
+        pollCol.updateMany(filter, deleteOldUserName);
+    }
+
+    public void updateUserInSessIDCol(Document originalUser, Document updatedInfo) {
+        Bson filter = Filters.eq("name", originalUser.getString("name"));       // TODO: Test if this deletes all other content in array or just adds the new UserName
+        BasicDBObject updateName = new BasicDBObject("$set", new Document("name", updatedInfo.getString("name")));
+        sessIDCol.updateOne(filter, updateName);
+
+        /*
+        Bson deleteOldUserName = Updates.pull("name", originalUser.getString("name"));
+        sessIDCol.updateOne(filter, deleteOldUserName);
+         */
+
+        filter = Filters.eq("pwHash", originalUser.getString("pwHash"));       // TODO: Test if this deletes all other content in array or just adds the new UserName
+        BasicDBObject updatePWHash = new BasicDBObject("$set", new Document("pwHash", updatedInfo.getString("pwHash")));
+        sessIDCol.updateOne(filter, updatePWHash);
+
+        /*
+        Bson deleteOldUPWHash = Updates.pull("pwHash", originalUser.getString("pwHash"));
+        sessIDCol.updateOne(filter, deleteOldUPWHash);
+         */
+    }
+
+
+    public void deleteUserByID(String id) {
+        Bson query = Filters.eq("_id", new ObjectId(id));
         this.userCol.deleteOne(query);
     }
 
@@ -241,20 +277,19 @@ public class DBInstance
         this.userNames = new ArrayList<>();
     }
 
-    public void addNewUserToUserNames(String name)
+    public boolean checkIfMoreThanOneAdminsExist()
     {
-        Optional<Document> optDoc = getSingleDocFromCollection(this.userCol, Projections.fields(), "name", name);
+        MongoCursor<Document> cursor = userCol.find(eq("role", "admin"))
+                .projection(Projections.fields())
+                .cursor();
 
-        if (optDoc.isPresent())
+        ArrayList<Document> admins = new ArrayList<>();
+        while(cursor.hasNext())
         {
-            Document doc = optDoc.get();
-            userNames.add(doc.getString("name"));
+            Document poll = cursor.next();
+            admins.add(poll);
         }
-        else
-        {
-            System.out.println("Specified user was not inserted correctly into database");
-            return;
-        }
+        return admins.size() > 1;
     }
     
 
@@ -331,7 +366,7 @@ public class DBInstance
         this.emailCol.deleteMany(new Document());
     }
 
-    private ArrayList<String> getAllEmails() {
+    public ArrayList<String> getAllEmails() {
         Optional<Document> optDoc = Optional.ofNullable(this.emailCol.find().first());
 
         if(optDoc.isPresent())
@@ -388,7 +423,7 @@ public class DBInstance
 
       if(checkIfUserHasSessID(user))
         {
-            this.sessIDCol.deleteOne(and(eq("name", user.getString("name")), eq("pwHash", user.getString("pwHash"))));
+            this.sessIDCol.deleteOne(eq("name", user.getString("name")));
         }
 
 

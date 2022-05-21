@@ -24,9 +24,9 @@ public class MongoTest {
     // INSTANCE.deleteAllEmails();
 
 
-    Document doc = new Document().append("name", "Poll1").append("created by", "Blofeld").append("accessible by", "Bond");;
-    Document doc2 = new Document().append("name", "Poll2").append("created by", "adasdsa").append("accessible by", "Blofeld");
-    Document doc3 = new Document().append("name", "Poll3").append("created by", "Bond").append("accessible by", "asdsadsad");
+    Document doc = new Document().append("name", "Poll1").append("created by", "Blofeld").append("accessible by", Arrays.asList(new String[] {"Bond"}));
+    Document doc2 = new Document().append("name", "Poll2").append("created by", "adasdsa").append("accessible by", Arrays.asList(new String[] {"Blofeld"}));
+    Document doc3 = new Document().append("name", "Poll3").append("created by", "Bond").append("accessible by", Arrays.asList(new String[] {"asdsadsad"}));
     Document doc4 = new Document().append("name", "Poll4").append("created by", "");
     ArrayList<String> l = new ArrayList<>();
     l.add("Bond");

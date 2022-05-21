@@ -4,18 +4,16 @@ import main.java.app.database.DBInstance;
 import org.bson.Document;
 
 import javax.print.Doc;
+import javax.swing.text.html.Option;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import org.apache.commons.codec.binary.Base64;
-import org.bson.types.ObjectId;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -121,6 +119,7 @@ public class Service
 
 		// TODO: Decrypt JSON
 
+		// "accessible by" muss Array sein
 		if(!json.contains("name") || !json.contains("accessible by") || !json.contains("created by") || !json.contains("tokens") || !json.contains("questions"))
 		{
 			throw new WebApplicationException(Response.status(422).build());
@@ -136,6 +135,11 @@ public class Service
 		INSTANCE.createPoll(poll);
 		return Response.ok(poll.toJson()).build(); 	//TODO: Checken ob der Muell funktioniert
 	}
+
+
+
+
+	// TODO: Check if PollToBeDeleted is accessible by user
 
 	@DELETE
 	@Produces( MediaType.APPLICATION_JSON )
@@ -180,7 +184,7 @@ public class Service
 
 		// TODO: Decrypt JSON
 
-		if(!json.contains("userName") || !json.contains("password") || !json.contains("role"))
+		if(!json.contains("E-Mail") ||!json.contains("userName") || !json.contains("password") || !json.contains("role"))
 		{
 			throw new WebApplicationException(Response.status(422).build());
 		}
@@ -194,10 +198,71 @@ public class Service
 		return Response.ok(user).build();
 	}
 
+	// TODO: Change Username, change Password
+	// TODO: Check if at least one sysAdmin exists
+
+
+	@PUT
+	@Path("/users")
+	@Consumes( MediaType.APPLICATION_JSON )
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response updateUser(final String json, @DefaultValue("") @QueryParam("sessionID") final String sessID)
+	{
+		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
+
+		if(!optUser.isPresent())
+		{
+			throw new WebApplicationException(Response.status(401).build()); // Session ID doesn't exist. User has to login on website again
+		}
+
+		// TODO: Decrypt JSON
+
+		Document user = optUser.get();
+		Document newUser = Document.parse(json);
+		Optional<Document> existingOptUser = INSTANCE.getUserAsOptDocumentByName(newUser.getString("name"));
+
+		Document existingUser = new Document();
+
+		if(!existingOptUser.isPresent())
+		{
+			existingUser = user;
+		}
+		else
+		{
+			existingUser = existingOptUser.get();
+		}
+
+		if(!json.contains("password") || !json.contains("name"))	// || !existingUser.getString("name").equals(user.getString("name")
+		{
+			throw new WebApplicationException(Response.status(422).build());
+		}
+
+			// User with already existing name is the user that needs to be updated
+			if(existingUser.getString("name").equals(user.getString("name")) && existingUser.getString("pwHash").equals(user.getString("pwHash")))
+			{
+				String userID = user.get("_id").toString();
+				Document update = new Document("_id", user.get("_id")).append("name", newUser.getString("name")).append("role", user.getString("role"));
+				update.append("salt", user.getString("salt")).append("pwHash", INSTANCE.generatePWHash(newUser.getString("password"), Base64.decodeBase64(user.getString("salt"))));
+
+				INSTANCE.updateUserInPollCol(user.getString("name"), update.getString("name"));
+				INSTANCE.updateUserInSessIDCol(user, update);		// TODO: pwHash wird nicht aktualisiert???
+				INSTANCE.updateUserInUserCol(userID, update);
+
+				// TODO: encrypt Response
+
+				return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();		// TODO: Test
+			}
+			System.out.println("UserName already exists");
+			throw new WebApplicationException(Response.status(404).build());
+
+
+	}
+
+
 	@DELETE
 	@Path("/users")
 	@Produces( MediaType.APPLICATION_JSON )
-	public Response deleteUser(@DefaultValue("") @QueryParam("userName") final String userToDelete, @DefaultValue("") @QueryParam("sessionID") final String sessID)
+	public Response deleteUser(@DefaultValue("") @QueryParam("userName") final String userToDeleteByName, @DefaultValue("") @QueryParam("sessionID") final String sessID)
 	{
 		Optional<Document> optUser = INSTANCE.authenticate(sessID);
 
@@ -207,19 +272,33 @@ public class Service
 		}
 		Document user = optUser.get();
 
-		if(!user.getString("role").equals("admin"))
+		if(userToDeleteByName.equals(user.getString("name")))
 		{
-			System.out.println("User does not have the neccessary permissions to delete an user");
+			System.out.println("An User can not delete his own account");
 			throw new WebApplicationException(Response.status(401).build());
 		}
 
-		optUser = INSTANCE.getUserAsOptDocumentByNameWithoutID(userToDelete);
+		if(!user.getString("role").equals("admin"))
+		{
+			System.out.println("User does not have the neccessary permissions to delete another user");
+			throw new WebApplicationException(Response.status(401).build());
+		}
+
+		optUser = INSTANCE.getUserAsOptDocumentByName(userToDeleteByName);
 		if(!optUser.isPresent())
 		{
 			throw new WebApplicationException(Response.status(404).build());
 		}
 
-		INSTANCE.deleteUserByName(userToDelete);
+		Document userToDelete = optUser.get();
+
+		if(userToDelete.getString("role").equals("admin") && !INSTANCE.checkIfMoreThanOneAdminsExist())
+		{
+			System.out.println("Delete Request denied. At least one admin has to exist at all times");
+			throw new WebApplicationException(Response.status(404).build());
+		}
+
+		INSTANCE.deleteUserByID(userToDelete.get("_id").toString());
 		return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();
 	}
 
@@ -238,7 +317,7 @@ public class Service
 		String userName = doc.getString("userName");
 		String password = doc.getString("password");
 
-		final Optional<Document> optUser = INSTANCE.getUserAsOptDocumentByNameWithoutID(userName);
+		final Optional<Document> optUser = INSTANCE.getUserAsOptDocumentByName(userName);
 
 		if(!optUser.isPresent())
 		{
@@ -250,7 +329,7 @@ public class Service
 		if(!INSTANCE.comparePWHash(user.getString("pwHash"), INSTANCE.generatePWHash(password, Base64.decodeBase64(user.getString("salt")))))
 		{
 			System.out.println("Incorrect Password");
-			throw new WebApplicationException(Response.status(404).build());
+			throw new WebApplicationException(Response.status(401).build());
 		}
 
 		INSTANCE.generateAndSetSessID(user);
@@ -365,9 +444,24 @@ public class Service
 	}
 
 
+	@GET
+	@Path("/emails")
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response getAlreadyUsedEmails(@DefaultValue("") @QueryParam("sessionID") final String sessID)
+	{
+		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
+		if(!optUser.isPresent())
+		{
+			throw new WebApplicationException(Response.status(401).build());
+		}
 
+		ArrayList<String> emails = INSTANCE.getAllEmails();
+		Document result = new Document().append("E-Mails", emails).append("Session ID", optUser.get().getString("Session ID"));
 
+		// TODO: encrypt JSON
 
+		return Response.ok( result.toJson() ).build( );
+	}
 
 }
 
