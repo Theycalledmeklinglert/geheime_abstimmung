@@ -8,7 +8,7 @@ import { VoteContainer } from '../models/voteContainer';
 })
 export class BackendService {
 
-  readonly url = 'http://localhost:8080/demo/api/polls/session';
+  readonly url = 'http://localhost:8080/demo/api/polls';
 
   constructor(private httpClient: HttpClient) { }
 
@@ -39,12 +39,14 @@ export class BackendService {
   }
 
   getSessionID(myUserData: JSON): string{
-    let sessionID:string = "";
+    let sessionID:string = "No Response";
 
     this.httpClient.post<any>( this.url + '/session' , myUserData ).subscribe((response) => {
       sessionID = response["Session ID"];
 
     });
+
+    console.log(sessionID);
 
     return sessionID;
   }
