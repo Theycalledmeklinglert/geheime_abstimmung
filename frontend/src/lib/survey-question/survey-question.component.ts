@@ -17,20 +17,23 @@ export class SurveyQuestionComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.question.multipleChoiceAnswer.fill(false,0,this.question.multipleChoiceAnswer.length);
 
 
   }
 
-  setAnswer(event:any):void {
-    this.question.individualAnswer = event.target.value;
-  }
 
-  updateFixedAnswer():void {
-
+  updateFixedAnswer(index: number):void {
+    this.question.multipleChoiceAnswer[index] = !this.question.multipleChoiceAnswer[index];
   }
 
   updateYesNoAnswer(): void {
-    
+
+  }
+
+  //temp!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  check(){
+    console.log(this.question)
   }
 
 }

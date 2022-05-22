@@ -5,9 +5,9 @@
 <div id="body">
 
   <section class="yesNoAnswer" *ngIf="this.question.type=='yesNoAnswer' ">
-    <mat-radio-group [(ngModel)]="labelPosition">
-      <mat-radio-button class="example-margin" value="yes">yes</mat-radio-button>
-      <mat-radio-button class="example-margin" value="no">no</mat-radio-button>
+    <mat-radio-group [(ngModel)]="this.question.yesNo">
+      <mat-radio-button value="true">yes</mat-radio-button>
+      <mat-radio-button value="false">no</mat-radio-button>
     </mat-radio-group>
   </section>
 
@@ -15,7 +15,7 @@
     <ul>
       <li *ngFor="let answer of this.question.fixedAnswers; let i = index">
         <div class="answer">
-          <mat-checkbox (change)="updateFixedAnswer()">
+          <mat-checkbox (change)="updateFixedAnswer(i)">
           {{answer}}
         </mat-checkbox>
         </div>
@@ -25,9 +25,12 @@
 
   <section class="customAnswer" *ngIf="this.question.type=='individualAnswer' ">
     <mat-form-field>
-      <input matInput placeholder="Your Answer">
+      <input matInput placeholder="Your Answer" [(ngModel)]="this.question.individualAnswer">
     </mat-form-field>
   </section>
+
+
+  <button mat-flat-button color="primary" (click)="check()">chjeck</button>
 
 </div>
 

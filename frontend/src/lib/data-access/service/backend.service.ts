@@ -1,0 +1,55 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { VoteContainer } from '../models/voteContainer';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class BackendService {
+
+  readonly url = 'http://localhost:8080/demo/api/polls';
+
+  constructor(private httpClient: HttpClient) { }
+
+  getVotecontainerofsurveyLeader(id: number): Observable<VoteContainer> {
+      return this.httpClient.get<VoteContainer>(this.url + '/'+ id);
+
+  }
+
+  getUsernameofsurveyLeader():string{
+    return "No Connection";
+  }
+
+  setpasswordofSurveyLeader(): void{
+  }
+
+  setSurveyLeader(): void{
+  }
+
+  deleteSurveyLeader(): void{
+  }
+
+  setnewVote(): void{
+  }
+
+  postPublicKey(myPublicKey: JSON): JSON{
+    let test: JSON = JSON.parse("Serverresponse");
+    return test;
+  }
+
+  getSessionID(myUserData: JSON): Observable<JSON>{
+    let data = this.httpClient.post<JSON>( this.url + '/session' , myUserData );
+
+    console.log(JSON.stringify(data))
+    return data;
+
+
+
+
+  }
+
+
+
+}
+

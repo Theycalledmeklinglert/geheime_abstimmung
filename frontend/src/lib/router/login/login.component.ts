@@ -4,7 +4,7 @@ import {SurveyLeader} from "../../data-access/models/surveyLeader";
 import {Router, RouterModule} from "@angular/router";
 import {AppComponent} from "../../../app/app.component";
 import {AppModule} from "../../../app/app.module";
-import {AuthenticationService} from "../../data-access/authentication.service";
+import {AuthenticationService} from "../../data-access/service/authentication.service";
 
 
 

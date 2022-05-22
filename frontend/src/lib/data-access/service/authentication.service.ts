@@ -36,7 +36,9 @@ export class AuthenticationService {
     let PasswordandUsername: JSON = JSON.parse('{"Password":'+password+', "Username" :'+username+'}');
     let encryptedPasswordandUsernameAsString: string = this.cryptService.encryptMessage(backendPublicKey,PasswordandUsername);
     let encryptedPasswordandUsernameJSON: JSON = JSON.parse('{"Encrypted Username and Password":'+encryptedPasswordandUsernameAsString+'}');
-    let myCurrentSessionJSON: JSON = this.backendS.getSessionID(encryptedPasswordandUsernameJSON);
+
+
+    let myCurrentSessionJSON = this.backendS.getSessionID(encryptedPasswordandUsernameJSON);
 
 
     //safe SessionID

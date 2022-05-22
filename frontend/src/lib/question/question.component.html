@@ -16,7 +16,6 @@
     <ul class="answerlist">
       <li *ngFor="let answer of this.question.fixedAnswers" class="answerstyle">
         {{answer}}
-
         <button mat-icon-button (click)="deleteAnswer(answer)">
           <mat-icon>delete</mat-icon>
         </button>
@@ -27,9 +26,9 @@
           <mat-label>Enter an answer:</mat-label>
           <input matInput placeholder="Your Answer" [(ngModel)]="this.tempAnswer">
         </mat-form-field>
-    </div>
-
+      </div>
     </ul>
+
     <button mat-icon-button (click)="addAnswer()">
       <mat-icon>add</mat-icon>
     </button>
@@ -39,7 +38,7 @@
     <mat-label>Add a description:</mat-label>
     <textarea matInput
       [(ngModel)]="this.question.description"
-      
+
       placeholder="Enter a description..."
       >
     </textarea>

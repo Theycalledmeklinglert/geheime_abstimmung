@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Question } from 'src/lib/data-access/models/question';
 import { Vote } from 'src/lib/data-access/models/vote';
 
@@ -9,11 +10,14 @@ import { Vote } from 'src/lib/data-access/models/vote';
 })
 export class SurveyComponent implements OnInit {
   vote:Vote;
+  surveyFrom: FormGroup;
 
   constructor() { }
 
   ngOnInit(): void {
     this.loadTestQuestions(); //Platzhalter zum testen bis Backendanbindung funktioniert
+
+    //this.surveyFrom = new FormBuilder().
   }
 
   consoleLogging():void {

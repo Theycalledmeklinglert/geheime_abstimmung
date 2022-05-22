@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { VoteContainer } from '../../data-access/models/voteContainer';
 import {Vote} from "../../data-access/models/vote";
-import {BackendService} from "../../data-access/backend.service";
+import {BackendService} from "../../data-access/service/backend.service";
 
 @Component({
   selector: 'voteContainer',
@@ -11,9 +11,10 @@ import {BackendService} from "../../data-access/backend.service";
 })
 export class VoteConainterComponent implements OnInit{
   vlcObject?: VoteContainer;
-  backendS: BackendService = new BackendService();
 
   newListIndex?: number;
+
+  constructor(private backendService: BackendService) {}
 
   ngOnInit(): void {
     this.vlcObject = {name:"testcontainer", votes:[{name:"TESTVOTE",lifetime:"1d17h10s"},{name:"Vote2",lifetime:"4d3h25s"},{name:"Vote3",lifetime:"2d12h55s"},{name:"Vote4",lifetime:"29d11h35s"},{name:"Vote5",lifetime:"0d0h55s"},{name:"Vote6",lifetime:"1d7h0s"},{name:"Vote7",lifetime:"1d17h10s"},{name:"Vote8",lifetime:"4d3h25s"},{name:"Vote9",lifetime:"2d12h55s"},{name:"Vote10",lifetime:"29d11h35s"}] };

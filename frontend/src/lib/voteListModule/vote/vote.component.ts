@@ -6,7 +6,7 @@ import {
   Output
 } from '@angular/core';
 import {Vote} from "../../data-access/models/vote";
-import {BackendService} from "../../data-access/backend.service";
+import {BackendService} from "../../data-access/service/backend.service";
 
 @Component({
   selector: 'vote',
@@ -19,7 +19,8 @@ export class VoteComponent {
   lowlifetime: boolean = false;
   showvoteinfo:boolean = false;
   datum: Date;
-  backendS: BackendService = new BackendService();
+
+  constructor (private backendService: BackendService) {}
 
 
   showVoteResult(): void {

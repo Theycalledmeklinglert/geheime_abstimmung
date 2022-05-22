@@ -3,7 +3,7 @@ import {Editor} from "../../data-access/models/editor";
 import {Question} from "../../data-access/models/question";
 import {box, randomBytes} from 'tweetnacl';
 import {decodeBase64, decodeUTF8, encodeBase64, encodeUTF8} from 'tweetnacl-util';
-import {EncryptionService} from "../../data-access/encryption.service";
+import {EncryptionService} from "../../data-access/service/encryption.service";
 
 @Component({
   selector: 'editor',

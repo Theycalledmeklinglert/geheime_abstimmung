@@ -1,6 +1,6 @@
 import { Component} from "@angular/core";
 import {LoginComponent} from "../login/login.component";
-import {BackendService} from "../../data-access/backend.service";
+import {BackendService} from "../../data-access/service/backend.service";
 
 
 
@@ -40,8 +40,8 @@ export class MainmenuComponent{
 
   //delete Admin
   deleteadminadress: string= "";
-  backendS: BackendService = new BackendService();
 
+  constructor(private backendService: BackendService) {}
 
   showAddAdmin(): void{
     this.addAdmin = true;

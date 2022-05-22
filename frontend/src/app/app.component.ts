@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {LoginComponent} from "../lib/router/login/login.component";
-import {BackendService} from "../lib/data-access/backend.service";
+import {BackendService} from "../lib/data-access/service/backend.service";
 
 @Component({
   selector: 'app-root',
@@ -12,17 +12,10 @@ export class AppComponent {
 
   currentuser: string = "";
   firststart : boolean;
-  backendS: BackendService = new BackendService();
+
   constructor() {
     localStorage.removeItem("sessionid");
     localStorage.removeItem("backendpublickey");
   }
-
-  getusername(): String{
-    //return this.loggedInUser.username;
-    this.currentuser = this.backendS.getUsernameofsurveyLeader();
-    return this.currentuser;
-  }
-
 
 }
