@@ -8,7 +8,7 @@ import { VoteContainer } from '../models/voteContainer';
 })
 export class BackendService {
 
-  readonly url = 'http://localhost:8080/demo/api/polls';
+  readonly url = 'http://localhost:8080/demo/api/polls/session';
 
   constructor(private httpClient: HttpClient) { }
 
@@ -38,15 +38,15 @@ export class BackendService {
     return test;
   }
 
-  getSessionID(myUserData: JSON): Observable<JSON>{
-    let data = this.httpClient.post<JSON>( this.url + '/session' , myUserData );
+  getSessionID(myUserData: JSON): string{
+    let sessionID:string = "";
 
-    console.log(JSON.stringify(data))
-    return data;
+    this.httpClient.post<any>( this.url + '/session' , myUserData ).subscribe((response) => {
+      sessionID = response["Session ID"];
 
+    });
 
-
-
+    return sessionID;
   }
 
 

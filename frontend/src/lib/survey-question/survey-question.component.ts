@@ -17,7 +17,6 @@ export class SurveyQuestionComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.question.multipleChoiceAnswer.fill(false,0,this.question.multipleChoiceAnswer.length);
 
 
   }
