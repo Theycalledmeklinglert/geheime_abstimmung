@@ -1,4 +1,4 @@
- package main.java.app.emaildistributor;
+package main.java.app.emaildistributor;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
