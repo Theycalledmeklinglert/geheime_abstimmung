@@ -12,7 +12,7 @@ import java.util.*;
 public class Distributor {
     public static void main(String[] args) {
 
-        String recipient = "blablacaodg@gmail.com";
+        String recipient = "blablacaodg@gmail.com, tim.braunger@gmx.de";
         String sender = "secret.vote.project@gmail.com";
         String host = "smtp.gmail.com";
 
