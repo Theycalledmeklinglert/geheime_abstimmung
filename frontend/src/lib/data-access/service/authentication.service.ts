@@ -47,6 +47,9 @@ export class AuthenticationService {
     localStorage.setItem("sessionID",myCurrentSessionasString); //toDo need to clear all objects if session ends
   }
 
+  updateSessionid(currentSessionid: string){
+  }
+
 
 
 

@@ -37,6 +37,7 @@ export class MainmenuComponent{
   newadminadress: string = "";
   newadminpassword: string= "";
   newadminusername: string= "";
+  newadminrole: string= "";
 
   //delete Admin
   deleteadminadress: string= "";

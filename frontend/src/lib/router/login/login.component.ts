@@ -20,7 +20,8 @@ export class LoginComponent{
   password: string = "";
   userObject: SurveyLeader;
   helpbuttonpressed: boolean;
-  constructor(private authService: AuthenticationService) {
+  correctUserdata: boolean = true;
+  constructor(private authService: AuthenticationService, private router: Router) {
   }
 
 
@@ -35,11 +36,15 @@ export class LoginComponent{
     localStorage.removeItem("sessionid");
     localStorage.removeItem("backendpublickey");
     if(this.username != "" && this.password != ""){
+      if (this.correctUserdata){
+        this.router.navigate(['/main']);
+      }
+
       this.authService.getSessionid(this.username,this.password);
+
     }else {
       alert("Emailadress or Password is empty!");
     }
-
   }
 
   presshelpbutton():void{
