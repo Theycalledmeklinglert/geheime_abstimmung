@@ -254,8 +254,6 @@ public class Service
 			}
 			System.out.println("UserName already exists");
 			throw new WebApplicationException(Response.status(404).build());
-
-
 	}
 
 
@@ -409,7 +407,7 @@ public class Service
 		return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();
 	}
 
-
+	// Diese Methode ist überflüssig oder? Da die Fragen schon im FrontEnd in den Poll embedded werden
 	@POST
 	@Path("/questions")
 	@Consumes( MediaType.APPLICATION_JSON )
@@ -462,6 +460,29 @@ public class Service
 
 		return Response.ok( result.toJson() ).build( );
 	}
+
+	@POST
+	@Path("/emails")
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response postLastUsedEmails(@DefaultValue("") @QueryParam("sessionID") final String sessID)
+	{
+		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
+		if(!optUser.isPresent())
+		{
+			throw new WebApplicationException(Response.status(401).build());
+		}
+
+		Document user = optUser.get();
+
+		//TODO
+
+
+
+
+		return Response.ok(new Document("Session ID", user.getString("Session ID"))).build();
+
+	}
+
 
 }
 

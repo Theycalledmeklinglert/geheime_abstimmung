@@ -6,6 +6,7 @@ import static main.java.app.database.DBInstance.getDBInstance;
 import com.mongodb.BasicDBObject;
 import main.java.app.database.DBInstance;
 import org.bson.Document;
+import org.bson.json.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -126,6 +127,12 @@ public class MongoTest {
 
         Document user4 = new Document("name", "meRN").append("password", "12345").append("pwHash", "asdf");
         INSTANCE.createUser(user4);
+
+
+        Document test = new Document("Session ID", "1232134");
+        String sessID = test.getString("Session ID");
+
+
 
         //doc = new Document("name", "Hi");
        // doc.put("name", "hello");
