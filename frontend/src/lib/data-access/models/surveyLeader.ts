@@ -3,5 +3,5 @@ export interface SurveyLeader {
   id?: number;
   username: string;
   password: string;
-  uservotes?: VoteContainer;
+  currentPolls?: VoteContainer;
 }

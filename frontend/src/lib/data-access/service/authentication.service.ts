@@ -50,7 +50,7 @@ export class AuthenticationService {
 
      */
 
-    this.backendS.getSessionID(passwordandUsername)
+    this.backendS.loadSessionID(passwordandUsername)
       .subscribe((response) =>
         localStorage.setItem( "sessionID", response["Session ID"] )
       );
