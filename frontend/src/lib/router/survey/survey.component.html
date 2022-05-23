@@ -13,7 +13,7 @@
 </div>
 
   <div id="submitButton">
-    <button mat-flat-button color="primary" (click)="submitSurvey()">Submit</button>
+    <button mat-flat-button color="primary" [disabled]="this.surveyFrom.invalid" (click)="submitSurvey()">Submit</button>
   </div>
 
 

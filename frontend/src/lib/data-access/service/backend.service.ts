@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { SurveyLeader } from '../models/surveyLeader';
+import { Vote } from '../models/vote';
 import { VoteContainer } from '../models/voteContainer';
 
 @Injectable({
@@ -12,8 +14,60 @@ export class BackendService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getVotecontainerofsurveyLeader(sessionID: string): Observable<VoteContainer> {
-    return this.httpClient.get<VoteContainer>(this.url + '/api/polls/'+ sessionID);
+  private getSessionID():string{
+    return localStorage.getItem("sessionID");
+  }
+
+  loadAllPollsByUser(): Observable<VoteContainer> {
+
+    return this.httpClient.get<VoteContainer>(this.url + '/api/polls?sessionID='+ this.getSessionID());
+
+  }
+
+
+  loadPollByUser(pollId: number): Observable<Vote> {
+
+    return this.httpClient.get<Vote>( this.url + '/api/polls/ '+ pollId +'?sessionID='+ this.getSessionID() );
+  }
+
+  createPoll(poll: Vote):Observable<Vote> {
+    let data = {
+      ...poll,
+    }
+
+    return this.httpClient.post<Vote>(this.url + '/api/polls?sessionID='+ this.getSessionID(), data);
+  }
+
+  deletePollByID(pollId: number):Observable<void>  {
+
+    return this.httpClient.delete<void>( this.url + '/api/polls/ '+ pollId +'/sessionID='+ this.getSessionID() );
+
+  }
+
+
+  //temp any!!!!!!!!!!!!!!!!!!!
+  loadAlreadyUsedEmails():Observable<any> {
+
+    return this.httpClient.get<any>( this.url + '/api/emails?sessionID='+ this.getSessionID() );
+
+  }
+
+  postPublicKey(myPublicKey: JSON): JSON{
+    let test: JSON = JSON.parse("Serverresponse");
+    return test;
+  }
+
+  loadSessionID(myUserData: JSON): Observable<any> {
+
+    return this.httpClient.post<any>( this.url + '/api/polls/session' , myUserData );
+
+  }
+
+
+  deleteUser(user: SurveyLeader):Observable<void> {
+
+    return this.httpClient.delete<void>(this.url + '/api/users?userName=' + user.username + '&sessionID=' + this.getSessionID() )
+
   }
 
   getUsernameofsurveyLeader():string{
@@ -26,22 +80,10 @@ export class BackendService {
   setSurveyLeader(): void{
   }
 
-  deleteSurveyLeader(): void{
-  }
-
   setnewVote(): void{
   }
 
-  postPublicKey(myPublicKey: JSON): JSON{
-    let test: JSON = JSON.parse("Serverresponse");
-    return test;
-  }
 
-  getSessionID(myUserData: JSON): Observable<any> {
-
-    return this.httpClient.post<any>( this.url + '/api/polls/session' , myUserData );
-
-  }
 
 }
 
