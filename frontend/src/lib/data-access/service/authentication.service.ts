@@ -38,13 +38,11 @@ export class AuthenticationService {
     let encryptedPasswordandUsernameJSON: JSON = JSON.parse('{"Encrypted Username and Password":'+encryptedPasswordandUsernameAsString+'}');
 
 
-    let myCurrentSessionJSON = this.backendS.getSessionID(encryptedPasswordandUsernameJSON);
+    this.backendS.getSessionID(encryptedPasswordandUsernameJSON)
+      .subscribe((response) =>
+        localStorage.setItem( "sessionID", response["Session ID"] )
+      );
 
-
-    //safe SessionID
-    let myCurrentSessionasString: string = JSON.stringify(myCurrentSessionJSON);
-
-    localStorage.setItem("sessionID",myCurrentSessionasString); //toDo need to clear all objects if session ends
   }
 
   updateSessionid(currentSessionid: string){

@@ -12,6 +12,7 @@ import { BackendService } from 'src/lib/data-access/service/backend.service';
 export class SurveyComponent implements OnInit {
   vote:Vote;
   surveyFrom: FormGroup;
+  debugObserbale: any;
 
   constructor(private backendService: BackendService) {}
 
@@ -41,14 +42,12 @@ export class SurveyComponent implements OnInit {
   //temp!!!!!!!!!!!!!
   debug() {
     const testJSON: JSON = JSON.parse('{"userName":"Blofeld", "password":"12345"}')
+    var test;
 
+    this.backendService.getSessionID(testJSON) .subscribe((response) =>
+    test = response["Session ID"]
 
-    const observable = this.backendService.getSessionID(testJSON);
-
-    console.log(observable)
-
-
-
+  );
 
   }
 

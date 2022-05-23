@@ -8,12 +8,12 @@ import { VoteContainer } from '../models/voteContainer';
 })
 export class BackendService {
 
-  readonly url = 'http://localhost:8080/demo/api/polls';
+  readonly url = 'http://localhost:4200';
 
   constructor(private httpClient: HttpClient) { }
 
   getVotecontainerofsurveyLeader(id: number): Observable<VoteContainer> {
-      return this.httpClient.get<VoteContainer>(this.url + '/'+ id);
+      return this.httpClient.get<VoteContainer>(this.url + '/api/polls/id/'+ id);
 
   }
 
@@ -38,20 +38,11 @@ export class BackendService {
     return test;
   }
 
-  getSessionID(myUserData: JSON): string{
-    let sessionID:string = "No Response";
+  getSessionID(myUserData: JSON): Observable<any> {
 
-    this.httpClient.post<any>( this.url + '/session' , myUserData ).subscribe((response) => {
-      sessionID = response["Session ID"];
+    return this.httpClient.post<any>( this.url + '/api/polls/session' , myUserData );
 
-    });
-
-    console.log(sessionID);
-
-    return sessionID;
   }
-
-
 
 }
 
