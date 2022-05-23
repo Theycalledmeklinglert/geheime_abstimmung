@@ -332,7 +332,7 @@ public class Service
 
 		INSTANCE.generateAndSetSessID(user);
 
-		Document res = new Document().append("Session ID", user.getString("Session ID"));
+		Document res = new Document().append("Session ID", user.getString("Session ID")).append("userName", user.getString(user.getString("userName")));
 		String unencryptedJSON = res.toJson();
 
 		// TODO: Encrypt JSON before sending back
@@ -343,19 +343,13 @@ public class Service
 
 	}
 
-
+				// TODO: Poll_id and answerid per @Path Element
 	@POST
 	@Path("/answers")
 	@Consumes( MediaType.APPLICATION_JSON )
 	@Produces( MediaType.APPLICATION_JSON )
-	public Response postAnswer(final String json, @DefaultValue("") @QueryParam("sessionID") final String sessID)
+	public Response postAnswer(final String json)	// TODO: remove Session ID
 	{
-		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
-
-		if(!optUser.isPresent())
-		{
-			throw new WebApplicationException(Response.status(401).build()); // Session ID doesn't exist. User has to login on website again
-		}
 
 		// TODO: Decrypt JSON
 
@@ -378,8 +372,7 @@ public class Service
 		{
 			throw new WebApplicationException(Response.status(404).build());
 		}
-		Document user = optUser.get();
-		return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();
+		return Response.ok().build();
 	}
 
 	@DELETE

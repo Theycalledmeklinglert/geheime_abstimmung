@@ -74,7 +74,6 @@ public class DBInstance
 
         }
 
-
     public Optional<Document> getPollAsOptDocumentByID(final String id )
     {
         Document doc = pollCol.find(eq("_id", new ObjectId(id)))
@@ -419,7 +418,7 @@ public class DBInstance
     }
 
 
-    public void generateAndSetSessID(Document user) {   // TODO: Test if sessionIDs are deleted after 30 minutes
+    public void generateAndSetSessID(Document user) {
 
       if(checkIfUserHasSessID(user))
         {
