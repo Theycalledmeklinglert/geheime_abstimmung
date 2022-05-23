@@ -332,7 +332,7 @@ public class Service
 
 		INSTANCE.generateAndSetSessID(user);
 
-		Document res = new Document().append("Session ID", user.getString("Session ID")).append("userName", user.getString(user.getString("userName")));
+		Document res = new Document().append("Session ID", user.getString("Session ID")).append("userName", user.getString("name"));
 		String unencryptedJSON = res.toJson();
 
 		// TODO: Encrypt JSON before sending back

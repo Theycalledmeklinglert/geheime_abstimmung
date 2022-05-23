@@ -163,6 +163,8 @@ public class DBInstance
             while(cursor.hasNext())
             {
                 Document poll = cursor.next();
+                String id = poll.get("_id").toString();
+                poll.append("_id", id);
                 polls.add(poll);
             }
 
