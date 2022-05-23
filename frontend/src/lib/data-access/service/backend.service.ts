@@ -12,9 +12,8 @@ export class BackendService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getVotecontainerofsurveyLeader(id: number): Observable<VoteContainer> {
-      return this.httpClient.get<VoteContainer>(this.url + '/api/polls/id/'+ id);
-
+  getVotecontainerofsurveyLeader(sessionID: string): Observable<VoteContainer> {
+    return this.httpClient.get<VoteContainer>(this.url + '/api/polls/'+ sessionID);
   }
 
   getUsernameofsurveyLeader():string{

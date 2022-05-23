@@ -15,6 +15,8 @@ export class AuthenticationService {
   getSessionid(username: string, password: string): void {
     //-> call encryption service to generate public key
 
+
+    /*
     let keyPair = this.cryptService.generateKeyPair();
     let myPublicKey: string = keyPair.publicKey.toString();
     let myPrivateKey: string = keyPair.secretKey.toString();
@@ -32,25 +34,37 @@ export class AuthenticationService {
     let backendPublicKey: Uint8Array = new TextEncoder().encode(backendPublicKeyAsString);
 
     // generate and send encrypted Password and Username
+
+
+    */
+
     //toDo hash password
-    let PasswordandUsername: JSON = JSON.parse('{"Password":'+password+', "Username" :'+username+'}');
+
+    let userData = '{"password":"'+password+'", "userName" :"'+username+'"}';
+    const passwordandUsername: JSON = JSON.parse(userData);
+
+    /*
+
     let encryptedPasswordandUsernameAsString: string = this.cryptService.encryptMessage(backendPublicKey,PasswordandUsername);
     let encryptedPasswordandUsernameJSON: JSON = JSON.parse('{"Encrypted Username and Password":'+encryptedPasswordandUsernameAsString+'}');
 
+     */
 
-    this.backendS.getSessionID(encryptedPasswordandUsernameJSON)
+    this.backendS.getSessionID(passwordandUsername)
       .subscribe((response) =>
         localStorage.setItem( "sessionID", response["Session ID"] )
       );
 
+    console.log(localStorage.getItem("sessionID"));
   }
 
-  updateSessionid(currentSessionid: string){
+  updateSessionid(newSessionid: string){
+    localStorage.removeItem("sessionID");
+    localStorage.setItem("sessionID",newSessionid);
   }
 
 
 
 
 }
-
 
