@@ -5,9 +5,10 @@ import static main.java.app.database.DBInstance.getDBInstance;
 
 import com.mongodb.BasicDBObject;
 import main.java.app.database.DBInstance;
+import okhttp3.*;
 import org.bson.Document;
-import org.bson.json.JsonObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -95,8 +96,8 @@ public class MongoTest {
 
         System.out.println(doc.toJson());
         INSTANCE.createPoll(doc);
-        Document answer = new Document("poll_id", doc.get("_id").toString()).append("token", "aaabbb");     //TODO: Muesste poll_id nicht eigentlich question_id sein??
-        Document answer2 = new Document("poll_id", doc.get("_id").toString()).append("token", "aaabbbccc"); //TODO: Muesste poll_id nicht eigentlich question_id sein??
+        Document answer = new Document("poll_id", doc.get("_id").toString()).append("token", "aaabbb").append("question_id", "1");     //TODO: Muesste poll_id nicht eigentlich question_id sein??
+        Document answer2 = new Document("poll_id", doc.get("_id").toString()).append("token", "aaabbbccc").append("question_id", "2"); //TODO: Muesste poll_id nicht eigentlich question_id sein??
 
         System.out.println(doc.get("_id").toString());
         System.out.println(answer.getString("poll_id"));
@@ -107,9 +108,9 @@ public class MongoTest {
         INSTANCE.deleteAnswersOfPollByPollID("AnswerTestPoll");
 
 
-        doc = new Document().append("name", "AnswerTestPoll2").append("admin", "Blofeld").append("tokens", Arrays.asList(new String[]{"MyTokens"}));
+        doc = new Document().append("name", "AnswerTestPoll2").append("admin", "Blofeld").append("tokens", Arrays.asList(new String[]{"MyToken"}));
         INSTANCE.createPoll(doc);
-        Document answer3 = new Document("poll_id", doc.get("_id").toString()).append("token", "MyToken");
+        Document answer3 = new Document("poll_id", doc.get("_id").toString()).append("token", "MyToken").append("question_id", "3");
         doc.put("tokens", Arrays.asList(new String[]{"MyToken"}));
 
         INSTANCE.createAnswer(answer3);     // TODO: Polls MUESSEN ein ArrayFeld names "tokens" enthalten
@@ -123,7 +124,7 @@ public class MongoTest {
         INSTANCE.createPoll(newPoll);
 
         String[] emails = {"test@test.com", "test@fhws.de", "test@gmail.com"};
-        INSTANCE.postLastUsedEmails(Arrays.asList(emails));
+        INSTANCE.saveLastUsedEmails(Arrays.asList(emails));
 
         Document user4 = new Document("name", "meRN").append("password", "12345").append("pwHash", "asdf");
         INSTANCE.createUser(user4);
@@ -131,9 +132,24 @@ public class MongoTest {
 
         Document test = new Document("Session ID", "1232134");
         String sessID = test.getString("Session ID");
+/*
+        OkHttpClient client = new OkHttpClient();
+        String url = "http://localhost:8080/api/polls/session";
+        String data = "{\"userName\" : \"Blofeld\", \"password\" : \"12345\"}";
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), data);
+        Request request = new Request.Builder().post(body).url(url).build();
 
+        for(int i = 0; i<40; i++)
+        {
+            try {
+                Response response = client.newCall(request).execute();
+                System.out.println(response.body().string());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
-
+ */
         //doc = new Document("name", "Hi");
        // doc.put("name", "hello");
        // System.out.println(doc.toJson());
