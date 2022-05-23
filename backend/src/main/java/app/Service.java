@@ -92,11 +92,11 @@ public class Service
 
 		if(optPolls.isPresent())
 		{
-			Collection<Document> polls = optPolls.get();
-			polls.add(new Document().append("Session ID", optUser.get().getString("Session ID")));	// s. getByID()
+			ArrayList<Document> polls = optPolls.get();
+			Document res = new Document("polls", polls).append("Session ID", optUser.get().getString("Session ID"));
 			// TODO: encrypt JSON
 
-			return Response.ok( polls ).build( );
+			return Response.ok( res ).build( );
 		}
 
 		// TODO: encrypt JSON
@@ -342,8 +342,40 @@ public class Service
 		return Response.ok(unencryptedJSON).build();
 
 	}
+/*
+	@GET
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response getALlAnswersOfPoll(@DefaultValue("") @QueryParam("sessionID") final String sessID)
+	{
+		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
+		if(!optUser.isPresent())
+		{
+			throw new WebApplicationException(Response.status(401).build());
+		}
 
-				// TODO: Poll_id and answerid per @Path Element
+		final Optional<ArrayList<Document>> optPolls = INSTANCE.getAllPollsOfUser(optUser.get().getString("name"));
+
+		if(optPolls.isPresent())
+		{
+			Collection<Document> polls = optPolls.get();
+			polls.add(new Document().append("Session ID", optUser.get().getString("Session ID")));	// s. getByID()
+			// TODO: encrypt JSON
+
+			return Response.ok( polls ).build( );
+		}
+
+		// TODO: encrypt JSON
+
+		return Response.status(404).build();
+	}
+
+
+
+
+ */
+
+
+	// TODO: Poll_id and answerid per @Path Element
 	@POST
 	@Path("/answers")
 	@Consumes( MediaType.APPLICATION_JSON )
