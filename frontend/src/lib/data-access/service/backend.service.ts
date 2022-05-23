@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { SurveyLeader } from '../models/surveyLeader';
 import { Vote } from '../models/vote';
 import { VoteContainer } from '../models/voteContainer';
+import {AuthenticationService} from "./authentication.service";
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +19,9 @@ export class BackendService {
     return localStorage.getItem("sessionID");
   }
 
-  loadAllPollsByUser(): Observable<VoteContainer> {
+  loadAllPollsByUser(): Observable<JSON> {
 
-    return this.httpClient.get<VoteContainer>(this.url + '/api/polls?sessionID='+ this.getSessionID());
+    return this.httpClient.get<JSON>(this.url + '/api/polls?sessionID='+ this.getSessionID());
 
   }
 
