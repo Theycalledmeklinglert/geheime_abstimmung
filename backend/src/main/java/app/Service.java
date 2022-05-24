@@ -3,8 +3,6 @@ package main.java.app;
 import main.java.app.database.DBInstance;
 import org.bson.Document;
 
-import javax.print.Doc;
-import javax.swing.text.html.Option;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -14,7 +12,8 @@ import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import org.apache.commons.codec.binary.Base64;
 
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static main.java.app.database.DBInstance.getDBInstance;
@@ -92,11 +91,11 @@ public class Service
 
 		if(optPolls.isPresent())
 		{
-			Collection<Document> polls = optPolls.get();
-			polls.add(new Document().append("Session ID", optUser.get().getString("Session ID")));	// s. getByID()
+			ArrayList<Document> polls = optPolls.get();
+			Document res = new Document("polls", polls).append("Session ID", optUser.get().getString("Session ID"));
 			// TODO: encrypt JSON
 
-			return Response.ok( polls ).build( );
+			return Response.ok( res ).build( );
 		}
 
 		// TODO: encrypt JSON
@@ -120,7 +119,7 @@ public class Service
 		// TODO: Decrypt JSON
 
 		// "accessible by" muss Array sein
-		if(!json.contains("name") || !json.contains("accessible by") || !json.contains("created by") || !json.contains("tokens") || !json.contains("questions"))
+		if(!json.contains("name") || !json.contains("accessible by") || !json.contains("created by") || !json.contains("questions") || !json.contains("emails"))
 		{
 			throw new WebApplicationException(Response.status(422).build());
 		}
@@ -130,9 +129,26 @@ public class Service
 		poll.put("created by", user.getString("name"));
 		poll.append("Session ID", user.getString("Session ID"));	// s. getByID()
 
+		ArrayList<String> emails = (ArrayList<String>) poll.get("emails");
+		INSTANCE.saveLastUsedEmails(emails);
+
+		ArrayList<String> tokens = INSTANCE.generateTokensOfPoll(emails.size());
+		poll.append("tokens", tokens);
+		INSTANCE.createPoll(poll);
+
+		Map<String, String> emailsAndTokens = new HashMap<>();
+
+		for(String email : emails)
+		{
+			emailsAndTokens.put(email, tokens.get(0));
+			tokens.remove(0);
+		}
+
+		// TODO: Call corresponding method of the the distributor class to generate and send the links with
+
+
 		// TODO: encrypt JSON
 
-		INSTANCE.createPoll(poll);
 		return Response.ok(poll.toJson()).build(); 	//TODO: Checken ob der Muell funktioniert
 	}
 
@@ -184,7 +200,7 @@ public class Service
 
 		// TODO: Decrypt JSON
 
-		if(!json.contains("E-Mail") ||!json.contains("userName") || !json.contains("password") || !json.contains("role"))
+		if(!json.contains("email") ||!json.contains("userName") || !json.contains("password") || !json.contains("role"))
 		{
 			throw new WebApplicationException(Response.status(422).build());
 		}
@@ -254,8 +270,6 @@ public class Service
 			}
 			System.out.println("UserName already exists");
 			throw new WebApplicationException(Response.status(404).build());
-
-
 	}
 
 
@@ -334,7 +348,7 @@ public class Service
 
 		INSTANCE.generateAndSetSessID(user);
 
-		Document res = new Document().append("Session ID", user.getString("Session ID"));
+		Document res = new Document().append("Session ID", user.getString("Session ID")).append("userName", user.getString("name"));
 		String unencryptedJSON = res.toJson();
 
 		// TODO: Encrypt JSON before sending back
@@ -345,43 +359,63 @@ public class Service
 
 	}
 
-
-	@POST
-	@Path("/answers")
-	@Consumes( MediaType.APPLICATION_JSON )
+	@GET
+	@Path ("/answers")
 	@Produces( MediaType.APPLICATION_JSON )
-	public Response postAnswer(final String json, @DefaultValue("") @QueryParam("sessionID") final String sessID)
+	public Response getALlAnswersOfPoll(@DefaultValue("") @QueryParam("sessionID") final String sessID, @DefaultValue("") @QueryParam("pollID") final String pollID)
 	{
 		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
 
 		if(!optUser.isPresent())
 		{
-			throw new WebApplicationException(Response.status(401).build()); // Session ID doesn't exist. User has to login on website again
+			throw new WebApplicationException(Response.status(401).build());
 		}
+
+		final Optional<Document> optAnswers = INSTANCE.getAnswersOfPollByID(pollID);
+
+		if(!optAnswers.isPresent())
+		{
+			return Response.status(404).build();
+		}
+
+		Document answers = optAnswers.get();
+		answers.append("Session ID", optUser.get().getString("Session ID"));
+
+		// TODO: encrypt JSON
+
+		return Response.ok( answers ).build( );
+	}
+
+
+	@POST
+	@Path("/answers")
+	@Consumes( MediaType.APPLICATION_JSON )
+	public Response postAnswer(final String json, @DefaultValue("") @QueryParam("pollID") final String pollID, @DefaultValue("") @QueryParam("token") final String token)
+	{
 
 		// TODO: Decrypt JSON
 
-		if(!json.contains("poll_id") || !json.contains("token") || !json.contains("question_id") || !json.contains("content"))
+		if(!json.contains("poll_id") || !json.contains("token") || !json.contains("question_id"))
 		{
 			throw new WebApplicationException(Response.status(422).build());
 		}
 
 		Document answer = Document.parse(json);
-		Optional<Document> poll = INSTANCE.getPollAsOptDocumentByID(answer.getString("poll_id"));
+		Optional<Document> poll = INSTANCE.getPollAsOptDocumentByID(answer.getString("pollID"));
 
 		if(!poll.isPresent())
 		{
 			throw new WebApplicationException(Response.status(404).build());
 		}
 
-		// TODO: encrypt JSON
-
 		if(!this.INSTANCE.createAnswer(answer))
 		{
 			throw new WebApplicationException(Response.status(404).build());
 		}
-		Document user = optUser.get();
-		return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();
+
+		// TODO: encrypt JSON
+
+		return Response.ok().build();
 	}
 
 	@DELETE
@@ -409,7 +443,7 @@ public class Service
 		return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();
 	}
 
-
+	// Diese Methode ist überflüssig oder? Da die Fragen schon im FrontEnd in den Poll embedded werden
 	@POST
 	@Path("/questions")
 	@Consumes( MediaType.APPLICATION_JSON )
@@ -425,7 +459,7 @@ public class Service
 
 		// TODO: Decrypt JSON
 
-		if(!json.contains("title") || !json.contains("description") || !json.contains("type") || !json.contains("poll_id"))	//TODO: Evtl. abaendern --> FrontEnd
+		if(!json.contains("title") || !json.contains("description") || !json.contains("type") || !json.contains("poll ID"))	//TODO: Evtl. abaendern --> FrontEnd
 		{
 			throw new WebApplicationException(Response.status(422).build());
 		}
@@ -462,6 +496,33 @@ public class Service
 
 		return Response.ok( result.toJson() ).build( );
 	}
+
+	@POST
+	@Path("/emails")
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response saveLastUsedEmails(final String json, @DefaultValue("") @QueryParam("sessionID") final String sessID)
+	{
+		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
+
+		if(!optUser.isPresent())
+		{
+			throw new WebApplicationException(Response.status(401).build());
+		}
+
+		Document user = optUser.get();
+
+		if(!json.contains("emails"))
+		{
+			throw new WebApplicationException(Response.status(422).build());
+		}
+
+		Document emails = Document.parse(json);
+		INSTANCE.saveLastUsedEmails( (ArrayList<String>) emails.get("emails"));
+
+		return Response.ok(new Document("Session ID", user.getString("Session ID"))).build();
+
+	}
+
 
 }
 

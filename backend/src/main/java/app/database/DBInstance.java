@@ -69,11 +69,10 @@ public class DBInstance
             answerCol = db.getCollection("Answers");
             emailCol = db.getCollection("E-Mails");
             sessIDCol = db.getCollection("SessIDs");
-            sessIDCol.dropIndex(Indexes.ascending("created at"));
+            //  sessIDCol.dropIndex(Indexes.ascending("created at"));
             sessIDCol.createIndex(Indexes.ascending("created at"), new IndexOptions().expireAfter(60L, TimeUnit.MINUTES));
 
         }
-
 
     public Optional<Document> getPollAsOptDocumentByID(final String id )
     {
@@ -93,9 +92,9 @@ public class DBInstance
 
     public boolean createPoll(Document poll)
     {
-        String name = poll.getString("name");
-
         pollCol.insertOne(poll);
+        Document answers = new Document("poll_id", poll.get("_id").toString()).append("answers", new ArrayList<Document>());
+        answerCol.insertOne(answers);
         return true;
     }
 
@@ -117,28 +116,13 @@ public class DBInstance
     public Optional<Document> getUserAsOptDocumentByName(final String name)
     {
         Optional<Document> optDoc = getSingleDocFromCollection(this.userCol, Projections.fields(Projections.fields()), "name", name);
-
-        if(optDoc.isPresent())
-        {
-            return optDoc;
-        }
-        else {
-            return Optional.empty();
-        }
+        return optDoc;
     }
-
 
     public Optional<Document> getUserAsOptDocumentByID(final long id)
     {
         Optional<Document> optDoc = getSingleDocFromCollection(this.userCol, Projections.fields(), "_id", Long.toString(id));
-
-        if(optDoc.isPresent())
-        {
-            return optDoc;
-        }
-        else {
-            return Optional.empty();
-        }
+        return optDoc;
     }
 
     // This method simply returns all registered usernames
@@ -164,6 +148,8 @@ public class DBInstance
             while(cursor.hasNext())
             {
                 Document poll = cursor.next();
+                String id = poll.get("_id").toString();
+                poll.append("_id", id);
                 polls.add(poll);
             }
 
@@ -179,10 +165,11 @@ public class DBInstance
     public boolean createUser(Document user) {
 
         String name = user.getString("name");
+        String email = user.getString("email");
 
-        if(checkUserNameExistence(name))
+        if(checkUserNameExistence(name) || checkEmailExistence(email))
         {
-            System.out.println("User with identical name already exists. You have to choose a different Username");
+            System.out.println("User with identical name/email already exists. You have to choose a different Username");
             return false;
         }
         else
@@ -214,9 +201,10 @@ public class DBInstance
         return getUserAsOptDocumentByName(name).isPresent();
     }
 
-    // updateUser() receives the oldUser document of the user to be updated by the getUserAsOptDocumentByID(id)
-    // update has to be a complete and valid user document. Aside from not having the _id
-    // Do we even need an updateUser() Method? I don't think so
+    public boolean checkEmailExistence(String email)
+    {
+        return getSingleDocFromCollection(userCol, Projections.fields(), "email", email).isPresent();
+    }
 
     public void updateUserInUserCol(String originalUserID, Document updatedInfo) {
         Bson filter = Filters.eq("_id", new ObjectId(originalUserID));
@@ -309,6 +297,23 @@ public class DBInstance
         }
     }
 
+    public Optional<Document> getAnswersOfPollByID(final String pollID)
+    {
+        Document answers = answerCol.find(eq("poll_id", pollID))
+                .projection(Projections.excludeId())
+                .first();
+
+       if(answers == null)
+       {
+           return Optional.empty();
+       }
+       else
+       {
+           return Optional.of(answers);
+       }
+    }
+
+
 
     public boolean createAnswer(Document answer)
     {
@@ -331,7 +336,12 @@ public class DBInstance
             Bson filter = Filters.eq("poll_id", poll.get("_id").toString());
             Bson delete = Updates.pull("tokens", answer.getString("token"));
             pollCol.updateOne(filter, delete);
-            answerCol.insertOne(answer);
+
+            filter = Filters.eq("poll_id", answer.getString("poll_id"));
+            BasicDBObject listItem = new BasicDBObject("answers", answer);
+            Bson pushToQuestList = new BasicDBObject("$push", listItem);
+
+            answerCol.updateOne(filter, pushToQuestList);
             return true;
         }
         else
@@ -352,14 +362,14 @@ public class DBInstance
         this.answerCol.deleteMany(doc);
     }
 
-    public void postLastUsedEmails(List<String> emails) {
+    public void saveLastUsedEmails(List<String> emails) {
         ArrayList<String> oldEmails = getAllEmails();
         deleteAllEmails();
 
         emails.stream().filter(e -> !oldEmails.contains(e)).forEach(e -> oldEmails.add(e));
 
-        Document container = new Document("E-Mails", oldEmails);
-        emailCol.insertOne(container);
+        Document newEmails = new Document("E-Mails", oldEmails);
+        emailCol.insertOne(newEmails);
     }
 
     public void deleteAllEmails() {
@@ -419,7 +429,7 @@ public class DBInstance
     }
 
 
-    public void generateAndSetSessID(Document user) {   // TODO: Test if sessionIDs are deleted after 30 minutes
+    public void generateAndSetSessID(Document user) {
 
       if(checkIfUserHasSessID(user))
         {
@@ -487,8 +497,16 @@ public class DBInstance
         return hashInDB.equals(givenHash);
     }
 
-
-
+    public ArrayList<String> generateTokensOfPoll(int size)
+    {
+        ArrayList<String> tokens = new ArrayList<>();
+        for(int i = 0; i < size; i++)
+        {
+            String token = String.valueOf(System.currentTimeMillis()).substring(8, 13) + UUID.randomUUID().toString().substring(1,10);
+            tokens.add(token);
+        }
+        return tokens;
+    }
 
     /*
 

@@ -15,6 +15,8 @@ export class AuthenticationService {
   getSessionid(username: string, password: string): void {
     //-> call encryption service to generate public key
 
+
+    /*
     let keyPair = this.cryptService.generateKeyPair();
     let myPublicKey: string = keyPair.publicKey.toString();
     let myPrivateKey: string = keyPair.secretKey.toString();
@@ -32,27 +34,37 @@ export class AuthenticationService {
     let backendPublicKey: Uint8Array = new TextEncoder().encode(backendPublicKeyAsString);
 
     // generate and send encrypted Password and Username
-    //toDo hash password
-    let PasswordandUsername: JSON = JSON.parse('{"Password":'+password+', "Username" :'+username+'}');
-    // let encryptedPasswordandUsernameAsString: string = this.cryptService.encryptMessage(backendPublicKey,PasswordandUsername);
-    // let encryptedPasswordandUsernameJSON: JSON = JSON.parse('{"Encrypted Username and Password":'+encryptedPasswordandUsernameAsString+'}');
-    //
-    //
-    // let myCurrentSessionJSON = this.backendS.getSessionID(encryptedPasswordandUsernameJSON);
-    //
-    //
-    // //safe SessionID
-    // let myCurrentSessionasString: string = JSON.stringify(myCurrentSessionJSON);
 
-    // localStorage.setItem("sessionID",myCurrentSessionasString); //toDo need to clear all objects if session ends
+
+    */
+
+    //toDo hash password
+
+    let userData = '{"password":"'+password+'", "userName" :"'+username+'"}';
+    const passwordandUsername: JSON = JSON.parse(userData);
+
+    /*
+
+    let encryptedPasswordandUsernameAsString: string = this.cryptService.encryptMessage(backendPublicKey,PasswordandUsername);
+    let encryptedPasswordandUsernameJSON: JSON = JSON.parse('{"Encrypted Username and Password":'+encryptedPasswordandUsernameAsString+'}');
+
+     */
+
+    this.backendS.loadSessionID(passwordandUsername)
+      .subscribe((response) =>
+        localStorage.setItem( "sessionID", response["Session ID"] )
+      );
+
+    console.log(localStorage.getItem("sessionID"));
   }
 
-  updateSessionid(currentSessionid: string){
+  updateSessionid(newSessionid: string){
+    localStorage.removeItem("sessionID");
+    localStorage.setItem("sessionID",newSessionid);
   }
 
 
 
 
 }
-
 

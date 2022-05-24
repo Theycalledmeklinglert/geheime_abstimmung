@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Question } from 'src/lib/data-access/models/question';
 import { Vote } from 'src/lib/data-access/models/vote';
 import { BackendService } from 'src/lib/data-access/service/backend.service';
@@ -12,13 +12,42 @@ import { BackendService } from 'src/lib/data-access/service/backend.service';
 export class SurveyComponent implements OnInit {
   vote:Vote;
   surveyFrom: FormGroup;
+  debugObserbale: any;
 
-  constructor(private backendService: BackendService) {}
+  constructor(private backendService: BackendService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.loadTestQuestions(); //Platzhalter zum testen bis Backendanbindung funktioniert
 
-    //this.surveyFrom = new FormBuilder().
+    this.surveyFrom = this.fb.group({
+
+    })
+
+    /*
+
+    Schmerz
+
+    for(var question of this.vote.questions){
+      if(question.type === "yesNoAnswer"){
+        this.surveyFrom.addControl(question.title, null, [
+          Validators.required,
+          Validators.email,
+          Validators.minLength(6)
+        ])
+      }
+
+
+    }
+
+    var loginForm = new FormGroup({
+      email: new FormControl(null, [
+        Validators.required,
+        Validators.email,
+        Validators.minLength(6)
+      ])
+    })
+    */
+
   }
 
   consoleLogging():void {
@@ -40,16 +69,7 @@ export class SurveyComponent implements OnInit {
 
   //temp!!!!!!!!!!!!!
   debug() {
-    const testJSON: JSON = JSON.parse('{"userName":"Blofeld", "password":"12345"}')
-
-
-    const observable = this.backendService.getSessionID(testJSON);
-
-    console.log(observable)
-
-
-
-
+    
   }
 
 }
