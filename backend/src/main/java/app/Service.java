@@ -328,10 +328,10 @@ public class Service
 		// TODO: Decrypt JSON
 
 		Document doc = Document.parse(json);
-		String userName = doc.getString("userName");
+		String email = doc.getString("email");
 		String password = doc.getString("password");
 
-		final Optional<Document> optUser = INSTANCE.getUserAsOptDocumentByName(userName);
+		final Optional<Document> optUser = INSTANCE.getUserAsOptDocumentByEmail(email);
 
 		if(!optUser.isPresent())
 		{

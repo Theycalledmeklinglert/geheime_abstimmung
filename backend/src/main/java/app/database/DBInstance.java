@@ -119,6 +119,12 @@ public class DBInstance
         return optDoc;
     }
 
+    public Optional<Document> getUserAsOptDocumentByEmail(final String email)
+    {
+        Optional<Document> optDoc = getSingleDocFromCollection(this.userCol, Projections.fields(Projections.fields()), "email", email);
+        return optDoc;
+    }
+
     public Optional<Document> getUserAsOptDocumentByID(final long id)
     {
         Optional<Document> optDoc = getSingleDocFromCollection(this.userCol, Projections.fields(), "_id", Long.toString(id));
@@ -223,7 +229,6 @@ public class DBInstance
         /*
         Bson deleteOldUserName = Updates.pull("created by", originalUserName);
         pollCol.updateOne(filter, deleteOldUserName);
-
          */
 
         Bson deleteOldUserName = Updates.pull("accessible by", originalUserName);
@@ -232,7 +237,6 @@ public class DBInstance
         filter = Filters.eq("accessible by", originalUserName);       // TODO: Test if this deletes all other content in array or just adds the new UserName
         update = new BasicDBObject("$push", new Document("accessible by", newUserName));
         pollCol.updateMany(filter, update);
-
 
     }
 
