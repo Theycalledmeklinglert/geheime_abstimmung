@@ -43,6 +43,7 @@ export class LoginComponent{
         this.router.navigate(['/main']);
         console.log("LoginComponent->"+"KEY: " + localStorage.getItem("sessionID"));
         localStorage.setItem("userEmail",this.userEmail);
+        localStorage.setItem("userPassword", this.password);
 
       }else {
         console.log("ERROR invalid SessionKey!");

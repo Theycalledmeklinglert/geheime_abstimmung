@@ -39,3 +39,9 @@
   top: -2%;
   right: 0.1%;
 }
+.toolbar .username h1{
+
+  position: fixed;
+  right: 1%;
+  top: 2%;
+}

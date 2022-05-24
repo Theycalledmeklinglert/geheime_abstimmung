@@ -112,9 +112,21 @@ export class MainmenuComponent{
   }
 
   sendAddAdminrequest(): void{
-    //INFO if add was sucessfull
-    //toDo finish
-    let userData = '{"password":"'+this.changedPassword+'", "email" :"'+localStorage.getItem("userEmail")+'", "username" :"'+this.userName+'"}';
+    //toDO INFO if add was sucessfull
+
+    let userData = '{"password":"'+this.newadminpassword+'", "email" :"'+this.newadminadress+'", "username" :"'+this.newadminusername+'", "role" :"'+this.newadminrole+'"}';
+    const userDataJSON: JSON = JSON.parse(userData);
+    console.log("Add Admin"+userDataJSON);
+
+
+    this.backendService.updatePasswordorUsernameSurveyLeader(userDataJSON).subscribe((response) =>{
+
+        this.authService.updateSessionid(response["Session ID"]);
+        console.log("AddAdmin->"+"NEWKEY: "+localStorage.getItem("sessionID"));
+      }
+    );
+
+
     this.addAdmin = false;
   }
 
@@ -123,8 +135,13 @@ export class MainmenuComponent{
 
 
   sendDeleteAdminrequest(): void{
-    //INFO if change was sucessfull
-    //send to backend
+    //toDo INFO if change was sucessfull
+    let userData = '{"name" :"'+localStorage.getItem("userName")+'"}';
+
+    this.backendService.deleteUser(this.deleteadminadress).subscribe((response) =>{
+      this.authService.updateSessionid(response["Session ID"]);
+      console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
+    })
     this.sureDeleteAdmin = false;
   }
 
@@ -132,13 +149,29 @@ export class MainmenuComponent{
 
 
   sendChangePasswordrequest(): void{
-    //INFO if change was sucessfull
-    console.log("EMAIL: "+localStorage.getItem("userEmail")+ "NEWPASSWORD:"+ this.changedPassword);
-    let userData = '{"password":"'+this.changedPassword+'", "name" :"'+localStorage.getItem("userEmail")+'"}';
+    //toDo INFO if change was sucessfull
+    let userData = '{"password":"'+this.changedPassword+'", "name" :"'+localStorage.getItem("userName")+'"}';
+    console.log("Paswordchange send:"+ userData);
+    const passwordandUsername: JSON = JSON.parse(userData);
+
+
+    this.backendService.updatePasswordorUsernameSurveyLeader(passwordandUsername).subscribe((response) =>{
+        this.authService.updateSessionid(response["Session ID"]);
+        console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
+      }
+    );
+
+    this.sureChangePassword = false;
+  }
+
+  sendChangeUsernamerequest(): void{
+    //toDO INFO if change was sucessfull
+
+    let userData = '{"password":"'+localStorage.getItem("userPassword")+'", "name" :"'+localStorage.getItem("userName")+'"}';
+    console.log("Usernamechange send:"+ userData);
     const passwordandUsername: JSON = JSON.parse(userData);
 
     this.backendService.updatePasswordorUsernameSurveyLeader(passwordandUsername).subscribe((response) =>{
-
         this.authService.updateSessionid(response["Session ID"]);
         console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
       }
@@ -146,13 +179,6 @@ export class MainmenuComponent{
 
 
 
-
-    this.sureChangePassword = false;
-  }
-
-  sendChangeUsernamerequest(): void{
-    //INFO if change was sucessfull
-    //this.backendS.deleteSurveyLeader(this.changedPasswort,localStorage.getItem("sessionid"))
     this.sureChangeUsername = false;
   }
 

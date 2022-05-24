@@ -54,6 +54,8 @@ export class AuthenticationService {
     let response: Promise<Observable<any>> = await lastValueFrom(this.backendS.loadSessionID(passwordandUsername));
     if(response["Session ID"]) {
       localStorage.setItem("sessionID", response["Session ID"]);
+      localStorage.setItem("userName",response["userName"]);
+      console.log(localStorage.getItem("userName"));
       console.log("Auth-Service->" + "KEY: " + localStorage.getItem("sessionID"));
       this.loginsucess = true;
     }

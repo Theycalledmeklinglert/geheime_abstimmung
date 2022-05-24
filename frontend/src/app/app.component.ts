@@ -13,9 +13,20 @@ export class AppComponent {
   currentuser: string = "";
   firststart : boolean;
 
+
   constructor() {
+    localStorage.removeItem("userName");
     localStorage.removeItem("sessionID");
     localStorage.removeItem("backendpublickey");
+  }
+
+  getUsername(): string{
+    if(localStorage.getItem("userName") == null){
+      return "";
+    }else {
+      return localStorage.getItem("userName");
+    }
+
   }
 
 }

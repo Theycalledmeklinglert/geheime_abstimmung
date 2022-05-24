@@ -65,14 +65,14 @@ export class BackendService {
   }
 
 
-  deleteUser(user: SurveyLeader):Observable<void> {
+  deleteUser(userName: string):Observable<JSON> {
 
-    return this.httpClient.delete<void>(this.url + '/api/users?userName=' + user.username + '&sessionID=' + this.getSessionID() )
+    return this.httpClient.delete<JSON>(this.url + '/api/polls/users?userName=' + userName + '&sessionID=' + this.getSessionID());
 
   }
 
   addnewSurveLeader(newUserData: JSON): Observable<JSON>{
-    return this.httpClient.put<JSON>(this.url + '/api/polls/users?sessionID='+ this.getSessionID(),newUserData);
+    return this.httpClient.post<JSON>(this.url + '/api/polls/users?sessionID='+ this.getSessionID(),newUserData);
   }
 
   getUsernameofsurveyLeader():string{
