@@ -235,7 +235,7 @@ public class Service
 
 		Document user = optUser.get();
 		Document newUser = Document.parse(json);
-		Optional<Document> existingOptUser = INSTANCE.getUserAsOptDocumentByName(newUser.getString("name"));
+		Optional<Document> existingOptUser = INSTANCE.getUserAsOptDocumentByEmail(newUser.getString("email"));
 
 		Document existingUser = new Document();
 
