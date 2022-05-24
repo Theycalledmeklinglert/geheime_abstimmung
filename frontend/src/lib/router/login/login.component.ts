@@ -5,6 +5,7 @@ import {Router, RouterModule} from "@angular/router";
 import {AppComponent} from "../../../app/app.component";
 import {AppModule} from "../../../app/app.module";
 import {AuthenticationService} from "../../data-access/service/authentication.service";
+import {timeout} from "rxjs";
 
 
 
@@ -16,7 +17,7 @@ import {AuthenticationService} from "../../data-access/service/authentication.se
 
 export class LoginComponent{
 
-  @Output()username: string = "";
+  @Output()userEmail: string = "";
   password: string = "";
   userObject: SurveyLeader;
   helpbuttonpressed: boolean;
@@ -26,25 +27,32 @@ export class LoginComponent{
 
 
   setUsername(event: any): void{
-    this.username = event.target.value;
+    this.userEmail = event.target.value;
   }
   setPassword(event: any):void{
     this.password = event.target.value;
   }
 
   submitlogin(): void{
-    localStorage.removeItem("sessionid");
-    localStorage.removeItem("backendpublickey");
-    if(this.username != "" && this.password != ""){
-      if (this.correctUserdata){
-        this.router.navigate(['/main']);
-      }
+    if(this.userEmail != "" && this.password != ""){
 
-      this.authService.getSessionid(this.username,this.password);
+      console.log("login with"+ this.password+ ","+this.userEmail)
+      let sucesslogin = this.authService.getSessionid(this.userEmail,this.password);
+      if (sucesslogin){
+
+        this.router.navigate(['/main']);
+        console.log("LoginComponent->"+"KEY: " + localStorage.getItem("sessionID"));
+        localStorage.setItem("userEmail",this.userEmail);
+
+      }else {
+        console.log("ERROR invalid SessionKey!");
+      }
 
     }else {
       alert("Emailadress or Password is empty!");
     }
+
+
   }
 
   presshelpbutton():void{

@@ -71,11 +71,17 @@ export class BackendService {
 
   }
 
+  addnewSurveLeader(newUserData: JSON): Observable<JSON>{
+    return this.httpClient.put<JSON>(this.url + '/api/polls/users?sessionID='+ this.getSessionID(),newUserData);
+  }
+
   getUsernameofsurveyLeader():string{
     return "No Connection";
   }
 
-  setpasswordofSurveyLeader(): void{
+  updatePasswordorUsernameSurveyLeader(newUserData: JSON): Observable<JSON>{
+
+    return this.httpClient.put<JSON>(this.url + '/api/polls/users?sessionID='+ this.getSessionID(),newUserData);
   }
 
   setSurveyLeader(): void{

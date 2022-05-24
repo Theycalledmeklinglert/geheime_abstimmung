@@ -14,7 +14,7 @@ export class AppComponent {
   firststart : boolean;
 
   constructor() {
-    localStorage.removeItem("sessionid");
+    localStorage.removeItem("sessionID");
     localStorage.removeItem("backendpublickey");
   }
 

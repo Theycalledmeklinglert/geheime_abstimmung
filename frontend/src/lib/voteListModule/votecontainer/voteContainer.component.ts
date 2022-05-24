@@ -17,12 +17,15 @@ export class VoteConainterComponent implements OnInit{
   constructor(private backendService: BackendService, private authService: AuthenticationService) {}
 
   ngOnInit(): void {
-    this.vlcObject = {name:"testcontainer", votes:[] };
+    console.log("VoteContainer->"+"OLDKEY: "+localStorage.getItem("sessionID"));
+    //this.vlcObject = {name:"testcontainer", votes:[] };
     this.backendService.loadAllPollsByUser().subscribe((response) =>{
-      this.vlcObject.votes = response["polls"];
-      this.authService.updateSessionid(response["Session ID"])
+      this.vlcObject = {name:"testcontainer",votes: response["polls"]};
+      this.authService.updateSessionid(response["Session ID"]);
+        console.log("VoteContainer->"+"NEWKEY: "+localStorage.getItem("sessionID"));
     }
     );
+
   }
 
 
