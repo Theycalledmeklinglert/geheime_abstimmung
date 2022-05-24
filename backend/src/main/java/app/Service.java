@@ -234,19 +234,10 @@ public class Service
 		// TODO: Decrypt JSON
 
 		Document user = optUser.get();
+
 		Document newUser = Document.parse(json);
-		Optional<Document> existingOptUser = INSTANCE.getUserAsOptDocumentByEmail(newUser.getString("email"));
-
-		Document existingUser = new Document();
-
-		if(!existingOptUser.isPresent())
-		{
-			existingUser = user;
-		}
-		else
-		{
-			existingUser = existingOptUser.get();
-		}
+		String newUserPWHash = INSTANCE.generatePWHash(newUser.getString("password"), Base64.decodeBase64(user.getString("salt")));
+		Document existingUser = user;
 
 		if(!json.contains("password") || !json.contains("name"))	// || !existingUser.getString("name").equals(user.getString("name")
 		{
@@ -254,7 +245,7 @@ public class Service
 		}
 
 			// User with already existing name is the user that needs to be updated
-			if(existingUser.getString("name").equals(user.getString("name")) && existingUser.getString("pwHash").equals(user.getString("pwHash")))
+			if((existingUser.getString("name").equals(newUser.getString("name")) && !existingUser.getString("pwHash").equals(newUser.getString("pwHash"))) || (!existingUser.getString("name").equals(newUser.getString("name")) && existingUser.getString("pwHash").equals(newUserPWHash)))
 			{
 				String userID = user.get("_id").toString();
 				Document update = new Document("_id", user.get("_id")).append("name", newUser.getString("name")).append("role", user.getString("role"));
@@ -268,8 +259,8 @@ public class Service
 
 				return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();		// TODO: Test
 			}
-			System.out.println("UserName already exists");
-			throw new WebApplicationException(Response.status(404).build());
+			System.out.println("Either UserName already exists or you attempted to change userName and PW at the same time which is not allowed");
+			throw new WebApplicationException(Response.status(401).build());
 	}
 
 
