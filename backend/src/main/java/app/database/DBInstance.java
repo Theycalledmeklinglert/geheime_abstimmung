@@ -439,7 +439,7 @@ public class DBInstance
 
       if(checkIfUserHasSessID(user))
         {
-            this.sessIDCol.deleteOne(eq("email", user.getString("email")));
+            this.sessIDCol.deleteMany(eq("email", user.getString("email")));
         }
 
 
@@ -468,7 +468,7 @@ public class DBInstance
 
     private boolean checkIfUserHasSessID(Document user)
     {
-        Optional<Document> optDoc = getUserAsOptDocumentByEmail(user.getString("email"));
+        Optional<Document> optDoc = getSingleDocFromCollection(sessIDCol, Projections.fields(), "email", user.getString("email"));
         if(optDoc.isPresent()) return true;
         else return false;
     }
