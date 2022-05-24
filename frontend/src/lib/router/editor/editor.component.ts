@@ -1,9 +1,9 @@
 import {Component} from "@angular/core";
 import {Editor} from "../../data-access/models/editor";
 import {Question} from "../../data-access/models/question";
-import {box, randomBytes} from 'tweetnacl';
-import {decodeBase64, decodeUTF8, encodeBase64, encodeUTF8} from 'tweetnacl-util';
+import {decodeBase64, encodeBase64, encodeUTF8} from 'tweetnacl-util';
 import {EncryptionService} from "../../data-access/service/encryption.service";
+import * as nacl from "tweetnacl";
 
 @Component({
   selector: 'editor',
@@ -84,18 +84,27 @@ export class EditorComponent {
       console.log(this.tempDescr);
     }
     printEncrypted(){
-      let pair = this.cryptService.generateKeyPair();
-      let publicKey = pair.publicKey;
-      let privateKey = pair.secretKey;
-      let textFile = "This is the generated private key for this survey. Please save it somewhere inaccessible for others:\n \n"+privateKey.toString()+"\n\n You will need" +
-        " it for accessing the results of this survey";
+      const keyPair = this.cryptService.generateKeyPair();
+      const priv = encodeBase64(keyPair.secretKey);
+      const pub = encodeBase64(keyPair.publicKey);
+      const encrypted = this.cryptService.encrypt(pub, this.editor);
+      // encrypted.privateKey = priv;
+      let textFile = "This is the generated private key for this survey. Please save it somewhere inaccessible for others:\n \n"+
+        JSON.stringify(encrypted)
+        // pub+'\n'+
+        // priv
+        +"\n\n You will need it for accessing the results of this survey";
       var data = new Blob([textFile], {type: 'text/plain'});
       if (textFile !== null) {
         window.URL.revokeObjectURL(textFile);
       }
       textFile = window.URL.createObjectURL(data);
       window.open(textFile);
-
-      console.log(this.cryptService.encryptMessage(publicKey, this.editor));
+      console.log(this.cryptService.decrypt(priv, encrypted))
     }
+
+  printDecrypted(){
+
+  }
+
 }

@@ -34,17 +34,17 @@ export class AuthenticationService {
     // generate and send encrypted Password and Username
     //toDo hash password
     let PasswordandUsername: JSON = JSON.parse('{"Password":'+password+', "Username" :'+username+'}');
-    let encryptedPasswordandUsernameAsString: string = this.cryptService.encryptMessage(backendPublicKey,PasswordandUsername);
-    let encryptedPasswordandUsernameJSON: JSON = JSON.parse('{"Encrypted Username and Password":'+encryptedPasswordandUsernameAsString+'}');
+    // let encryptedPasswordandUsernameAsString: string = this.cryptService.encryptMessage(backendPublicKey,PasswordandUsername);
+    // let encryptedPasswordandUsernameJSON: JSON = JSON.parse('{"Encrypted Username and Password":'+encryptedPasswordandUsernameAsString+'}');
+    //
+    //
+    // let myCurrentSessionJSON = this.backendS.getSessionID(encryptedPasswordandUsernameJSON);
+    //
+    //
+    // //safe SessionID
+    // let myCurrentSessionasString: string = JSON.stringify(myCurrentSessionJSON);
 
-
-    let myCurrentSessionJSON = this.backendS.getSessionID(encryptedPasswordandUsernameJSON);
-
-
-    //safe SessionID
-    let myCurrentSessionasString: string = JSON.stringify(myCurrentSessionJSON);
-
-    localStorage.setItem("sessionID",myCurrentSessionasString); //toDo need to clear all objects if session ends
+    // localStorage.setItem("sessionID",myCurrentSessionasString); //toDo need to clear all objects if session ends
   }
 
   updateSessionid(currentSessionid: string){

@@ -14,14 +14,13 @@
 
     <div id="surveyNameInput">
       <mat-form-field>
-        <input matInput placeholder="Survey Name" required>
+        <input matInput type="text" placeholder="Survey Name" [(ngModel)]="this.editor.vote.name" required>
       </mat-form-field> <br>
     </div>
 
     <div id="expirationDateInput">
       <label class="label" for="timeinputfield">Expiration:</label> <br>
-
-      <input  class="inputfield" type="datetime-local" id="timeinputfield" required><br/>
+      <input  class="inputfield" type="datetime-local" id="timeinputfield" [(ngModel)]="this.editor.vote.lifetime" required><br/>
     </div>
 
   </section>
@@ -82,11 +81,11 @@
   <input type="image" src="../../assets/addVoter_btn.png" width="125%" height="125%" (click)="addEmail()"/>
 </div>
 
-<div *ngIf="this.next" class="backButton">
-  <input type="image" src="../../assets/back_btn.png" width="125%" height="125%" (click)="this.next = false"/>
+<div *ngIf="this.next" class="returnToMainButton">
+  <input type="image" src="../../assets/back_btn.png" width="125%" height="125%" (click)="this.next = false; this.printDecrypted()"/>
 </div>
 
-<div class="returnToMainButton">
+<div *ngIf="!this.next" class="returnToMainButton">
   <img src="../../../assets/returnToMain_btn.png" width="125%" height="125%" routerLink="/main" (click)="this.deleteEverything()"/>
 </div>
 </body>
