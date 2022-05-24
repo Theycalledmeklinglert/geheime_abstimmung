@@ -19,14 +19,15 @@ export class VoteConainterComponent implements OnInit{
 
   async ngOnInit(): Promise<void> {
     console.log("VoteContainer->"+"OLDKEY: "+localStorage.getItem("sessionID"));
-    //this.vlcObject = {name:"testcontainer", votes:[] };
     let response = await lastValueFrom(this.backendService.loadAllPollsByUser());
     console.log(response);
-    // if(response["polls"]){
-    //   this.vlcObject = {name:"testcontainer",votes: response["polls"]};
-    //   this.authService.updateSessionid(response["Session ID"]);
-    //   console.log("VoteContainer->"+"NEWKEY: "+localStorage.getItem("sessionID"));
-    // }
+    if(response["polls"]){
+      this.vlcObject = {name:"testcontainer",votes: response["polls"]};
+      this.authService.updateSessionid(response["Session ID"]);
+      console.log("VoteContainer->"+"NEWKEY: "+localStorage.getItem("sessionID"));
+    } else{
+      this.vlcObject = {name:"testcontainer", votes:[] };
+    }
   }
 
 
