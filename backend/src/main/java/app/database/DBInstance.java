@@ -226,12 +226,14 @@ public class DBInstance
 
          */
 
+        Bson deleteOldUserName = Updates.pull("accessible by", originalUserName);
+        pollCol.updateMany(filter, deleteOldUserName);
+
         filter = Filters.eq("accessible by", originalUserName);       // TODO: Test if this deletes all other content in array or just adds the new UserName
         update = new BasicDBObject("$push", new Document("accessible by", newUserName));
         pollCol.updateMany(filter, update);
 
-        Bson deleteOldUserName = Updates.pull("accessible by", originalUserName);
-        pollCol.updateMany(filter, deleteOldUserName);
+
     }
 
     public void updateUserInSessIDCol(Document originalUser, Document updatedInfo) {
