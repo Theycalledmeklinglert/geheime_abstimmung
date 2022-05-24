@@ -33,11 +33,11 @@ export class LoginComponent{
     this.password = event.target.value;
   }
 
-  submitlogin(): void{
+  async submitlogin(): Promise<void>{
     if(this.userEmail != "" && this.password != ""){
 
       console.log("login with"+ this.password+ ","+this.userEmail)
-      let sucesslogin = this.authService.getSessionid(this.userEmail,this.password);
+      let sucesslogin = await this.authService.getSessionid(this.userEmail,this.password);
       if (sucesslogin){
 
         this.router.navigate(['/main']);

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {EncryptionService} from "./encryption.service";
 import {BackendService} from "./backend.service";
-import {timeout} from "rxjs";
+import {firstValueFrom, lastValueFrom, Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class AuthenticationService {
   }
 
 
-  getSessionid(email: string, password: string): boolean {
+  async getSessionid(email: string, password: string): Promise<any> {
     //-> call encryption service to generate public key
 
 
@@ -42,8 +42,8 @@ export class AuthenticationService {
 
     //toDo hash password
 
-    let userData = '{"password":"'+password+'","email" :"'+email+'"}';
-    console.log("authservice: "+userData);
+    let userData = '{"password":"' + password + '","email" :"' + email + '"}';
+    console.log("authservice: " + userData);
     const passwordandUsername: JSON = JSON.parse(userData);
 
     /*
@@ -51,19 +51,12 @@ export class AuthenticationService {
     let encryptedPasswordandUsernameJSON: JSON = JSON.parse('{"Encrypted Username and Password":'+encryptedPasswordandUsernameAsString+'}');
 
      */
-
-      this.backendS.loadSessionID(passwordandUsername)
-      .subscribe((response) =>{
-        if(response != null) {
-          this.loginsucess = true;
-          localStorage.setItem("sessionID", response["Session ID"]);
-          console.log("Auth-Service->" +"KEY: " +localStorage.getItem("sessionID"));
-        }else {
-          return this.loginsucess = false;
-        }
-      }
-      );
-
+    let response: Promise<Observable<any>> = await lastValueFrom(this.backendS.loadSessionID(passwordandUsername));
+    if(response["Session ID"]) {
+      localStorage.setItem("sessionID", response["Session ID"]);
+      console.log("Auth-Service->" + "KEY: " + localStorage.getItem("sessionID"));
+      this.loginsucess = true;
+    }
     return this.loginsucess;
   }
 
