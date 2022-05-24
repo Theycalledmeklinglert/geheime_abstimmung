@@ -132,6 +132,10 @@ public class MongoTest {
 
         Document test = new Document("Session ID", "1232134");
         String sessID = test.getString("Session ID");
+
+        Document userWithEmail = new Document("email", "ernst.blofeld@fhws.de").append("name", "Blofeld2").append("password", "12345").append("role", "admin");
+        INSTANCE.createUser(userWithEmail);
+
 /*
         OkHttpClient client = new OkHttpClient();
         String url = "http://localhost:8080/api/polls/session";
