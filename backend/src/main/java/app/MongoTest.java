@@ -86,12 +86,12 @@ public class MongoTest {
 
 
 
-        doc = new Document().append("name", "AnswerTestPoll").append("admin", "Blofeld");
+        doc = new Document().append("name", "AnswerTestPoll").append("admin", "Blofeld2");
         String[] tokens = {"aaabbb", "aaabbbccc"};
         doc.put("tokens", Arrays.asList(tokens));
 
         List<BasicDBObject> adminsAndSupervisors = new ArrayList<>();
-        doc.put("accessible by", Arrays.asList(new String[]{"Ernst Blofeld", "James Bondy", "Hier keonnte ihr Nutzername stehen!"}));
+        doc.put("accessible by", Arrays.asList(new String[]{"Blofeld2", "James Bondy", "Hier keonnte ihr Nutzername stehen!"}));
 
 
         System.out.println(doc.toJson());
@@ -108,7 +108,7 @@ public class MongoTest {
         INSTANCE.deleteAnswersOfPollByPollID("AnswerTestPoll");
 
 
-        doc = new Document().append("name", "AnswerTestPoll2").append("admin", "Blofeld").append("tokens", Arrays.asList(new String[]{"MyToken"}));
+        doc = new Document().append("name", "AnswerTestPoll2").append("admin", "Blofeld2").append("tokens", Arrays.asList(new String[]{"MyToken"}));
         INSTANCE.createPoll(doc);
         Document answer3 = new Document("poll_id", doc.get("_id").toString()).append("token", "MyToken").append("question_id", "3");
         doc.put("tokens", Arrays.asList(new String[]{"MyToken"}));
@@ -116,11 +116,11 @@ public class MongoTest {
         INSTANCE.createAnswer(answer3);     // TODO: Polls MUESSEN ein ArrayFeld names "tokens" enthalten
 
 
-        ArrayList<Document> res = INSTANCE.getAllPollsOfUser("Ernst Blofeld").get();
-        res.stream().forEach(poll -> System.out.println(poll.toJson()));
+        // ArrayList<Document> res = INSTANCE.getAllPollsOfUser("Ernst Blofeld").get();
+      //  res.stream().forEach(poll -> System.out.println(poll.toJson()));
 
         Document newPoll = new Document("name", "newPoll").append("admin", "James Bond");
-        newPoll.put("accessible by", Arrays.asList(new String[]{"Ernst Blofeld"}));
+        newPoll.put("accessible by", Arrays.asList(new String[]{"Ernst Blofeld", "Blofeld2"}));
         INSTANCE.createPoll(newPoll);
 
         String[] emails = {"test@test.com", "test@fhws.de", "test@gmail.com"};
