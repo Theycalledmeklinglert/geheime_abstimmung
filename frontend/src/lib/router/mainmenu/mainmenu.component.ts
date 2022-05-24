@@ -141,8 +141,8 @@ export class MainmenuComponent{
     this.backendService.deleteUser(this.deleteadminadress).subscribe((response) =>{
       this.authService.updateSessionid(response["Session ID"]);
       console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
+      this.sureDeleteAdmin = false;
     })
-    this.sureDeleteAdmin = false;
   }
 
 
@@ -158,28 +158,30 @@ export class MainmenuComponent{
     this.backendService.updatePasswordorUsernameSurveyLeader(passwordandUsername).subscribe((response) =>{
         this.authService.updateSessionid(response["Session ID"]);
         console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
+        this.sureChangePassword = false;
       }
     );
 
-    this.sureChangePassword = false;
+
   }
 
   sendChangeUsernamerequest(): void{
     //toDO INFO if change was sucessfull
 
-    let userData = '{"password":"'+localStorage.getItem("userPassword")+'", "name" :"'+localStorage.getItem("userName")+'"}';
+    let userData = '{"password":"'+localStorage.getItem("userPassword")+'", "name" :"'+this.changedUsername+'"}';
     console.log("Usernamechange send:"+ userData);
     const passwordandUsername: JSON = JSON.parse(userData);
 
     this.backendService.updatePasswordorUsernameSurveyLeader(passwordandUsername).subscribe((response) =>{
         this.authService.updateSessionid(response["Session ID"]);
+        localStorage.setItem("userName", this.changedUsername);
         console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
+        this.sureChangeUsername = false;
       }
     );
 
 
 
-    this.sureChangeUsername = false;
   }
 
 
@@ -204,6 +206,15 @@ export class MainmenuComponent{
 
   setnewUsername(event: any): void{
     this.changedUsername = event.target.value;
+  }
+
+  setadmin():void{
+    if(this.newadminrole = "default"){
+      this.newadminrole = "admin";
+    }else {
+      this.newadminrole = "default";
+
+    }
   }
 
 }

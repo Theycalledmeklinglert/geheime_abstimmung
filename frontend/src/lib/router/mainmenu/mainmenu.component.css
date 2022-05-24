@@ -149,6 +149,10 @@
 
 
 
+.adminGenerator .isadmin_txt{
+  font-size: 15px;
+}
+
 .adminGenerator .add{
   color: white;
   position: fixed;
@@ -563,3 +567,4 @@
   right: 10%;
   cursor: pointer;
 }
+

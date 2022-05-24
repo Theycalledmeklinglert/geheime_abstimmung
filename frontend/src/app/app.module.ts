@@ -25,6 +25,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 
 @NgModule({
@@ -40,27 +41,28 @@ import {MatMenuModule} from '@angular/material/menu';
     VoteConainterComponent
 
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
 
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatRadioModule,
-    MatCheckboxModule,
-    BrowserAnimationsModule,
-    MatIconModule,
-    MatDatepickerModule,
-    MatMenuModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatRadioModule,
+        MatCheckboxModule,
+        BrowserAnimationsModule,
+        MatIconModule,
+        MatDatepickerModule,
+        MatMenuModule,
+        MatProgressSpinnerModule,
 
 
-  ],
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

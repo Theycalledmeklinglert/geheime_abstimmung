@@ -25,6 +25,8 @@ export class LoginComponent{
   constructor(private authService: AuthenticationService, private router: Router) {
   }
 
+  showloadingstatus: boolean = false;
+
 
   setUsername(event: any): void{
     this.userEmail = event.target.value;
@@ -35,7 +37,7 @@ export class LoginComponent{
 
   async submitlogin(): Promise<void>{
     if(this.userEmail != "" && this.password != ""){
-
+      this.showloadingstatus = true;
       console.log("login with"+ this.password+ ","+this.userEmail)
       let sucesslogin = await this.authService.getSessionid(this.userEmail,this.password);
       if (sucesslogin){
@@ -47,6 +49,7 @@ export class LoginComponent{
 
       }else {
         console.log("ERROR invalid SessionKey!");
+        this.showloadingstatus = false;
       }
 
     }else {

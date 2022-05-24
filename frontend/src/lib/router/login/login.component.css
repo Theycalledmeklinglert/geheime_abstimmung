@@ -129,5 +129,16 @@
   transition: .5s;
 }
 
+.loginfield .loading {
+  position: absolute;
+  top: 82%;
+  right: 1%;
+  color: #adadad;
+  font-size: 7px;
+  font-weight: 50;
+  pointer-events: none;
+
+}
+
 
 
