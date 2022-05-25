@@ -31,7 +31,7 @@
         </div>
         <div class="helpbutton" (click)="presshelpbutton()"> Need help?</div>
         <div class="wronguserdata" *ngIf="wrongUsernameorPassword">
-          Passwort or Username is incorrect!
+          Password or Username is incorrect!
         </div>
         <input type="submit" value="Login"  (click)="submitlogin()">
         <div class="loading" *ngIf="showloadingstatus">
@@ -46,7 +46,9 @@
     <div class="helpwindow" *ngIf="helpbuttonpressed">
 
       <h1 mat-dialog-title>INFO</h1>
-      <div mat-dialog-content>If you have problems logging in or do not yet have acess data, please contact FHWS-HELPCENTER.</div>
+      <div mat-dialog-content>If you have problems logging in or do not yet have acess data, please contact
+        <a href="https://itsc.fhws.de/helpdesk/">Helpdesk.ITSC@fhws.de</a>
+      </div>
       <div mat-dialog-actions>
         <button mat-flat-button color="primary" (click)="pressokaybutton()">OKAY </button>
       </div>

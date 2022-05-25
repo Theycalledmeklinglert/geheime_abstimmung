@@ -55,7 +55,8 @@ export class AuthenticationService {
     if(response["Session ID"]) {
       localStorage.setItem("sessionID", response["Session ID"]);
       localStorage.setItem("userName",response["userName"]);
-      console.log(localStorage.getItem("userName"));
+      localStorage.setItem("userRole",response["role"]);
+      console.log(localStorage.getItem("userRole"));
       console.log("Auth-Service->" + "KEY: " + localStorage.getItem("sessionID"));
       this.loginsucess = true;
     }

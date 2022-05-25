@@ -15,7 +15,7 @@ import {Router} from "@angular/router";
 export class MainmenuComponent{
 
   //SysAdmin?
-  isSysAdmin: boolean = true;
+  isSysAdmin: boolean = false;
 
   //Formula
   addAdmin: boolean;
@@ -41,14 +41,22 @@ export class MainmenuComponent{
   newadminadress: string = "";
   newadminpassword: string= "";
   newadminusername: string= "";
-  newadminrole: string= "";
+  newadminrole: string= "default";
   //test
-  userName: string= "blalbalb";
+  username: string= "defaultname";
 
   //delete Admin
   deleteadminadress: string= "";
 
-  constructor(private backendService: BackendService, private authService: AuthenticationService, private router: Router) {}
+  //symbolls
+  sucesssend: boolean = false;
+  failsend: boolean = false;
+
+  constructor(private backendService: BackendService, private authService: AuthenticationService, private router: Router) {
+    if(localStorage.getItem("userRole")=="admin"){
+      this.isSysAdmin = true;
+    }
+  }
 
   showAddAdmin(): void{
     this.addAdmin = true;
@@ -114,18 +122,24 @@ export class MainmenuComponent{
 
   sendAddAdminrequest(): void{
     //toDO INFO if add was sucessfull
-
     let userData = '{"password":"'+this.newadminpassword+'", "email" :"'+this.newadminadress+'", "name" :"'+this.newadminusername+'", "role" :"'+this.newadminrole+'"}';
     const userDataJSON: JSON = JSON.parse(userData);
     console.log("Add Admin"+userDataJSON);
 
+    try {
+      this.backendService.addnewSurveLeader(userDataJSON).subscribe((response) =>{
+          console.log("returnt key from Backend: "+ response["Session ID"] );
+          this.authService.updateSessionid(response["Session ID"]);
+          console.log("AddAdmin->"+"NEWKEY: "+localStorage.getItem("sessionID"));
+          this.sucesssend = true;
+          setTimeout(() => { this.sucesssend = false;}, 1300);
+      });
 
-    this.backendService.addnewSurveLeader(userDataJSON).subscribe((response) =>{
-      console.log("returnt key from Backend: "+ response["Session ID"] );
-        this.authService.updateSessionid(response["Session ID"]);
-        console.log("AddAdmin->"+"NEWKEY: "+localStorage.getItem("sessionID"));
-      }
-    );
+
+    }catch (err){
+
+    }
+
 
 
     this.addAdmin = false;
@@ -137,30 +151,46 @@ export class MainmenuComponent{
 
   sendDeleteAdminrequest(): void{
     //toDo INFO if change was sucessfull
-    let userData = '{"name" :"'+localStorage.getItem("userName")+'"}';
+    let userData = '{"name" :"'+localStorage.getItem("userName")+ '", "role" :"'+localStorage.getItem("userRole")+'"}';
 
-    this.backendService.deleteUser(this.deleteadminadress).subscribe((response) =>{
-      this.authService.updateSessionid(response["Session ID"]);
-      console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
-      this.sureDeleteAdmin = false;
-    })
+    try {
+      this.backendService.deleteUser(this.deleteadminadress).subscribe((response) =>{
+        this.authService.updateSessionid(response["Session ID"]);
+        console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
+        this.sureDeleteAdmin = false;
+        this.sucesssend = true;
+        setTimeout(() => { this.sucesssend = false;}, 1300);
+      });
+
+
+
+    }catch (err){
+      this.failsend = true;
+    }
   }
 
 
 
   sendChangePasswordrequest(): void{
     //toDo INFO if change was sucessfull
-    let userData = '{"password":"'+this.changedPassword+'", "name" :"'+localStorage.getItem("userName")+'"}';
+    let userData = '{"password":"'+this.changedPassword+'", "name" :"'+localStorage.getItem("userName")+'", "email" :"'+localStorage.getItem("userEmail")+'"}';
     console.log("Paswordchange send:"+ userData);
     const passwordandUsername: JSON = JSON.parse(userData);
 
+    try {
+      this.backendService.updatePasswordorUsernameSurveyLeader(passwordandUsername).subscribe((response) =>{
+          this.authService.updateSessionid(response["Session ID"]);
+          console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
+          this.sureChangePassword = false;
+        this.sucesssend = true;
+        setTimeout(() => { this.sucesssend = false;}, 1300);
+        });
 
-    this.backendService.updatePasswordorUsernameSurveyLeader(passwordandUsername).subscribe((response) =>{
-        this.authService.updateSessionid(response["Session ID"]);
-        console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
-        this.sureChangePassword = false;
-      }
-    );
+
+    }catch (err){
+
+    }
+
 
 
   }
@@ -168,17 +198,21 @@ export class MainmenuComponent{
   sendChangeUsernamerequest(): void{
     //toDO INFO if change was sucessfull
 
-    let userData = '{"password":"'+localStorage.getItem("userPassword")+'", "name" :"'+this.changedUsername+'"}';
+    let userData = '{"password":"'+localStorage.getItem("userPassword")+'", "name" :"'+this.changedUsername+'", "email" :"'+localStorage.getItem("userEmail")+'"}';
     console.log("Usernamechange send:"+ userData);
     const passwordandUsername: JSON = JSON.parse(userData);
 
-    this.backendService.updatePasswordorUsernameSurveyLeader(passwordandUsername).subscribe((response) =>{
-        this.authService.updateSessionid(response["Session ID"]);
-        localStorage.setItem("userName", this.changedUsername);
-        console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
-        this.sureChangeUsername = false;
-      }
-    );
+    try {
+      this.backendService.updatePasswordorUsernameSurveyLeader(passwordandUsername).subscribe((response) =>{
+          this.authService.updateSessionid(response["Session ID"]);
+          localStorage.setItem("userName", this.changedUsername);
+          console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
+          this.sureChangeUsername = false;
+        this.sucesssend = true;
+        setTimeout(() => { this.sucesssend = false;}, 1300);
+      });
+
+    }catch (err){}
 
 
 
@@ -189,7 +223,7 @@ export class MainmenuComponent{
     this.newadminadress = event.target.value;
   }
 
-  setpasswortofnewAdmin(event: any): void{
+  setpasswordofnewAdmin(event: any): void{
     this.newadminpassword = event.target.value;
   }
 
@@ -209,14 +243,16 @@ export class MainmenuComponent{
   }
 
   setadmin():void{
-    if(this.newadminrole == ""){
+    if(this.newadminrole == "default"){
       this.newadminrole = "admin";
-      console.log("set admin")
+      console.log("set admin");
     }else {
-      this.newadminrole = "";
+      this.newadminrole = "default";
       console.log("set normal")
     }
   }
+
+
 
 
 

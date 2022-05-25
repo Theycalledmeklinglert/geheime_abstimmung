@@ -106,8 +106,9 @@
 
 
 .loginfield #loginwindow .helpbutton{
-  position: absolute;
-  bottom: 32%;
+  position: relative;
+  padding:0 5px;
+  top: 20%;
   left: 5%;
   color: #a6a6a6;
   cursor: pointer;
