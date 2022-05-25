@@ -265,6 +265,12 @@ public class Service
 		String newUserPWHash = INSTANCE.generatePWHash(newUser.getString("password"), Base64.decodeBase64(user.getString("salt")));
 		Document existingUser = user;
 
+		if(!user.getString("role").equals("admin") && newUser.getString("role").equals("admin"))	// A non admin can not add a new admin
+		{
+			Document error = new Document("Session ID", user.getString("Session ID"));
+			return Response.status(401).entity(error.toJson()).build();
+		}
+
 		if(!json.contains("password") || !json.contains("name"))	// || !existingUser.getString("name").equals(user.getString("name")
 		{
 			Document error = new Document("Session ID", user.getString("Session ID"));
@@ -375,7 +381,7 @@ public class Service
 
 		INSTANCE.generateAndSetSessID(user);
 
-		Document res = new Document().append("Session ID", user.getString("Session ID")).append("userName", user.getString("name"));
+		Document res = new Document().append("Session ID", user.getString("Session ID")).append("userName", user.getString("name")).append("role", user.getString("role"));
 		String unencryptedJSON = res.toJson();
 
 		// TODO: Encrypt JSON before sending back
