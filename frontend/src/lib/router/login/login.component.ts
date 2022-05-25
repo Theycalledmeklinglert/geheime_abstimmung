@@ -46,7 +46,6 @@ export class LoginComponent{
         console.log("LoginComponent->"+"KEY: " + localStorage.getItem("sessionID"));
         localStorage.setItem("userEmail",this.userEmail);
         localStorage.setItem("userPassword", this.password);
-
       }else {
         console.log("ERROR invalid SessionKey!");
         this.showloadingstatus = false;
