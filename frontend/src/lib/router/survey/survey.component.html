@@ -3,17 +3,21 @@
 </div>
 
 <div id="body">
-  <ul>
-    <li *ngFor="let question of this.vote.questions">
-      <surveyQuestion
-        [question]="question"
-      ></surveyQuestion>
-    </li>
-  </ul>
+
+  <form [formGroup]="surveyForm" >
+    <ul>
+      <li *ngFor="let question of this.vote.questions">
+        <surveyQuestion
+          [question]="question"
+          [parentForm]="surveyForm"
+        ></surveyQuestion>
+      </li>
+    </ul>
+  </form>
 </div>
 
   <div id="submitButton">
-    <button mat-flat-button color="primary" [disabled]="this.surveyFrom.invalid" (click)="submitSurvey()">Submit</button>
+    <button mat-flat-button color="primary" [disabled]="this.surveyForm.disable && this.surveyForm.invalid" (click)="submitSurvey()">Submit</button>
   </div>
 
 

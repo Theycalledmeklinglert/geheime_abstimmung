@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {  FormControl, FormGroup, Validators } from '@angular/forms';
 import { Question } from 'src/lib/data-access/models/question';
 import { Vote } from 'src/lib/data-access/models/vote';
 import { BackendService } from 'src/lib/data-access/service/backend.service';
@@ -9,55 +9,30 @@ import { BackendService } from 'src/lib/data-access/service/backend.service';
   templateUrl: './survey.component.html',
   styleUrls: ['./survey.component.css']
 })
-export class SurveyComponent implements OnInit {
+export class SurveyComponent implements OnInit, AfterViewInit{
   vote:Vote;
-  surveyFrom: FormGroup;
-  debugObserbale: any;
+  surveyForm: FormGroup;
 
-  constructor(private backendService: BackendService, private fb: FormBuilder) {}
+
+  constructor(private backendService: BackendService) {}
 
   ngOnInit(): void {
     this.loadTestQuestions(); //Platzhalter zum testen bis Backendanbindung funktioniert
 
-    this.surveyFrom = this.fb.group({
-
-    })
-
-    /*
-
-    Schmerz
-
-    for(var question of this.vote.questions){
-      if(question.type === "yesNoAnswer"){
-        this.surveyFrom.addControl(question.title, null, [
-          Validators.required,
-          Validators.email,
-          Validators.minLength(6)
-        ])
-      }
-
-
-    }
-
-    var loginForm = new FormGroup({
-      email: new FormControl(null, [
-        Validators.required,
-        Validators.email,
-        Validators.minLength(6)
-      ])
-    })
-    */
-
+    this.surveyForm = new FormGroup({});
+    this.surveyForm.addControl("init", new FormControl(null,Validators.required)); //setzt temporäre Control um Fehler NG0100 zu vermeiden
   }
 
-  consoleLogging():void {
-
-    this.vote.questions.forEach(question => console.log(question.title));
+  ngAfterViewInit(): void {
+    this.surveyForm.removeControl("init"); //löscht nachdem die ChildComponents intitialisiert wurden,
   }
 
   submitSurvey():void{
-
+    console.log(this.surveyForm.value);
   }
+
+
+  //Debug Methods
 
   loadTestQuestions():void {
     this.vote= {name:"Testumfrage", lifetime:"1650250688", questions:[]};
@@ -67,9 +42,8 @@ export class SurveyComponent implements OnInit {
   }
 
 
-  //temp!!!!!!!!!!!!!
   debug() {
-    
+   
   }
 
 }

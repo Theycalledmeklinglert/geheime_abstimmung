@@ -2,20 +2,21 @@
   <h2>{{this.question.title}}</h2>
 </div>
 
-<div id="body">
+
+<div id="body" [formGroup]="this.parentForm">
 
   <section class="yesNoAnswer" *ngIf="this.question.type=='yesNoAnswer' ">
-    <mat-radio-group [(ngModel)]="this.question.yesNo">
-      <mat-radio-button value="true">yes</mat-radio-button>
-      <mat-radio-button value="false">no</mat-radio-button>
+    <mat-radio-group [formControlName]="this.question.title">
+      <mat-radio-button [value]="true" (change)="this.question.yesNo=true">yes</mat-radio-button>
+      <mat-radio-button [value]="false" (change)="this.question.yesNo=false">no</mat-radio-button>
     </mat-radio-group>
   </section>
 
   <section class="fixedAnswer" *ngIf="this.question.type=='fixedAnswer'">
-    <ul>
+    <ul [formGroup]="this.subGroupFixed">
       <li *ngFor="let answer of this.question.fixedAnswers; let i = index">
         <div class="answer">
-          <mat-checkbox (change)="updateFixedAnswer(i)">
+          <mat-checkbox [formControlName]="answer" (onClick)="updateFixedAnswer(i, this)">
           {{answer}}
         </mat-checkbox>
         </div>
@@ -25,7 +26,11 @@
 
   <section class="customAnswer" *ngIf="this.question.type=='individualAnswer' ">
     <mat-form-field>
-      <input matInput placeholder="Your Answer" [(ngModel)]="this.question.individualAnswer">
+      <input
+      matInput placeholder="Your Answer"
+      (change)="this.question.individualAnswer"
+      [formControlName]="this.question.title"
+      >
     </mat-form-field>
   </section>
 
