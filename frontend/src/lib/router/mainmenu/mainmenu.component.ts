@@ -40,7 +40,7 @@ export class MainmenuComponent{
   newadminadress: string = "";
   newadminpassword: string= "";
   newadminusername: string= "";
-  newadminrole: string= "admin";
+  newadminrole: string= "";
   //test
   userName: string= "blalbalb";
 
@@ -114,13 +114,13 @@ export class MainmenuComponent{
   sendAddAdminrequest(): void{
     //toDO INFO if add was sucessfull
 
-    let userData = '{"password":"'+this.newadminpassword+'", "email" :"'+this.newadminadress+'", "username" :"'+this.newadminusername+'", "role" :"'+this.newadminrole+'"}';
+    let userData = '{"password":"'+this.newadminpassword+'", "email" :"'+this.newadminadress+'", "name" :"'+this.newadminusername+'", "role" :"'+this.newadminrole+'"}';
     const userDataJSON: JSON = JSON.parse(userData);
     console.log("Add Admin"+userDataJSON);
 
 
-    this.backendService.updatePasswordorUsernameSurveyLeader(userDataJSON).subscribe((response) =>{
-
+    this.backendService.addnewSurveLeader(userDataJSON).subscribe((response) =>{
+      console.log("returnt key from Backend: "+ response["Session ID"] );
         this.authService.updateSessionid(response["Session ID"]);
         console.log("AddAdmin->"+"NEWKEY: "+localStorage.getItem("sessionID"));
       }
@@ -144,7 +144,6 @@ export class MainmenuComponent{
       this.sureDeleteAdmin = false;
     })
   }
-
 
 
 
@@ -209,11 +208,12 @@ export class MainmenuComponent{
   }
 
   setadmin():void{
-    if(this.newadminrole = "default"){
+    if(this.newadminrole == ""){
       this.newadminrole = "admin";
+      console.log("set admin")
     }else {
-      this.newadminrole = "default";
-
+      this.newadminrole = "";
+      console.log("set normal")
     }
   }
 

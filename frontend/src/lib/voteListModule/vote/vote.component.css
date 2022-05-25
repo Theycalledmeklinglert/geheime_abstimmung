@@ -66,3 +66,9 @@
   transform: scaleX(115%);
   transform: rotate(-20deg);
 }
+
+.vote .resultbutton{
+  left: 7.5%;
+  width: 80%;
+  height: 70px;
+}

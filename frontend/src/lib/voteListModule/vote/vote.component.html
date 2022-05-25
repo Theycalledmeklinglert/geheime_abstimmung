@@ -5,8 +5,9 @@
   <title>$Title$</title>
 </head>
 <body>
-<div class="vote" (click)="showVoteResult()">
-  <div id = "name" title = "VOTE NAME">{{showVoteName()}}</div>
+<div class="vote">
+  <div id = "name" title = "VOTE NAME" (click)="showVoteResult()" >{{showVoteName()}}</div>
+
 
 
   <div *ngIf="lowlifetime;else longlifetime">
@@ -23,6 +24,8 @@
   <div id="delete" title="DELETE VOTE" (click)="deletethisVote()" >
     <input type="image" src="../../../assets/deleteButton.png" width="30%" height="30%">
   </div>
+
+  <div class="resultbutton" (click)="showVoteResult()"></div>
 
 </div>
 

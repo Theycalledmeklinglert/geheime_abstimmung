@@ -84,8 +84,7 @@ export class BackendService {
     return this.httpClient.put<JSON>(this.url + '/api/polls/users?sessionID='+ this.getSessionID(),newUserData);
   }
 
-  setSurveyLeader(): void{
-  }
+
 
   setnewVote(): void{
   }

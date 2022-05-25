@@ -36,8 +36,8 @@ public class Service
 
 		Document doc = Document.parse(json);
 		String publicKeyClient = doc.getString("Public Key");
-		// TODO: Wo soll der PK gespeichert werden? Wie lange? Jede Anfrage neuer PK oder nur jede neue SessionID?
-		// TODO: PK in SessID Col speichern?
+		// TODO: Wo soll der PK gespeichert werden? Wie lange? Jede Anfrage neuer PK oder nur jede Anfrage neue SessionID?
+		// TODO: PK in SessID Col Dokument speichern?
 
 		// TODO: Generate Public Key
 
@@ -61,10 +61,13 @@ public class Service
 			throw new WebApplicationException(Response.status(401).build()); // 401 = Authentifizierung notwendig da SessID abgelaufen
 																			 // Mit FrontEnd absprechen wie Weiterleitung AUF und NACH Login funktioniert
 		}
+
+		Document user = optUser.get();
+
 		if(optPoll.isPresent())
 		{
 			Document poll = optPoll.get();
-			poll.append("Session ID", optUser.get().getString("session ID"));	// Neue Session ID des Users wird mitgesendet und muss von FrontEnd ausgelesen und gespeichert werden
+			poll.append("Session ID", user.getString("session ID"));	// Neue Session ID des Users wird mitgesendet und muss von FrontEnd ausgelesen und gespeichert werden
 
 			// TODO: Decrypt JSON
 
@@ -73,7 +76,8 @@ public class Service
 
 		// TODO: Decrypt JSON
 
-		return Response.status(404).build();
+		Document error = new Document("Session ID", user.getString("Session ID"));
+		return Response.status(404).entity(error.toJson()).build();
 	}
 
 
@@ -82,17 +86,19 @@ public class Service
 	public Response getAllPollsByUser(@DefaultValue("") @QueryParam("sessionID") final String sessID)
 	{
 		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
+
 		if(!optUser.isPresent())
 		{
 			throw new WebApplicationException(Response.status(401).build());
 		}
 
-		final Optional<ArrayList<Document>> optPolls = INSTANCE.getAllPollsOfUser(optUser.get().getString("name"));
+		Document user = optUser.get();
+		final Optional<ArrayList<Document>> optPolls = INSTANCE.getAllPollsOfUser(user.getString("name"));
 
 		if(optPolls.isPresent())
 		{
 			ArrayList<Document> polls = optPolls.get();
-			Document res = new Document("polls", polls).append("Session ID", optUser.get().getString("Session ID"));
+			Document res = new Document("polls", polls).append("Session ID", user.getString("Session ID"));
 			// TODO: encrypt JSON
 
 			return Response.ok( res ).build( );
@@ -100,7 +106,8 @@ public class Service
 
 		// TODO: encrypt JSON
 
-		return Response.status(404).build();
+		Document error = new Document("Session ID", user.getString("Session ID"));
+		return Response.status(404).entity(error.toJson()).build();
 	}
 
 
@@ -116,15 +123,16 @@ public class Service
 			throw new WebApplicationException(Response.status(401).build());
 		}
 
+		Document user = optUser.get();
 		// TODO: Decrypt JSON
 
 		// "accessible by" muss Array sein
 		if(!json.contains("name") || !json.contains("accessible by") || !json.contains("created by") || !json.contains("questions") || !json.contains("emails"))
 		{
-			throw new WebApplicationException(Response.status(422).build());
+			Document error = new Document("Session ID", user.getString("Session ID"));
+			return Response.status(422).entity(error.toJson()).build();
 		}
 
-		Document user = optUser.get();
 		Document poll = Document.parse(json);
 		poll.put("created by", user.getString("name"));
 		poll.append("Session ID", user.getString("Session ID"));	// s. getByID()
@@ -168,16 +176,19 @@ public class Service
 			throw new WebApplicationException(Response.status(401).build());
 		}
 
-		// TODO: Decrypt JSON
+		Document user = optUser.get();
 
 		Optional<Document> opt = this.INSTANCE.getPollAsOptDocumentByID(pollID);
+
 		if(!opt.isPresent())
 		{
-			throw new WebApplicationException(Response.status(404).build());
+			Document error = new Document("Session ID", user.getString("Session ID"));
+			return Response.status(404).entity(error.toJson()).build();
 		}
+
 		this.INSTANCE.deletePollByID(pollID);
 
-		Document newSessID = new Document().append("Session ID", optUser.get().getString("Session ID"));
+		Document newSessID = new Document().append("Session ID", user.getString("Session ID"));
 
 		// TODO: encrypt Response
 
@@ -192,26 +203,41 @@ public class Service
 	{
 
 		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
+		Document newUser = Document.parse(json);
 
 		if(!optUser.isPresent())
 		{
-			throw new WebApplicationException(Response.status(401).build()); // Session ID doesn't exist. User has to login on website again
+			throw new WebApplicationException(Response.status(401).build());  	// Session ID doesn't exist
+		}
+
+		Document user = optUser.get();
+
+		if((newUser.getString("role").equals("admin") && !user.getString("role").equals("admin")))
+		{
+			Document error = new Document("Session ID", user.getString("Session ID"));
+			return Response.status(401).entity(error.toJson()).build();
 		}
 
 		// TODO: Decrypt JSON
 
-		if(!json.contains("email") ||!json.contains("userName") || !json.contains("password") || !json.contains("role"))
+		if(!json.contains("email") ||!json.contains("name") || !json.contains("password") || !json.contains("role"))
 		{
-			throw new WebApplicationException(Response.status(422).build());
+			Document error = new Document("Session ID", user.getString("Session ID"));
+			return Response.status(422).entity(error.toJson()).build();
 		}
 
-		Document user = Document.parse(json);
-		INSTANCE.createUser(user);
-		user.append("Session ID", optUser.get().getString("SessionID"));
+
+		if(!INSTANCE.createUser(newUser))
+		{
+			Document error = new Document("Session ID", user.getString("Session ID"));
+			return Response.status(500).entity(error.toJson()).build();
+		}
+
+		newUser.append("Session ID", user.getString("Session ID")).append("_id", newUser.get("_id").toString());
 
 		// TODO: encrypt Response?
 
-		return Response.ok(user).build();
+		return Response.ok(newUser).build();
 	}
 
 	// TODO: Change Username, change Password
@@ -241,11 +267,12 @@ public class Service
 
 		if(!json.contains("password") || !json.contains("name"))	// || !existingUser.getString("name").equals(user.getString("name")
 		{
-			throw new WebApplicationException(Response.status(422).build());
+			Document error = new Document("Session ID", user.getString("Session ID"));
+			return Response.status(422).entity(error.toJson()).build();
 		}
 
 			// User with already existing name is the user that needs to be updated
-			if((existingUser.getString("name").equals(newUser.getString("name")) && !existingUser.getString("pwHash").equals(newUser.getString("pwHash"))) || (!existingUser.getString("name").equals(newUser.getString("name")) && existingUser.getString("pwHash").equals(newUserPWHash)))
+		if((existingUser.getString("name").equals(newUser.getString("name")) && !existingUser.getString("pwHash").equals(newUser.getString("pwHash"))) || (!existingUser.getString("name").equals(newUser.getString("name")) && existingUser.getString("pwHash").equals(newUserPWHash)))
 			{
 				String userID = user.get("_id").toString();
 				Document update = new Document("_id", user.get("_id")).append("name", newUser.getString("name")).append("role", user.getString("role"));
@@ -259,8 +286,10 @@ public class Service
 
 				return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();		// TODO: Test
 			}
-			System.out.println("Either UserName already exists or you attempted to change userName and PW at the same time which is not allowed");
-			throw new WebApplicationException(Response.status(401).build());
+
+		System.out.println("Either UserName already exists or you attempted to change userName and PW at the same time which is not allowed");
+		Document error = new Document("Session ID", user.getString("Session ID"));
+		return Response.status(404).entity(error.toJson()).build();
 	}
 
 
@@ -275,24 +304,30 @@ public class Service
 		{
 			throw new WebApplicationException(Response.status(401).build());
 		}
+
 		Document user = optUser.get();
+		String newSessID = user.getString("Session ID");
 
 		if(userToDeleteByName.equals(user.getString("name")))
 		{
 			System.out.println("An User can not delete his own account");
-			throw new WebApplicationException(Response.status(401).build());
+			Document error = new Document("Session ID", newSessID);
+			return Response.status(401).entity(error.toJson()).build();
 		}
 
 		if(!user.getString("role").equals("admin"))
 		{
 			System.out.println("User does not have the neccessary permissions to delete another user");
-			throw new WebApplicationException(Response.status(401).build());
+			Document error = new Document("Session ID", newSessID);
+			return Response.status(401).entity(error.toJson()).build();
 		}
 
 		optUser = INSTANCE.getUserAsOptDocumentByName(userToDeleteByName);
+
 		if(!optUser.isPresent())
 		{
-			throw new WebApplicationException(Response.status(404).build());
+			Document error = new Document("Session ID", newSessID);
+			return Response.status(404).entity(error.toJson()).build();
 		}
 
 		Document userToDelete = optUser.get();
@@ -300,11 +335,12 @@ public class Service
 		if(userToDelete.getString("role").equals("admin") && !INSTANCE.checkIfMoreThanOneAdminsExist())
 		{
 			System.out.println("Delete Request denied. At least one admin has to exist at all times");
-			throw new WebApplicationException(Response.status(404).build());
+			Document error = new Document("Session ID", newSessID);
+			return Response.status(404).entity(error.toJson()).build();
 		}
 
 		INSTANCE.deleteUserByID(userToDelete.get("_id").toString());
-		return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();
+		return Response.ok(new Document().append("Session ID", newSessID).toJson()).build();
 	}
 
 
@@ -334,7 +370,7 @@ public class Service
 		if(!INSTANCE.comparePWHash(user.getString("pwHash"), INSTANCE.generatePWHash(password, Base64.decodeBase64(user.getString("salt")))))
 		{
 			System.out.println("Incorrect Password");
-			throw new WebApplicationException(Response.status(401).build());
+			throw new WebApplicationException(Response.status(404).build());
 		}
 
 		INSTANCE.generateAndSetSessID(user);
@@ -362,15 +398,17 @@ public class Service
 			throw new WebApplicationException(Response.status(401).build());
 		}
 
+		Document user = optUser.get();
 		final Optional<Document> optAnswers = INSTANCE.getAnswersOfPollByID(pollID);
 
 		if(!optAnswers.isPresent())
 		{
-			return Response.status(404).build();
+			Document error = new Document("Session ID", user.getString("Session ID"));
+			return Response.status(404).entity(error.toJson()).build();
 		}
 
 		Document answers = optAnswers.get();
-		answers.append("Session ID", optUser.get().getString("Session ID"));
+		answers.append("Session ID", user.getString("Session ID"));
 
 		// TODO: encrypt JSON
 
@@ -394,12 +432,7 @@ public class Service
 		Document answer = Document.parse(json);
 		Optional<Document> poll = INSTANCE.getPollAsOptDocumentByID(answer.getString("pollID"));
 
-		if(!poll.isPresent())
-		{
-			throw new WebApplicationException(Response.status(404).build());
-		}
-
-		if(!this.INSTANCE.createAnswer(answer))
+		if(!poll.isPresent() || !this.INSTANCE.createAnswer(answer))
 		{
 			throw new WebApplicationException(Response.status(404).build());
 		}
@@ -420,14 +453,15 @@ public class Service
 		{
 			throw new WebApplicationException(Response.status(401).build());
 		}
-		Document user = optUser.get();
 
+		Document user = optUser.get();
 		optUser = INSTANCE.getPollAsOptDocumentByID(pollID);
 
 		if(!optUser.isPresent())
 		{
 			System.out.println("Specified Poll does not exist");
-			throw new WebApplicationException(Response.status(404).build());
+			Document error = new Document("Session ID", user.getString("Session ID"));
+			return Response.status(404).entity(error.toJson()).build();
 		}
 
 		INSTANCE.deleteAnswersOfPollByPollID(pollID);
@@ -448,19 +482,21 @@ public class Service
 			throw new WebApplicationException(Response.status(401).build());
 		}
 
+		Document user = optUser.get();
 		// TODO: Decrypt JSON
 
 		if(!json.contains("title") || !json.contains("description") || !json.contains("type") || !json.contains("poll ID"))	//TODO: Evtl. abaendern --> FrontEnd
 		{
-			throw new WebApplicationException(Response.status(422).build());
+			Document error = new Document("Session ID", user.getString("Session ID"));
+			return Response.status(422).entity(error.toJson()).build();
 		}
 
-		Document user = optUser.get();
 		Document question = Document.parse(json);
 
 		if(!this.INSTANCE.createQuestion(question))
 		{
-			throw new WebApplicationException(Response.status(404).build());
+			Document error = new Document("Session ID", user.getString("Session ID"));
+			return Response.status(404).entity(error.toJson()).build();
 		}
 
 		// TODO: encrypt JSON
@@ -475,6 +511,7 @@ public class Service
 	public Response getAlreadyUsedEmails(@DefaultValue("") @QueryParam("sessionID") final String sessID)
 	{
 		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
+
 		if(!optUser.isPresent())
 		{
 			throw new WebApplicationException(Response.status(401).build());
@@ -504,7 +541,8 @@ public class Service
 
 		if(!json.contains("emails"))
 		{
-			throw new WebApplicationException(Response.status(422).build());
+			Document error = new Document("Session ID", user.getString("Session ID"));
+			return Response.status(422).entity(error.toJson()).build();
 		}
 
 		Document emails = Document.parse(json);
@@ -513,7 +551,6 @@ public class Service
 		return Response.ok(new Document("Session ID", user.getString("Session ID"))).build();
 
 	}
-
 
 }
 
