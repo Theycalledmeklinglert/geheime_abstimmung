@@ -3,6 +3,7 @@ package main.java.app;
 import main.java.app.database.DBInstance;
 import org.bson.Document;
 
+import javax.swing.text.html.Option;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -36,7 +37,7 @@ public class Service
 
 		Document doc = Document.parse(json);
 		String publicKeyClient = doc.getString("Public Key");
-		// TODO: Wo soll der PK gespeichert werden? Wie lange? Jede Anfrage neuer PK oder nur jede Anfrage neue SessionID?
+		// TODO: Wo soll der PK gespeichert werden? --> In jedes SessID Dokument mit rein
 		// TODO: PK in SessID Col Dokument speichern?
 
 		// TODO: Generate Public Key
@@ -160,9 +161,6 @@ public class Service
 		return Response.ok(poll.toJson()).build(); 	//TODO: Checken ob der Muell funktioniert
 	}
 
-
-
-
 	// TODO: Check if PollToBeDeleted is accessible by user
 
 	@DELETE
@@ -260,39 +258,41 @@ public class Service
 		// TODO: Decrypt JSON
 
 		Document user = optUser.get();
-
 		Document newUser = Document.parse(json);
-		String newUserPWHash = INSTANCE.generatePWHash(newUser.getString("password"), Base64.decodeBase64(user.getString("salt")));
-		Document existingUser = user;
 
-		if(!user.getString("role").equals("admin") && newUser.getString("role").equals("admin"))	// A non admin can not add a new admin
-		{
-			Document error = new Document("Session ID", user.getString("Session ID"));
-			return Response.status(401).entity(error.toJson()).build();
-		}
 
-		if(!json.contains("password") || !json.contains("name"))	// || !existingUser.getString("name").equals(user.getString("name")
+		if(!json.contains("password") || !json.contains("name") || !json.contains("email"))
 		{
 			Document error = new Document("Session ID", user.getString("Session ID"));
 			return Response.status(422).entity(error.toJson()).build();
 		}
 
-			// User with already existing name is the user that needs to be updated
-		if((existingUser.getString("name").equals(newUser.getString("name")) && !existingUser.getString("pwHash").equals(newUser.getString("pwHash"))) || (!existingUser.getString("name").equals(newUser.getString("name")) && existingUser.getString("pwHash").equals(newUserPWHash)))
-			{
+		String newUserPWHash = INSTANCE.generatePWHash(newUser.getString("password"), Base64.decodeBase64(user.getString("salt")));
+		Optional<Document> opt = INSTANCE.getUserAsOptDocumentByEmail(newUser.getString("email"));
+
+		if(!opt.isPresent())
+		{
+			Document error = new Document("Session ID", user.getString("Session ID"));
+			return Response.status(404).entity(error.toJson()).build();
+		}
+
+		Document existingUser = opt.get();
+
+		if(existingUser.getString("email").equals(user.getString("email"))) {
+			if ((existingUser.getString("name").equals(newUser.getString("name")) && !existingUser.getString("pwHash").equals(newUser.getString("pwHash"))) || (!existingUser.getString("name").equals(newUser.getString("name")) && existingUser.getString("pwHash").equals(newUserPWHash))) {
 				String userID = user.get("_id").toString();
 				Document update = new Document("_id", user.get("_id")).append("name", newUser.getString("name")).append("role", user.getString("role"));
 				update.append("salt", user.getString("salt")).append("pwHash", INSTANCE.generatePWHash(newUser.getString("password"), Base64.decodeBase64(user.getString("salt"))));
 
 				INSTANCE.updateUserInPollCol(user.getString("name"), update.getString("name"));
-				INSTANCE.updateUserInSessIDCol(user, update);		// TODO: pwHash wird nicht aktualisiert???
+				INSTANCE.updateUserInSessIDCol(user, update);        // TODO: pwHash wird nicht aktualisiert???
 				INSTANCE.updateUserInUserCol(userID, update);
 
 				// TODO: encrypt Response
 
-				return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();		// TODO: Test
+				return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();        // TODO: Test
 			}
-
+		}
 		System.out.println("Either UserName already exists or you attempted to change userName and PW at the same time which is not allowed");
 		Document error = new Document("Session ID", user.getString("Session ID"));
 		return Response.status(404).entity(error.toJson()).build();
@@ -425,18 +425,20 @@ public class Service
 	@POST
 	@Path("/answers")
 	@Consumes( MediaType.APPLICATION_JSON )
-	public Response postAnswer(final String json, @DefaultValue("") @QueryParam("pollID") final String pollID, @DefaultValue("") @QueryParam("token") final String token)
+	public Response postAnswer(final String json, @DefaultValue("") @QueryParam("token") final String token)
 	{
 
 		// TODO: Decrypt JSON
 
-		if(!json.contains("poll_id") || !json.contains("token") || !json.contains("question_id"))
+		if(!json.contains("id") || !json.contains("token"))
 		{
 			throw new WebApplicationException(Response.status(422).build());
 		}
 
 		Document answer = Document.parse(json);
-		Optional<Document> poll = INSTANCE.getPollAsOptDocumentByID(answer.getString("pollID"));
+		String pollID = answer.getString("id");
+
+		Optional<Document> poll = INSTANCE.getPollAsOptDocumentByID(pollID);
 
 		if(!poll.isPresent() || !this.INSTANCE.createAnswer(answer))
 		{
