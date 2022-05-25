@@ -16,12 +16,12 @@
     <div class="test" *ngIf="isSysAdmin" >
     <button mat-menu-item (click)="showAddAdmin()" >
       <mat-icon>perm_identity</mat-icon>
-      <span>Add Admin</span>
+      <span>Add Surveyleader</span>
     </button>
 
     <button mat-menu-item (click)="showDeleteAdmin()">
       <mat-icon>delete_forever</mat-icon>
-      <span>Delete Admin</span>
+      <span>Delete Surveyleader</span>
     </button>
     </div>
 
@@ -58,10 +58,8 @@
 </div>
 
 
-
-
 <div class="adminGenerator" *ngIf="addAdmin">
-  <div class="headline">Add Admin</div>
+  <div class="headline">Add Surveyleader</div>
 
   <div class="txt_field">
     <input type="text" required
@@ -110,7 +108,7 @@
 
 
 <div class="deleteAdmin" *ngIf="deleteAdmin">
-  <div class="headline">Delete Admin</div>
+  <div class="headline">Delete Surveyleader</div>
 
   <div class="txt_field">
     <input type="text" required
@@ -225,6 +223,8 @@
 
 
 
+<mat-icon id="sucessicon" style="color:rgba(0,253,0,0.48)" *ngIf="sucesssend == true"> cloud_done</mat-icon>
+<mat-icon id="failicon" style="color:rgba(255,0,0,0.49)" *ngIf="failsend">warning</mat-icon>
 
 
 
