@@ -10,12 +10,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import java.util.ArrayList;
-import org.apache.commons.codec.binary.Base64;
+import java.time.LocalDateTime;
+import java.util.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import org.apache.commons.codec.binary.Base64;
 
 import static main.java.app.database.DBInstance.getDBInstance;
 
@@ -136,13 +134,15 @@ public class Service
 
 		Document poll = Document.parse(json);
 		poll.put("created by", user.getString("name"));
-		poll.append("Session ID", user.getString("Session ID"));	// s. getByID()
+		poll.append("Session ID", user.getString("Session ID"));
+		poll.put("timestamp", new Date());
 
 		ArrayList<String> emails = (ArrayList<String>) poll.get("emails");
 		INSTANCE.saveLastUsedEmails(emails);
 
 		ArrayList<String> tokens = INSTANCE.generateTokensOfPoll(emails.size());
 		poll.append("tokens", tokens);
+
 		INSTANCE.createPoll(poll);
 
 		Map<String, String> emailsAndTokens = new HashMap<>();
@@ -157,8 +157,7 @@ public class Service
 
 
 		// TODO: encrypt JSON
-
-		return Response.ok(poll.toJson()).build(); 	//TODO: Checken ob der Muell funktioniert
+		return Response.ok(poll.append("_id", poll.get("_id").toString()).toJson()).build(); 	//TODO: Checken ob der Muell funktioniert
 	}
 
 	// TODO: Check if PollToBeDeleted is accessible by user
