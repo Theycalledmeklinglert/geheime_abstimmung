@@ -27,6 +27,7 @@ export class LoginComponent{
 
   showloadingstatus: boolean = false;
 
+  wrongUsernameorPassword: boolean = false;
 
   setUsername(event: any): void{
     this.userEmail = event.target.value;
@@ -39,17 +40,22 @@ export class LoginComponent{
     if(this.userEmail != "" && this.password != ""){
       this.showloadingstatus = true;
       console.log("login with"+ this.password+ ","+this.userEmail)
-      let sucesslogin = await this.authService.getSessionid(this.userEmail,this.password);
-      if (sucesslogin){
+      try {
+        let sucesslogin = await this.authService.getSessionid(this.userEmail,this.password);
+        if (sucesslogin){
 
-        this.router.navigate(['/main']);
-        console.log("LoginComponent->"+"KEY: " + localStorage.getItem("sessionID"));
-        localStorage.setItem("userEmail",this.userEmail);
-        localStorage.setItem("userPassword", this.password);
-      }else {
+          this.router.navigate(['/main']);
+          console.log("LoginComponent->"+"KEY: " + localStorage.getItem("sessionID"));
+          localStorage.setItem("userEmail",this.userEmail);
+          localStorage.setItem("userPassword", this.password);
+        }
+
+      }catch (err){
         console.log("ERROR invalid SessionKey!");
         this.showloadingstatus = false;
+        this.wrongUsernameorPassword = true;
       }
+
 
     }else {
       alert("Emailadress or Password is empty!");

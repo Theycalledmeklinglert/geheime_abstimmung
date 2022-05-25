@@ -69,7 +69,7 @@ export class SurveyComponent implements OnInit {
 
   //temp!!!!!!!!!!!!!
   debug() {
-    
+
   }
 
 }
