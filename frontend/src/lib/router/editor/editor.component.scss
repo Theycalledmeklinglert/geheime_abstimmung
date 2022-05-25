@@ -10,7 +10,7 @@
   border: 3px solid #2691d9;
   border-radius: 40px 40px 40px 40px;
   align-items: flex-end;
-
+  overflow-y: auto;
 }
 .sidebar{
   text-align: center;
@@ -23,6 +23,7 @@
   border: 3px solid #ea7609;
   border-radius: 40px 40px 40px 40px;
   align-items: center;
+  overflow-y: auto;
 }
 
 #head{
@@ -34,6 +35,7 @@
 #questionList{
   position: relative;
   align-items: center ;
+  overflow-y: scroll;
 
 }
 
@@ -98,6 +100,11 @@
   background-color: rgba(239, 238, 238, 1);
   list-style: none;
 }
+#emaillist ul{
+  display: flow;
+
+}
+
 
 
 #emaillist ul li{
@@ -108,10 +115,7 @@
   list-style: none;
   align-items: flex-start;
   width: 20vw;
-  display: inline-list-item;
-  overflow: scroll;
-  max-height: 100px;
-
+  //max-height: 30px;
 }
 .emailstyle{
   font-size: 20px;
@@ -133,9 +137,22 @@
   margin-left: 10px;
   padding: 10px;
 }
-.inputfield::placeholder{
-  font-size: 2px;
-}
+
 #inputfield{
   font-size: 20px;
+}
+#body ul{
+  align-items: center;
+  position: relative;
+  background-color: transparent;
+  height: 50vh;
+}
+
+
+#body ul li {
+  overflow: auto;
+  background-color: transparent;
+  display: inline-block;
+  width: 100%;
+
 }

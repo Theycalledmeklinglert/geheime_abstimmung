@@ -18,7 +18,7 @@ export class EditorComponent {
     vote: {
       name: "",
       lifetime: "",
-      questions: [{id: 1, title: "New Question", visible: true}],
+      questions: [{id: 1, title: "", visible: true}],
       emails: []
     }
   };
@@ -37,7 +37,6 @@ export class EditorComponent {
   listPos?: number;
   next: boolean = false;
   tempEmail?: string;
-  tempDescr?: string;
   // focus: boolean = false;
 
 
@@ -80,9 +79,6 @@ export class EditorComponent {
     };
   }
 
-    setDescription(){
-      console.log(this.tempDescr);
-    }
     printEncrypted(){
       const keyPair = this.cryptService.generateKeyPair();
       const priv = encodeBase64(keyPair.secretKey);
@@ -93,7 +89,7 @@ export class EditorComponent {
         JSON.stringify(encrypted)
         // pub+'\n'+
         // priv
-        +"\n\n You will need it for accessing the results of this survey";
+        +"\n\n You will need it for accessing the results of this survey. Please close this window, after you copied and saved the key.";
       var data = new Blob([textFile], {type: 'text/plain'});
       if (textFile !== null) {
         window.URL.revokeObjectURL(textFile);

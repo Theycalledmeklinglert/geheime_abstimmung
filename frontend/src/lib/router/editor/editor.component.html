@@ -21,8 +21,7 @@
     <br/>
 
     <div id="expirationDateInput">
-<!--      <label class="label" for="timeinputfield">Expiration:</label> <br>-->
-      <mat-label>Expiration</mat-label>
+      <mat-label>Expiration</mat-label><br/>
       <input  class="inputfield" type="datetime-local" id="timeinputfield" [(ngModel)]="this.editor.vote.lifetime" required><br/>
     </div>
 
@@ -59,10 +58,10 @@
 </div>
 <section id="emaillist">
 <div *ngIf="this.next" class="questionwindow">
-  <ul class="emaillist">
+  <ul >
     <label class="label" for="emailInput">Enter an Email:</label>
     <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
-      <input matInput type="email" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempEmail">
+      <input matInput type="email" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempEmail" (blur)="addEmail()">
       <mat-label id="inputfield">Enter here...</mat-label>
     </mat-form-field>
     <li *ngFor="let email of this.editor.vote.emails" class="emailstyle">

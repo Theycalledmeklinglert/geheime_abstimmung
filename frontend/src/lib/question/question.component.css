@@ -57,6 +57,9 @@ input[id=yesNo]:checked {
   -moz-filter: none;
   filter: none;
 }
-#inputLabel{
-  font-size: 20px;
+#textarena{
+  font-size: 15px;
+}
+.inputfield{
+  font-size: 15px;
 }

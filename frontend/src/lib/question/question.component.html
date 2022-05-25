@@ -1,17 +1,30 @@
 <div id="head">
-  <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
-  <input matInput #inputText class="questiontitle" type="text" [(ngModel)]="this.question.title" required />
-    <mat-label id="inputLabel">Enter your question here...</mat-label>
+  <mat-form-field [ngStyle]="{'width.ch': titleInput.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
+  <input matInput #titleInput class="questiontitle" type="text" [(ngModel)]="this.question.title" required />
+    <mat-label class="inputfield">Enter your question here...</mat-label>
   </mat-form-field>
 </div>
+
+<mat-form-field appearance="fill" [ngStyle]="{'width.ch': descInput.value.length, 'min-width.ch': 20, 'max-width.ch': 25}">
+  <mat-label class="inputfield">Add a description:</mat-label>
+  <textarea matInput id="textarena"
+            #descInput
+            [(ngModel)]="this.question.description"
+            cdkTextareaAutosize
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="10"
+            placeholder="Enter a description..."
+  >
+    </textarea>
+</mat-form-field>
 
 
 <div id="body">
   <form id="questionSelect">
-    <mat-radio-group aria-label="Select an option">
+    <mat-radio-group aria-label="Select an option" required>
       <mat-radio-button value="1" (click)="chooseYesNoAnswer()" >Yes/No  Answer</mat-radio-button>
-      <mat-radio-button value="2" (click)="chooseFixedAnswers()">Fixed Answer</mat-radio-button>
-      <mat-radio-button value="3" (click)="chooseIndividualAnswers()">individual Answer</mat-radio-button>
+      <mat-radio-button value="2" (click)="chooseFixedAnswers()">Fixed Answers</mat-radio-button>
+      <mat-radio-button value="3" (click)="chooseIndividualAnswers()">individual Answers</mat-radio-button>
     </mat-radio-group>
   </form>
 
@@ -37,16 +50,6 @@
     </button>
   </div>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Add a description:</mat-label>
-    <textarea matInput id="textarena"
-      [(ngModel)]="this.question.description"
-              cdkTextareaAutosize
-              cdkAutosizeMinRows="5"
-              cdkAutosizeMaxRows="10"
-      placeholder="Enter a description..."
-      >
-    </textarea>
-  </mat-form-field>
+
 
 </div>
