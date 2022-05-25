@@ -43,7 +43,7 @@ export class EditorComponent {
 
   addEmptyQuestion() {
     this.editor.vote.questions.forEach(q => q.visible = false);
-    let question: Question = {id: 4, title: "new Question", visible: true};
+    let question: Question = {id: 4, title: "", visible: true};
     this.listPos = this.editor.vote.questions.push(question) - 1;
     question.id = (this.listPos == 0) ? 1 : this.editor.vote.questions[this.listPos - 1].id + 1;
 

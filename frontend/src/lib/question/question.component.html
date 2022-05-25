@@ -1,5 +1,8 @@
 <div id="head">
-  <input class="questiontitle" type="text" [(ngModel)]="this.question.title" />
+  <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
+  <input matInput #inputText class="questiontitle" type="text" [(ngModel)]="this.question.title" required />
+    <mat-label id="inputLabel">Enter your question here...</mat-label>
+  </mat-form-field>
 </div>
 
 
@@ -36,9 +39,11 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Add a description:</mat-label>
-    <textarea matInput
+    <textarea matInput id="textarena"
       [(ngModel)]="this.question.description"
-
+              cdkTextareaAutosize
+              cdkAutosizeMinRows="5"
+              cdkAutosizeMaxRows="10"
       placeholder="Enter a description..."
       >
     </textarea>

@@ -13,13 +13,16 @@
     <h1>Create new Vote:</h1>
 
     <div id="surveyNameInput">
-      <mat-form-field>
-        <input matInput type="text" placeholder="Survey Name" [(ngModel)]="this.editor.vote.name" required>
+      <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 40, 'max-width.ch': 60}">
+        <mat-label>Survey Name</mat-label>
+        <input matInput #inputText class="inputfield" type="text" [(ngModel)]="this.editor.vote.name" required>
       </mat-form-field> <br>
     </div>
+    <br/>
 
     <div id="expirationDateInput">
-      <label class="label" for="timeinputfield">Expiration:</label> <br>
+<!--      <label class="label" for="timeinputfield">Expiration:</label> <br>-->
+      <mat-label>Expiration</mat-label>
       <input  class="inputfield" type="datetime-local" id="timeinputfield" [(ngModel)]="this.editor.vote.lifetime" required><br/>
     </div>
 
@@ -54,16 +57,24 @@
   </div>
 
 </div>
+<section id="emaillist">
 <div *ngIf="this.next" class="questionwindow">
   <ul class="emaillist">
+    <label class="label" for="emailInput">Enter an Email:</label>
+    <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
+      <input matInput type="email" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempEmail">
+      <mat-label id="inputfield">Enter here...</mat-label>
+    </mat-form-field>
     <li *ngFor="let email of this.editor.vote.emails" class="emailstyle">
       {{email}}
-      <img src="../../../assets/deleteButton.png" width="20px" (click)="this.deleteEmail(email)">
+      <button id="delete" mat-icon-button (click)="deleteEmail(email)">
+        <mat-icon>delete</mat-icon>
+      </button>
+<!--      <img src="../../../assets/deleteButton.png" width="20px" (click)="this.deleteEmail(email)">-->
     </li>
-    <label class="label" for="emailInput">Enter an Email:</label>
-    <input type="email" class="inputfield" id="emailInput" [(ngModel)]="this.tempEmail" placeholder="Enter here...">
   </ul>
 </div>
+</section>
 <div *ngIf="!this.next" class="nextButton">
   <input type="image" src="../../../assets/next_btn.png" width="125%" height="125%" (click)="this.next = true">
 </div>

@@ -2,14 +2,15 @@
   text-align: center;
   font-size: 40px;
   position: fixed;
-  left:40%;
+  left:35%;
   background-color: rgba(239, 238, 238, 1);
   width: 50%;
-  height: auto;
+  height: 80%;
   top: 15%;
   border: 3px solid #2691d9;
   border-radius: 40px 40px 40px 40px;
   align-items: flex-end;
+
 }
 .sidebar{
   text-align: center;
@@ -83,10 +84,15 @@
 }
 
 .label{
-
+  font-size: 20px;
   position: center;
+  margin: 10px;
 }
-
+.questiontitle{
+  cursor: pointer;
+  word-wrap: break-word;
+  font-weight: bold;
+}
 
 .questioneditor{
   background-color: rgba(239, 238, 238, 1);
@@ -94,14 +100,24 @@
 }
 
 
-.emaillist{
+#emaillist ul li{
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  background-color: white;
   list-style: none;
-  align-items: center;
+  align-items: flex-start;
+  width: 20vw;
+  display: inline-list-item;
+  overflow: scroll;
+  max-height: 100px;
+
 }
 .emailstyle{
   font-size: 20px;
-  border: 3px solid #ea7609;
-  border-radius: 40px 40px 40px 40px;
+  overflow: scroll;
+  //border: 3px solid #ea7609;
+  //border-radius: 40px 40px 40px 40px;
 }
 .returnToMainButton{
   text-align: center;
@@ -112,4 +128,14 @@
   bottom: 25%;
   cursor: pointer;
 }
-
+.inputfield{
+  font-size: 20px;
+  margin-left: 10px;
+  padding: 10px;
+}
+.inputfield::placeholder{
+  font-size: 2px;
+}
+#inputfield{
+  font-size: 20px;
+}
