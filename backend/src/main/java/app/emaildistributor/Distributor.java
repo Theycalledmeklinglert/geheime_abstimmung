@@ -10,12 +10,11 @@ import javax.mail.internet.MimeMessage;
 import java.util.*;
 
 public class Distributor {
-    public static void main(String[] args) {
 
-        String recipient = "blablacaodg@gmail.com, tim.braunger@gmx.de";
-        String sender = "secret.vote.project@gmail.com";
-        String host = "smtp.gmail.com";
+    static String sender = "secret.vote.project@gmail.com";
+    static String host = "smtp.gmail.com";
 
+    public Session generateSession(){
         Properties properties = System.getProperties();
 
         properties.put("mail.smtp.host", host);
@@ -29,10 +28,14 @@ public class Distributor {
                 return new PasswordAuthentication(sender, "Project420");
             }
         });
-        session.setDebug(true);
 
+        session.setDebug(true);
+        return session;
+    }
+
+    public void sendMessage(String recipient){
         try {
-            MimeMessage message = new MimeMessage(session);
+            MimeMessage message = new MimeMessage(generateSession());
             message.setFrom(new InternetAddress(sender));
             message.setRecipients(
                     Message.RecipientType.TO,
@@ -46,6 +49,25 @@ public class Distributor {
         catch (MessagingException e) {
             e.printStackTrace();
         }
+    }
+
+    public void distribute(ArrayList<String> recipients){
+        recipients.forEach(n -> sendMessage(n));
+    }
+
+    // TODO: generateMessage Methode
+    // TODO: generateLink Methode
+
+
+    public static void main(String[] args) {
+        ArrayList<String> recipients = new ArrayList<>();
+
+        recipients.add("tim.braunger@gmx.de");
+        recipients.add("blablacaodg@gmail.com");
+
+        Distributor test = new Distributor();
+
+        test.distribute(recipients);
 
     }
 
