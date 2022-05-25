@@ -161,13 +161,17 @@ public class DBInstance
                 polls.add(poll);
             }
 
-            if(polls.isEmpty())
+            return Optional.of(polls);
+
+            /* if(polls.isEmpty())
             {
                 return Optional.empty();
             }
             else {
                 return Optional.of(polls);
             }
+
+             */
         }
 
     public boolean createUser(Document user) {
