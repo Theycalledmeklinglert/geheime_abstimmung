@@ -13,8 +13,8 @@
 
 
   <div class="username">
-
-    <div class="usericon">
+    {{isLoggedIn()}}
+    <div class="usericon" *ngIf="showUsericon">
       <input type="image" src="../assets/user_icon2.png" width="40%" height="40%">
     </div>
 

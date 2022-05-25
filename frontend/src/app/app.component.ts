@@ -11,7 +11,7 @@ export class AppComponent {
   title = 'frontend';
 
   currentuser: string = "";
-  firststart : boolean;
+  showUsericon : boolean = false;
 
 
   constructor() {
@@ -26,7 +26,15 @@ export class AppComponent {
     }else {
       return localStorage.getItem("userName");
     }
-
   }
+
+  isLoggedIn():void{
+    if(localStorage.getItem("userName") != null){
+    this.showUsericon = true;
+    }else if(localStorage.getItem("userName") == null){
+      this.showUsericon = false;
+    }
+  }
+
 
 }
