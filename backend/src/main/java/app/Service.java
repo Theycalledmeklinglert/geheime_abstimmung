@@ -200,17 +200,24 @@ public class Service
 
 		// TODO: Decrypt JSON
 
-		if(!json.contains("email") ||!json.contains("userName") || !json.contains("password") || !json.contains("role"))
+		if(!json.contains("email") ||!json.contains("name") || !json.contains("password") || !json.contains("role"))
 		{
 			throw new WebApplicationException(Response.status(422).build());
 		}
 
 		Document user = Document.parse(json);
-		INSTANCE.createUser(user);
-		user.append("Session ID", optUser.get().getString("SessionID"));
+
+		if(!INSTANCE.createUser(user))
+		{
+			Document error = new Document("Session ID", optUser.get().getString("Session ID"));
+			return Response.serverError().entity(error.toJson()).build();
+		}
+
+		user.append("Session ID", optUser.get().getString("Session ID"));
 
 		// TODO: encrypt Response?
 
+		user.append("_id", user.get("_id").toString());
 		return Response.ok(user).build();
 	}
 

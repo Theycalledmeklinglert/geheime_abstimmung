@@ -10,6 +10,8 @@ import org.bson.types.ObjectId;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
