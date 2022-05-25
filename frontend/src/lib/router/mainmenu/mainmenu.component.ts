@@ -2,6 +2,7 @@ import { Component} from "@angular/core";
 import {LoginComponent} from "../login/login.component";
 import {BackendService} from "../../data-access/service/backend.service";
 import {AuthenticationService} from "../../data-access/service/authentication.service";
+import {Router} from "@angular/router";
 
 
 
@@ -47,7 +48,7 @@ export class MainmenuComponent{
   //delete Admin
   deleteadminadress: string= "";
 
-  constructor(private backendService: BackendService, private authService: AuthenticationService) {}
+  constructor(private backendService: BackendService, private authService: AuthenticationService, private router: Router) {}
 
   showAddAdmin(): void{
     this.addAdmin = true;
@@ -215,6 +216,14 @@ export class MainmenuComponent{
       this.newadminrole = "";
       console.log("set normal")
     }
+  }
+
+
+
+
+  logout():void{
+    localStorage.clear();
+    this.router.navigate(['/login']);
   }
 
 }

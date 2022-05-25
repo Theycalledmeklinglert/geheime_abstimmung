@@ -70,6 +70,17 @@
   transition: .4s;
 }
 
+.loginfield #loginwindow .txt_field .redtext{
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  color: red;
+  transform: translateY(-50%);
+  font-size: 16px;
+  pointer-events: none;
+  transition: .4s;
+}
+
 .loginfield #loginwindow .txt_field span::before{
   content: "";
   position: absolute;
@@ -96,7 +107,7 @@
 
 .loginfield #loginwindow .helpbutton{
   position: absolute;
-  bottom: 35%;
+  bottom: 32%;
   left: 5%;
   color: #a6a6a6;
   cursor: pointer;
@@ -104,6 +115,12 @@
 .loginfield #loginwindow .helpbutton:hover{
   text-decoration: underline;
   color: #2691d9;
+}
+
+.loginfield #loginwindow .wronguserdata{
+  position: fixed;
+  top: 70%;
+  color: #ff0000;
 }
 
 .loginfield #loginwindow input[type="submit"]{
@@ -139,6 +156,7 @@
   pointer-events: none;
 
 }
+
 
 
 

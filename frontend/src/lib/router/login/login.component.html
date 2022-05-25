@@ -17,7 +17,8 @@
                  (change)="setUsername($event)"
           >
           <span></span>
-          <label>Email</label>
+          <label *ngIf="wrongUsernameorPassword == false">Email</label>
+          <label *ngIf="wrongUsernameorPassword" style="color:red">Email</label>
         </div>
         <div class="txt_field">
           <input type="password" required
@@ -25,9 +26,13 @@
                  (change)="setPassword($event)"
           >
           <span></span>
-          <label>Password</label>
+          <label *ngIf="wrongUsernameorPassword == false">Password</label>
+          <label *ngIf="wrongUsernameorPassword" style="color:red">Password</label>
         </div>
         <div class="helpbutton" (click)="presshelpbutton()"> Need help?</div>
+        <div class="wronguserdata" *ngIf="wrongUsernameorPassword">
+          Passwort or Username is incorrect!
+        </div>
         <input type="submit" value="Login"  (click)="submitlogin()">
         <div class="loading" *ngIf="showloadingstatus">
           <mat-spinner [diameter]="40"></mat-spinner>

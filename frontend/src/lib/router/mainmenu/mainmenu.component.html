@@ -35,6 +35,11 @@
       <span>Change Username</span>
     </button>
 
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>exit_to_app</mat-icon>
+      <span>Logout</span>
+    </button>
+
   </mat-menu>
 </div>
 
@@ -113,7 +118,7 @@
            (change)="setUsernameoftoDeleteAdmin($event)"
     >
     <span></span>
-    <label>Email</label>
+    <label>Username</label>
   </div>
 
   <div class="delete" >
