@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import {  FormControl, FormGroup, Validators } from '@angular/forms';
-import { Question } from 'src/lib/data-access/models/question';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Vote } from 'src/lib/data-access/models/vote';
 import { BackendService } from 'src/lib/data-access/service/backend.service';
 
@@ -39,11 +38,19 @@ export class SurveyComponent implements OnInit, AfterViewInit{
     this.vote.questions.push({title:"FrageText1", id:1, type:"yesNoAnswer"});
     this.vote.questions.push({title:"FrageText2", id:2, type:"fixedAnswer", fixedAnswers:["AntwortText1", "AntwortText2","AntwortText3"]});
     this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
+    this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
+    this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
+    this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
+    this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
+    this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
+    this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
+    this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
+
   }
 
 
   debug() {
-   
+
   }
 
 }

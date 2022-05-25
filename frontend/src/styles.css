@@ -2,7 +2,7 @@
 .body{
   background-image: url("assets/background-vote.jpg");
   background-size: cover;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   background-position: center center;
   height: 100vh;
 }

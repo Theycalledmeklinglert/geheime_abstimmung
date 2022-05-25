@@ -1,10 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SurveyLeader } from '../models/surveyLeader';
 import { Vote } from '../models/vote';
-import { VoteContainer } from '../models/voteContainer';
-import {AuthenticationService} from "./authentication.service";
+
 
 @Injectable({
   providedIn: 'root'
