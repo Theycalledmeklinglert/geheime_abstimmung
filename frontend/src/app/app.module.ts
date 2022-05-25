@@ -26,6 +26,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {SurveyResultComponent} from "../lib/router/surveyResult/surveyResult.component";
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     SurveyComponent,
     SurveyQuestionComponent,
     VoteComponent,
-    VoteConainterComponent
+    VoteConainterComponent,
+    SurveyResultComponent
 
   ],
     imports: [

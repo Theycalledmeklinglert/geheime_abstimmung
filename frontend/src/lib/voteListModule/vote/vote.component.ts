@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import {Vote} from "../../data-access/models/vote";
 import {BackendService} from "../../data-access/service/backend.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'vote',
@@ -17,16 +18,16 @@ export class VoteComponent {
   @Input() voteObject: Vote;
 
   lowlifetime: boolean = false;
-  showvoteinfo:boolean = false;
   datum: Date;
+  voteisfinish: boolean = true;
 
-  constructor (private backendService: BackendService) {}
+  constructor (private backendService: BackendService, private router: Router) {}
 
 
   showVoteResult(): void {
-
-    //  this.backendS.getSurvey(this.voteObject.id,localStorage.getItem("sessionid"))
-    this.showvoteinfo = true;
+    if(this.voteisfinish == true){
+      this.router.navigate(['/result']);
+    }
   }
 
   showVoteName(): String{
