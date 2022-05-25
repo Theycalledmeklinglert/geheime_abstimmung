@@ -60,4 +60,8 @@ export class SurveyQuestionComponent implements OnInit {
     this.question.multipleChoiceAnswer[index] = checkBox.checked;
   }
 
+  updateCustomAnswer(event: any) {
+    this.question.individualAnswer = event.target.value;
+  }
+
 }

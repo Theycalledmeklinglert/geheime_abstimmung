@@ -28,7 +28,7 @@
     <mat-form-field>
       <input
       matInput placeholder="Your Answer"
-      (change)="this.question.individualAnswer"
+      (change)="updateCustomAnswer($event)"
       [formControlName]="this.question.title"
       >
     </mat-form-field>
