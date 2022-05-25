@@ -223,7 +223,7 @@ export class MainmenuComponent{
     this.newadminadress = event.target.value;
   }
 
-  setpasswortofnewAdmin(event: any): void{
+  setpasswordofnewAdmin(event: any): void{
     this.newadminpassword = event.target.value;
   }
 

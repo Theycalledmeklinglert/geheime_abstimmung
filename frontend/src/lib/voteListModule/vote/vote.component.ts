@@ -8,6 +8,7 @@ import {
 import {Vote} from "../../data-access/models/vote";
 import {BackendService} from "../../data-access/service/backend.service";
 import {Router} from "@angular/router";
+import {stringify} from "@angular/compiler/src/util";
 
 @Component({
   selector: 'vote',
@@ -35,13 +36,23 @@ export class VoteComponent {
   }
 
 
-  showVoteLifetime(): String{
+  showVoteLifetime(): number{
     /*
      this.datum = new Date(this.voteObject.lifetime);
     if(this.datum.getDay() < 1){this.lowlifetime = true;}
      */
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
 
-    return this.voteObject.lifetime;
+    var todayis = Date.parse( mm + '/' + dd + '/' + yyyy);
+    console.log(todayis);
+    let testdate = new Date("09/30/2021");
+    console.log(Date.parse(this.voteObject.lifetime));
+    var diff = Math.abs( Date.parse(this.voteObject.lifetime)-todayis);
+    console.log("Diff: "+ diff);
+    return diff;
   }
 
   stopthisVote(): void{

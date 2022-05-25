@@ -27,6 +27,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {SurveyResultComponent} from "../lib/router/surveyResult/surveyResult.component";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 
 @NgModule({
@@ -43,28 +44,29 @@ import {SurveyResultComponent} from "../lib/router/surveyResult/surveyResult.com
     SurveyResultComponent
 
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
 
-        BrowserAnimationsModule,
-        FormsModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatRadioModule,
-        MatCheckboxModule,
-        BrowserAnimationsModule,
-        MatIconModule,
-        MatDatepickerModule,
-        MatMenuModule,
-        MatProgressSpinnerModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatRadioModule,
+    MatCheckboxModule,
+    BrowserAnimationsModule,
+    MatIconModule,
+    MatDatepickerModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule,
 
 
-    ],
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
