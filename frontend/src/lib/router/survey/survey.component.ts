@@ -26,8 +26,9 @@ export class SurveyComponent implements OnInit, AfterViewInit{
     this.surveyForm.removeControl("init"); //löscht nachdem die ChildComponents intitialisiert wurden,
   }
 
-  submitSurvey():void{
-    console.log(this.surveyForm.value);
+  submitSurvey():void {
+    const token = "testToken" //muss noch den token aus der url ziehen
+    this.backendService.submitSurvey(this.vote, token);
   }
 
 

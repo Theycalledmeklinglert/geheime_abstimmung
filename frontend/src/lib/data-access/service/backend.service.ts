@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Vote } from '../models/vote';
+import { EncryptionService } from './encryption.service';
 
 
 @Injectable({
@@ -11,7 +12,7 @@ export class BackendService {
 
   readonly url = 'http://localhost:4200';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private encryptionService: EncryptionService) { }
 
   private getSessionID():string{
     return localStorage.getItem("sessionID");
@@ -22,7 +23,6 @@ export class BackendService {
     return this.httpClient.get<JSON>(this.url + '/api/polls?sessionID='+ this.getSessionID());
 
   }
-
 
   loadPollByUser(pollId: number): Observable<Vote> {
 
@@ -51,7 +51,7 @@ export class BackendService {
 
   }
 
-  postPublicKey(myPublicKey: JSON): JSON{
+  keyExchange(): any{
     let test: JSON = JSON.parse("Serverresponse");
     return test;
   }
@@ -78,15 +78,22 @@ export class BackendService {
   }
 
   updatePasswordorUsernameSurveyLeader(newUserData: JSON): Observable<JSON>{
-
-    return this.httpClient.put<JSON>(this.url + '/api/polls/users?sessionID='+ this.getSessionID(),newUserData);
+    return this.httpClient.put<JSON>(this.url + '/api/polls/users?sessionID='+ this.getSessionID(), newUserData);
   }
 
+  submitSurvey(answeredPoll: Vote, token: string){
+
+    //temporäre Platzhalter für spätere Implementierungen
+    const key = this.keyExchange()
+    let encryptedData = this.encryptionService.encrypt(key, answeredPoll)
+
+
+    return this.httpClient.post<Vote>(this.url + '/api/answers?token=' + token, encryptedData)
+  }
 
 
   setnewVote(): void{
   }
-
 
 
 }
