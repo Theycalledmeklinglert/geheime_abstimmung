@@ -49,9 +49,8 @@ export class BackendService {
     return this.httpClient.get<any>( this.url + '/api/emails?sessionID='+ this.getSessionID() );
   }
 
-  keyExchange(): any{
-    let test: JSON = JSON.parse("Serverresponse");
-    return test;
+  keyExchange(keyandemail: JSON): Observable<any>{
+    return this.httpClient.post(this.url +'/api/polls/connect',keyandemail);
   }
 
   loadSessionID(myUserData: JSON): Observable<any> {

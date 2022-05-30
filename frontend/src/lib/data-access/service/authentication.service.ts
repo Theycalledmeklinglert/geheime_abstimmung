@@ -18,27 +18,24 @@ export class AuthenticationService {
     //-> call encryption service to generate public key
 
 
-    /*
+
     let keyPair = this.cryptService.generateKeyPair();
-    let myPublicKey: string = keyPair.publicKey.toString();
-    let myPrivateKey: string = keyPair.secretKey.toString();
+    let myPublicKey: string = keyPair.publicKey;
+    let myPrivateKey: string = keyPair.privateKey;
 
     //send Frontend publicKey to Backend, and get Backend publicKey
     localStorage.setItem("privateKey", myPrivateKey);
-    let myPublicKeyJSON: JSON = JSON.parse('{"Public Key":'+myPublicKey+'}');
-    let backendPublicKeyJSON: JSON = this.backendS.postPublicKey(myPublicKeyJSON);
+    let myPublicKeyJSON: JSON = JSON.parse('{"email":"' + email + '","Public Key" :"' + myPublicKey + '"}');
+    let backendPublicKeyJSONresponse: Promise<Observable<any>> = await lastValueFrom(this.backendS.keyExchange(myPublicKeyJSON));
 
-    //safe backend PublicKey as String
-    let backendPublicKeyAsString: string = backendPublicKeyJSON["Public Key"]; //toDo check return
-    localStorage.setItem("backendKey",backendPublicKeyAsString);
-
-    //format string in Keyformat
-    let backendPublicKey: Uint8Array = new TextEncoder().encode(backendPublicKeyAsString);
-
-    // generate and send encrypted Password and Username
+    if(backendPublicKeyJSONresponse["Public Key"]) {
+      localStorage.setItem("backendPublicKey",backendPublicKeyJSONresponse["Public Key"]);
+      console.log("Public Key of Backend: " + localStorage.getItem("backendPublicKey"));
+    }
 
 
-    */
+
+
 
     //toDo hash password
 
