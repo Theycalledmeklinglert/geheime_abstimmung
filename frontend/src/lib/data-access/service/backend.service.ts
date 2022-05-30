@@ -28,13 +28,10 @@ export class BackendService {
     return this.httpClient.get<Vote>( this.url + '/api/polls/ '+ pollId +'?sessionID='+ this.getSessionID() );
   }
 
-  createPoll(poll: Vote):Observable<Vote> {
-    let data = {
-      ...poll,
+  createPoll(poll: JSON):Observable<Vote> {
+    return this.httpClient.post<Vote>(this.url +'/api/polls?sessionID='+ this.getSessionID() ,poll)
     }
 
-    return this.httpClient.post<Vote>(this.url + '/api/polls?sessionID='+ this.getSessionID(), data);
-  }
 
   deletePollByID(pollId: number):Observable<void>  {
 
