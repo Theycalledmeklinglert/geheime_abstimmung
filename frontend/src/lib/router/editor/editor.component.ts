@@ -24,7 +24,7 @@ export class EditorComponent implements OnInit{
 
   addEmptyQuestion() {
     this.vote.questions.forEach(q => q.visible = false);
-    let question: Question = {id: 1, title: "", type:"", visible: true};
+    let question: Question = {id: 1, title: "",type:"", visible: true};
     this.listPos = this.vote.questions.push(question) - 1;
     question.id = (this.listPos == 0) ? 1 : this.vote.questions[this.listPos - 1].id + 1;
 
@@ -51,7 +51,7 @@ export class EditorComponent implements OnInit{
     this.vote = {
         name: "",
         lifetime: "",
-        questions: [{id: 1, title: "New Question",type: "", visible: true}],
+        questions: [{id: 1, title: "New Question",type:"", visible: true}],
         emails: []
       };
     this.submitted = false;
@@ -86,7 +86,7 @@ export class EditorComponent implements OnInit{
       }
       textFile = window.URL.createObjectURL(data);
       window.open(textFile);
-      this.backendService.createPoll(this.vote);
+      this.backendService.createPoll(this.vote).subscribe(r => console.log(r));
     }
     pressOkayButton(){
       this.notAllFilled = false;
@@ -102,16 +102,15 @@ export class EditorComponent implements OnInit{
     };
 
     isCompleteVote(): boolean{
+      let result: boolean = true;
       if(this.vote.name == "" || this.vote.lifetime == ""){
-        return false;
+        result = false;
       }
-      this.vote.questions.forEach(q =>
-      {
-        if(q.type == undefined || q.title == ""){
-          return false;
-        }
-      })
-      return this.vote.emails.length != 0;
+      for(let q of this.vote.questions){
+        if(q.type == "" || q.title == "") result = false;
+      }
+      if (this.vote.emails.length == 0) result = false;
+      return result;
 
     }
 }

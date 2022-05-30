@@ -3,7 +3,7 @@ export interface Question{
   id: number;
   title: string;
   description?: string;
-  type?: string;
+  type: string;
 
   yesNo?: boolean;
   fixedAnswers?: string[];

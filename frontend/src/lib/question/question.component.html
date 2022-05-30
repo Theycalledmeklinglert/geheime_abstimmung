@@ -22,9 +22,9 @@
 <div id="body">
   <form id="questionSelect">
     <mat-radio-group aria-label="Select an option" required>
-      <mat-radio-button (click)="chooseYesNoAnswer()" value="1">Yes/No  Answer</mat-radio-button>
-      <mat-radio-button (click)="chooseFixedAnswers()" value="2">Fixed Answers</mat-radio-button>
-      <mat-radio-button (click)="chooseIndividualAnswers()" value="3">individual Answers</mat-radio-button>
+      <mat-radio-button (click)="chooseYesNoAnswer()" value="1" [checked]="question.type == 'yesNoAnswer'">Yes/No  Answer</mat-radio-button>
+      <mat-radio-button (click)="chooseFixedAnswers()" value="2" [checked]="question.type == 'fixedAnswers'">Fixed Answers</mat-radio-button>
+      <mat-radio-button (click)="chooseIndividualAnswers()" value="3" [checked]="question.type == 'individualAnswer'">Individual Answers</mat-radio-button>
     </mat-radio-group>
   </form>
 

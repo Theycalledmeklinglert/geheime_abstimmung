@@ -49,6 +49,9 @@ export class VoteConainterComponent implements OnInit{
     this.vlcObject.votes = votes;
   }
 
-
+  deleteVote(vote: Vote){
+    this.vlcObject.votes.filter(v => v != vote);
+    this.backendService.deletePollByID(vote.id);
+  }
 
 }

@@ -21,6 +21,8 @@ export class VoteComponent {
   lowlifetime: boolean = false;
   datum: Date;
   voteisfinish: boolean = true;
+  @Output()
+  deleteVoteEvent: EventEmitter<Vote>;
 
   constructor (private backendService: BackendService, private router: Router) {}
 
@@ -60,6 +62,7 @@ export class VoteComponent {
 
   deletethisVote(): void{
     console.log("delete this Vote!");
+    this.deleteVoteEvent.emit(this.voteObject);
   //  this.backendS.deleteSurvey(this.voteObject.id,localStorage.getItem("sessionid"))
   }
 
