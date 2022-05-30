@@ -3,14 +3,12 @@ package main.java.app;
 import main.java.app.database.DBInstance;
 import org.bson.Document;
 
-import javax.swing.text.html.Option;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 import org.apache.commons.codec.binary.Base64;
@@ -25,22 +23,27 @@ public class Service
 	@Context
 	protected UriInfo uriInfo;
 
-
 	@POST
 	@Path("/connect")
 	@Consumes( MediaType.APPLICATION_JSON )
 	@Produces( MediaType.APPLICATION_JSON )
-	public Response postPublicKey(final String json)	// This method will be used to send exchange the public keys between client and server
+	public Response keyExchange(final String json)	// This method will be used to send exchange the public keys between client and server
 	{
 
 		Document doc = Document.parse(json);
 		String publicKeyClient = doc.getString("Public Key");
+		String email = doc.getString("email");
+
 		// TODO: Wo soll der PK gespeichert werden? --> In jedes SessID Dokument mit rein
 		// TODO: PK in SessID Col Dokument speichern?
 
 		// TODO: Generate Public Key
+		String privateKeyServer = "Placeholder";
+		String publicKeyServer= "Placeholder";
 
-		String publicKeyServer = "Placeholder";
+		Document keys = new Document("private Key", privateKeyServer).append("public Key Client", publicKeyClient);
+		INSTANCE.saveKeys(email, privateKeyServer, publicKeyClient);
+
 		doc = new Document().append("Public Key", publicKeyServer);
 
 		return Response.ok(doc).build();
@@ -145,19 +148,23 @@ public class Service
 
 		INSTANCE.createPoll(poll);
 
-		Map<String, String> emailsAndTokens = new HashMap<>();
+		ArrayList<String[]> emailsAndLinks = new ArrayList<>();
+		String baseUri = "http://localhost:4200/survey";		// TODO: BASE URI HAS TO BE CHANGED TO ACTUAL WEBSITE URI BEFORE RELEASE!!!!!!!!!!!!
 
 		for(String email : emails)
 		{
-			emailsAndTokens.put(email, tokens.get(0));
+			String answerLink = baseUri + "?pollID=" + poll.get("_id").toString() + "&token=" + tokens.get(0);
+			emailsAndLinks.add(new String[] {emails.get(0), answerLink});
 			tokens.remove(0);
+			emails.remove(0);
 		}
 
-		// TODO: Call corresponding method of the the distributor class to generate and send the links with
+		// Distributor = sendEmails(emailsAndLinks) // Oder so
+		// TODO: Call corresponding method of the the distributor class to send the links per Email (has to take emailsAndTokens and answerLinks
 
 
 		// TODO: encrypt JSON
-		return Response.ok(poll.append("_id", poll.get("_id").toString()).toJson()).build(); 	//TODO: Checken ob der Muell funktioniert
+		return Response.ok(poll.append("_id", poll.get("_id").toString()).toJson()).build();
 	}
 
 	// TODO: Check if PollToBeDeleted is accessible by user
@@ -192,7 +199,7 @@ public class Service
 		return Response.ok(newSessID).build();
 	}
 
-	@POST
+	@POST	// TODO: Email mit Zugangsdaten (UserName, PW, Email an Email Adresse wenn ein neuer User erstellt wird
 	@Path("/users")
 	@Consumes( MediaType.APPLICATION_JSON )
 	@Produces( MediaType.APPLICATION_JSON )
@@ -236,9 +243,6 @@ public class Service
 
 		return Response.ok(newUser).build();
 	}
-
-	// TODO: Change Username, change Password
-	// TODO: Check if at least one sysAdmin exists
 
 
 	@PUT
@@ -358,6 +362,7 @@ public class Service
 	{
 
 		// TODO: Decrypt JSON
+		// Wie checken ob JSON verschluesselt wurde?
 
 		Document doc = Document.parse(json);
 		String email = doc.getString("email");
@@ -380,7 +385,11 @@ public class Service
 
 		INSTANCE.generateAndSetSessID(user);
 
+		// TODO: Public Key und private Key im jeweiligen SessID Col abspeichern
+		//
+
 		Document res = new Document().append("Session ID", user.getString("Session ID")).append("userName", user.getString("name")).append("role", user.getString("role"));
+
 		String unencryptedJSON = res.toJson();
 
 		// TODO: Encrypt JSON before sending back
@@ -418,6 +427,31 @@ public class Service
 		// TODO: encrypt JSON
 
 		return Response.ok( answers ).build( );
+	}
+
+	@GET
+	@Path("/answers/{pollID}")
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response getSinglePollByID(@DefaultValue( "" ) @PathParam( "pollID" ) final String poll_id, @DefaultValue("") @QueryParam("token") final String token)
+	{
+		final Optional<Document> optPoll = INSTANCE.getPollAsOptDocumentByID(poll_id);
+
+		if(!optPoll.isPresent())
+		{
+			return Response.status(404).build();
+		}
+
+		Document poll = optPoll.get();
+
+		ArrayList<String> tokens = (ArrayList<String>) poll.get("tokens");
+
+		if(!tokens.contains("token"))
+		{
+			return Response.status(404).build();
+		}
+
+		// TODO: Decrypt JSON
+		return Response.ok(poll.toJson()).build();
 	}
 
 

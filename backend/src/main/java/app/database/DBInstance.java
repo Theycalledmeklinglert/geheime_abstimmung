@@ -10,8 +10,6 @@ import org.bson.types.ObjectId;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -20,80 +18,68 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.mongodb.client.model.Filters.*;
+
 import org.apache.commons.codec.binary.Base64;
 
-public class DBInstance
-{
-        private static DBInstance INSTANCE;
-        private static MongoClient client;
-        private static MongoDatabase db;
-        private static MongoCollection<Document> pollCol;
-        private static MongoCollection<Document> userCol;
-        private static MongoCollection<Document> answerCol;
-        private static MongoCollection<Document> emailCol;
-        private static MongoCollection<Document> sessIDCol;
-
+public class DBInstance {
+    private static DBInstance INSTANCE;
+    private static MongoClient client;
+    private static MongoDatabase db;
+    private static MongoCollection<Document> pollCol;
+    private static MongoCollection<Document> userCol;
+    private static MongoCollection<Document> answerCol;
+    private static MongoCollection<Document> emailCol;
+    private static MongoCollection<Document> sessIDCol;
 
 
     private static ArrayList<String> pollNames;
 
     private static ArrayList<String> userNames;
 
-    public static MongoCollection<Document> getCollection( )
-        {
-                return pollCol;
+    public static MongoCollection<Document> getCollection() {
+        return pollCol;
+    }
+
+    public static ArrayList<String> getPollNames() {
+        return pollNames;
+    }
+
+    public static DBInstance getDBInstance() {
+        if (INSTANCE == null) {
+            return new DBInstance();
+        } else {
+            return INSTANCE;
         }
+    }
 
-        public static ArrayList<String> getPollNames( )
-        {
-            return pollNames;
-        }
+    private DBInstance() {
+        // The Mongo Connection URI is mostly provided by the mongodb cloud. It can change depending on what DB user logs into the DB from the application
+        // client = MongoClients.create("mongodb://localhost:27017");
+        client = MongoClients.create("mongodb+srv://sampleUser:GeheimeAbstimmung@cluster0.eobux.mongodb.net/TestDB?retryWrites=true&w=majority");
+        db = client.getDatabase("DB");
+        pollCol = db.getCollection("Polls");
+        userCol = db.getCollection("Users");
+        answerCol = db.getCollection("Answers");
+        emailCol = db.getCollection("E-Mails");
+        sessIDCol = db.getCollection("SessIDs");
+        //  sessIDCol.dropIndex(Indexes.ascending("created at"));
+        sessIDCol.createIndex(Indexes.ascending("created at"), new IndexOptions().expireAfter(60L, TimeUnit.MINUTES));
 
-        public static DBInstance getDBInstance() {
-            if(INSTANCE == null)
-            {
-                return new DBInstance();
-            }
-            else
-            {
-                return INSTANCE;
-            }
-        }
+    }
 
-        private DBInstance( )
-        {
-            // The Mongo Connection URI is mostly provided by the mongodb cloud. It can change depending on what DB user logs into the DB from the application
-            // client = MongoClients.create("mongodb://localhost:27017");
-            client = MongoClients.create("mongodb+srv://sampleUser:GeheimeAbstimmung@cluster0.eobux.mongodb.net/TestDB?retryWrites=true&w=majority");
-            db = client.getDatabase("DB");
-            pollCol = db.getCollection("Polls");
-            userCol = db.getCollection("Users");
-            answerCol = db.getCollection("Answers");
-            emailCol = db.getCollection("E-Mails");
-            sessIDCol = db.getCollection("SessIDs");
-            //  sessIDCol.dropIndex(Indexes.ascending("created at"));
-            sessIDCol.createIndex(Indexes.ascending("created at"), new IndexOptions().expireAfter(60L, TimeUnit.MINUTES));
-
-        }
-
-    public Optional<Document> getPollAsOptDocumentByID(final String id )
-    {
+    public Optional<Document> getPollAsOptDocumentByID(final String id) {
         Document doc = pollCol.find(eq("_id", new ObjectId(id)))
                 .projection(Projections.fields())
                 .first();
 
-        if (doc == null)
-        {
+        if (doc == null) {
             return Optional.empty();
-        }
-        else
-        {
+        } else {
             return Optional.of(doc);
         }
     }
 
-    public boolean createPoll(Document poll)
-    {
+    public boolean createPoll(Document poll) {
         pollCol.insertOne(poll);
         Document answers = new Document("poll_id", poll.get("_id").toString()).append("answers", new ArrayList<Document>());
         answerCol.insertOne(answers);
@@ -115,27 +101,23 @@ public class DBInstance
     // This method also returns the username + password hash
 
     // This method also returns the username + password hash
-    public Optional<Document> getUserAsOptDocumentByName(final String name)
-    {
+    public Optional<Document> getUserAsOptDocumentByName(final String name) {
         Optional<Document> optDoc = getSingleDocFromCollection(this.userCol, Projections.fields(Projections.fields()), "name", name);
         return optDoc;
     }
 
-    public Optional<Document> getUserAsOptDocumentByEmail(final String email)
-    {
+    public Optional<Document> getUserAsOptDocumentByEmail(final String email) {
         Optional<Document> optDoc = getSingleDocFromCollection(this.userCol, Projections.fields(Projections.fields()), "email", email);
         return optDoc;
     }
 
-    public Optional<Document> getUserAsOptDocumentByID(final long id)
-    {
+    public Optional<Document> getUserAsOptDocumentByID(final long id) {
         Optional<Document> optDoc = getSingleDocFromCollection(this.userCol, Projections.fields(), "_id", Long.toString(id));
         return optDoc;
     }
 
     // This method simply returns all registered usernames
-    public ArrayList<String> getAllUserNames()
-    {
+    public ArrayList<String> getAllUserNames() {
         ArrayList<String> users = new ArrayList<>();
         MongoCursor<Document> cursor = userCol.find().cursor();
 
@@ -146,22 +128,20 @@ public class DBInstance
         return userNames;
     }
 
-        public Optional<ArrayList<Document>> getAllPollsOfUser(final String userName)
-        {
-            MongoCursor<Document> cursor = pollCol.find(or(eq("accessible by", userName), eq("created by", userName)))
-                    .projection(Projections.fields())
-                    .cursor();
+    public Optional<ArrayList<Document>> getAllPollsOfUser(final String userName) {
+        MongoCursor<Document> cursor = pollCol.find(or(eq("accessible by", userName), eq("created by", userName)))
+                .projection(Projections.fields())
+                .cursor();
 
-            ArrayList<Document> polls = new ArrayList<>();
-            while(cursor.hasNext())
-            {
-                Document poll = cursor.next();
-                String id = poll.get("_id").toString();
-                poll.append("_id", id);
-                polls.add(poll);
-            }
+        ArrayList<Document> polls = new ArrayList<>();
+        while (cursor.hasNext()) {
+            Document poll = cursor.next();
+            String id = poll.get("_id").toString();
+            poll.append("_id", id);
+            polls.add(poll);
+        }
 
-            return Optional.of(polls);
+        return Optional.of(polls);
 
             /* if(polls.isEmpty())
             {
@@ -172,20 +152,17 @@ public class DBInstance
             }
 
              */
-        }
+    }
 
     public boolean createUser(Document user) {
 
         String name = user.getString("name");
         String email = user.getString("email");
 
-        if(checkUserNameExistence(name) || checkEmailExistence(email))
-        {
+        if (checkUserNameExistence(name) || checkEmailExistence(email)) {
             System.out.println("User with identical name/email already exists. You have to choose a different Username");
             return false;
-        }
-        else
-        {
+        } else {
 
             SecureRandom random = new SecureRandom();
             byte[] salt = new byte[16];
@@ -208,13 +185,11 @@ public class DBInstance
         }
     }
 
-    public boolean checkUserNameExistence(String name)
-    {
+    public boolean checkUserNameExistence(String name) {
         return getUserAsOptDocumentByName(name).isPresent();
     }
 
-    public boolean checkEmailExistence(String email)
-    {
+    public boolean checkEmailExistence(String email) {
         return getSingleDocFromCollection(userCol, Projections.fields(), "email", email).isPresent();
     }
 
@@ -223,8 +198,8 @@ public class DBInstance
         BasicDBObject update = new BasicDBObject("$set", updatedInfo);
         userCol.updateOne(filter, update);                  // TODO: Test if this works
 
-            //TODO: createUser(update) HAS TO INCLUDE the _id from the oldUser Doc. Otherwise the _id of the updated SurveyLeader
-            //does not match the _id of the original one!
+        //TODO: createUser(update) HAS TO INCLUDE the _id from the oldUser Doc. Otherwise the _id of the updated SurveyLeader
+        //does not match the _id of the original one!
     }
 
     public void updateUserInPollCol(String originalUserName, String newUserName) {
@@ -277,65 +252,52 @@ public class DBInstance
         this.userNames = new ArrayList<>();
     }
 
-    public boolean checkIfMoreThanOneAdminsExist()
-    {
+    public boolean checkIfMoreThanOneAdminsExist() {
         MongoCursor<Document> cursor = userCol.find(eq("role", "admin"))
                 .projection(Projections.fields())
                 .cursor();
 
         ArrayList<Document> admins = new ArrayList<>();
-        while(cursor.hasNext())
-        {
+        while (cursor.hasNext()) {
             Document poll = cursor.next();
             admins.add(poll);
         }
         return admins.size() > 1;
     }
-    
 
-    private Optional<Document> getSingleDocFromCollection(MongoCollection<Document> col, Bson projection, String attributeName, String attributeVal)
-    {
+
+    private Optional<Document> getSingleDocFromCollection(MongoCollection<Document> col, Bson projection, String attributeName, String attributeVal) {
         Document doc = col.find(eq(attributeName, attributeVal))
                 .projection(projection)
                 .first();
 
-        if (doc == null)
-        {
+        if (doc == null) {
             return Optional.empty();
-        }
-        else
-        {
+        } else {
             return Optional.of(doc);
         }
     }
 
-    public Optional<Document> getAnswersOfPollByID(final String pollID)
-    {
+    public Optional<Document> getAnswersOfPollByID(final String pollID) {
         Document answers = answerCol.find(eq("poll_id", pollID))
                 .projection(Projections.excludeId())
                 .first();
 
-       if(answers == null)
-       {
-           return Optional.empty();
-       }
-       else
-       {
-           return Optional.of(answers);
-       }
+        if (answers == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(answers);
+        }
     }
 
 
-
-    public boolean createAnswer(Document answer)
-    {
+    public boolean createAnswer(Document answer) {
         // TODO: Answer MUSS ein Attribut namens poll_id UND ein Attribut question_id UND ein Attribut content enthalten!!!
         // + Attribut namens "token"
         // Konstruktion des Answer-JSON muss mit FrontEnd abgestimmt werden
         Optional<Document> optPoll = getPollAsOptDocumentByID(answer.getString("poll_id"));
 
-        if(!optPoll.isPresent())
-        {
+        if (!optPoll.isPresent()) {
             System.out.println("This answer does not belong to an exisitng poll");
             return false;
         }
@@ -343,8 +305,7 @@ public class DBInstance
         Document poll = optPoll.get();
         ArrayList<String> tokens = (ArrayList<String>) poll.get("tokens");
 
-        if(tokens.contains(answer.getString("token")))
-        {
+        if (tokens.contains(answer.getString("token"))) {
             Bson filter = Filters.eq("poll_id", poll.get("_id").toString());
             Bson delete = Updates.pull("tokens", answer.getString("token"));
             pollCol.updateOne(filter, delete);
@@ -355,9 +316,7 @@ public class DBInstance
 
             answerCol.updateOne(filter, pushToQuestList);
             return true;
-        }
-        else
-        {
+        } else {
             System.out.println("Answer does not contain a valid token. Answer will not be posted");
             return false;
         }
@@ -391,26 +350,21 @@ public class DBInstance
     public ArrayList<String> getAllEmails() {
         Optional<Document> optDoc = Optional.ofNullable(this.emailCol.find().first());
 
-        if(optDoc.isPresent())
-        {
-            Document doc =optDoc.get();
+        if (optDoc.isPresent()) {
+            Document doc = optDoc.get();
             ArrayList<String> emails = (ArrayList<String>) doc.get("E-Mails");
             return emails;
-        }
-        else
-        {
+        } else {
             return new ArrayList<String>();
         }
     }
 
-    public boolean createQuestion(Document question)
-    {
+    public boolean createQuestion(Document question) {
         // TODO: question MUSS ein Attribut namens poll_id enthalten!!!
         // Konstruktion des question-JSON muss mit FrontEnd abgestimmt werden
         Optional<Document> optPoll = getPollAsOptDocumentByID(question.getString("poll_id"));
 
-        if(!optPoll.isPresent())
-        {
+        if (!optPoll.isPresent()) {
             System.out.println("This answer does not belong to an exisitng poll");
             return false;
         }
@@ -421,18 +375,32 @@ public class DBInstance
 
         pollCol.updateOne(filter, pushToQuestList);
         return true;
+    }
+
+
+    public boolean saveKeys(String email, String privateKeyServer, String publicKeyClient) {
+
+        Optional<Document> optUser = getUserAsOptDocumentByEmail(email);
+        if (!optUser.isPresent())
+        {
+            return false;
         }
 
+        Document user = optUser.get();
+
+        user.put("public Key Client", publicKeyClient);
+        user.append("prvate Key Server", privateKeyServer);
+
+        updateUserInUserCol(user.get("_id").toString(), user);
+
+        return true;
+    }
 
 
-
-
-    public Optional<Document> authenticate(final String sessID)
-    {
+    public Optional<Document> authenticate(final String sessID) {
         final Optional<Document> optUser = getUserBySessionID(sessID);
 
-        if(!optUser.isPresent())
-        {
+        if (!optUser.isPresent()) {
             return Optional.empty();
         }
         Document user = optUser.get();
@@ -443,13 +411,12 @@ public class DBInstance
 
     public void generateAndSetSessID(Document user) {
 
-      if(checkIfUserHasSessID(user))
-        {
+        if (checkIfUserHasSessID(user)) {
             this.sessIDCol.deleteMany(eq("email", user.getString("email")));
         }
 
 
-        String sessID = String.valueOf(System.currentTimeMillis()).substring(8, 13) + UUID.randomUUID().toString().substring(1,10);
+        String sessID = String.valueOf(System.currentTimeMillis()).substring(8, 13) + UUID.randomUUID().toString().substring(1, 10);
         user.append("created at", new Date());
         user.append("Session ID", sessID);
 
@@ -462,20 +429,16 @@ public class DBInstance
                 .projection(Projections.fields())
                 .first();
 
-        if (doc == null)
-        {
+        if (doc == null) {
             return Optional.empty();
-        }
-        else
-        {
+        } else {
             return Optional.of(doc);
         }
     }
 
-    private boolean checkIfUserHasSessID(Document user)
-    {
+    private boolean checkIfUserHasSessID(Document user) {
         Optional<Document> optDoc = getSingleDocFromCollection(sessIDCol, Projections.fields(), "email", user.getString("email"));
-        if(optDoc.isPresent()) return true;
+        if (optDoc.isPresent()) return true;
         else return false;
     }
 
@@ -491,91 +454,29 @@ public class DBInstance
 
             byte[] hash = factory.generateSecret(spec).getEncoded();
             return Base64.encodeBase64String(hash);
-        }
-        catch (NoSuchAlgorithmException e)
-        {
+        } catch (NoSuchAlgorithmException e) {
             System.out.println("Hashing failed");
             throw new RuntimeException(e);
-        }
-        catch (InvalidKeySpecException e)
-        {
+        } catch (InvalidKeySpecException e) {
             System.out.println("Hashing failed");
             throw new RuntimeException(e);
         }
     }
 
-    public boolean comparePWHash(String hashInDB, String givenHash)
-    {
+    public boolean comparePWHash(String hashInDB, String givenHash) {
         return hashInDB.equals(givenHash);
     }
 
-    public ArrayList<String> generateTokensOfPoll(int size)
-    {
+    public ArrayList<String> generateTokensOfPoll(int size) {
         ArrayList<String> tokens = new ArrayList<>();
-        for(int i = 0; i < size; i++)
-        {
-            String token = String.valueOf(System.currentTimeMillis()).substring(8, 13) + UUID.randomUUID().toString().substring(1,10);
+        for (int i = 0; i < size; i++) {
+            String token = String.valueOf(System.currentTimeMillis()).substring(8, 13) + UUID.randomUUID().toString().substring(1, 10);
             tokens.add(token);
         }
         return tokens;
     }
 
-    /*
 
-        public void delete( final Person person )
-        {
-            this.storage.remove( person.getId( ) );
-        }
-
-        public boolean containsId( final long id )
-        {
-            return this.storage.containsKey( id );
-        }
-
-        public void deleteById( final long id )
-        {
-            this.storage.remove( id );
-        }
-
-        public Collection<Person> findAll( )
-        {
-            return findBy( "", "" );
-        }
-
-        public Collection<Person> findBy( final String firstName, final String lastName )
-        {
-            return this.storage.values( ).stream( )
-                    .filter( byFirstName( firstName ) )
-                    .filter( byLastName( lastName ) )
-                    .collect( Collectors.toList( ) );
-        }
-
-        public Optional<Person> readByEmailAddress( final String emailAddress )
-        {
-            return this.storage.values( ).stream( )
-                    .filter( byEmailAddress( emailAddress ) )
-                    .findFirst( );
-        }
-
-        private Predicate<Person> byFirstName(final String firstName )
-        {
-            return person -> StringUtils.isEmpty( firstName ) || person.getFirstName( ).equals( firstName );
-        }
-
-        private Predicate<Person> byLastName( final String lastName )
-        {
-            return person -> StringUtils.isEmpty( lastName ) || person.getLastName( ).equals( lastName );
-        }
-
-        private Predicate<Person> byEmailAddress( final String emailAddress )
-        {
-            return person -> StringUtils.isEmpty( emailAddress ) || person.getEmailAddress( ).equals( emailAddress );
-        }
-
-
-     */
-
-
-    }
+}
 
 
