@@ -28,7 +28,7 @@ export class BackendService {
     return this.httpClient.get<Vote>( this.url + '/api/polls/ '+ pollId +'?sessionID='+ this.getSessionID() );
   }
 
-  createPoll(poll: JSON):Observable<Vote> {
+  createPoll(poll: Vote):Observable<Vote> {
     return this.httpClient.post<Vote>(this.url +'/api/polls?sessionID='+ this.getSessionID() ,poll)
     }
 
@@ -86,7 +86,7 @@ export class BackendService {
   }
 
 
-  setnewVote(): void{
+  setNewVote(vote: Vote): void{
   }
 
 
