@@ -29,20 +29,6 @@ export class VoteConainterComponent implements OnInit{
     });
   }
 
-  /*
-  async ngOnInit(): Promise<void> {
-    console.log("VoteContainer->"+"OLDKEY: "+localStorage.getItem("sessionID"));
-    let response = await lastValueFrom(this.backendService.loadAllPollsByUser());
-    console.log(response);
-    if(response["polls"]){
-      this.vlcObject = {name:"testcontainer",votes: response["polls"]};
-      this.authService.updateSessionid(response["Session ID"]);
-      console.log("VoteContainer->"+"NEWKEY: "+localStorage.getItem("sessionID"));
-    } else{
-      this.vlcObject = {name:"testcontainer", votes:[] };
-    }
-  }
-   */
 
 
   setVotes(votes: Vote[]){
@@ -51,7 +37,6 @@ export class VoteConainterComponent implements OnInit{
 
   deleteVote(vote: Vote){
     this.vlcObject.votes.filter(v => v != vote);
-    this.backendService.deletePollByID(vote.id);
   }
 
 }

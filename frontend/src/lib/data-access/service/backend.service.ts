@@ -33,9 +33,9 @@ export class BackendService {
     }
 
 
-  deletePollByID(pollId: number):Observable<void>  {
+  deletePollByID(pollId: number):Observable<JSON>  {
 
-    return this.httpClient.delete<void>( this.url + '/api/polls/ '+ pollId +'/sessionID='+ this.getSessionID() );
+    return this.httpClient.delete<JSON>( this.url + '/api/polls?pollID='+ pollId +'&sessionID='+ this.getSessionID() );
 
   }
 

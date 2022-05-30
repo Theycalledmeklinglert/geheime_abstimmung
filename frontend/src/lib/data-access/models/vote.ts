@@ -1,7 +1,7 @@
 import {Question} from "./question";
 
 export interface Vote{
-  id?: number;
+  _id?: number;
   name: string;
   lifetime: string;
   position?: number;
