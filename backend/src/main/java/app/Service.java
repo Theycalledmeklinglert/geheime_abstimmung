@@ -136,8 +136,6 @@ public class Service
 
 		Document poll = Document.parse(json);
 		poll.put("created by", user.getString("name"));
-		poll.append("Session ID", user.getString("Session ID"));
-		poll.put("timestamp", new Date());
 
 		ArrayList<String> emails = (ArrayList<String>) poll.get("emails");
 		INSTANCE.saveLastUsedEmails(emails);
@@ -163,7 +161,7 @@ public class Service
 
 
 		// TODO: encrypt JSON
-		return Response.ok(poll.append("_id", poll.get("_id").toString()).toJson()).build();
+		return Response.ok(new Document("Session ID", user.getString("Session ID")).toJson()).build();
 	}
 
 	// TODO: Check if PollToBeDeleted is accessible by user
