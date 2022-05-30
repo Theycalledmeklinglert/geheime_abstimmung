@@ -11,12 +11,20 @@ import { BackendService } from 'src/lib/data-access/service/backend.service';
 export class SurveyComponent implements OnInit, AfterViewInit{
   vote:Vote;
   surveyForm: FormGroup;
+  params: any;
 
 
   constructor(private backendService: BackendService) {}
 
   ngOnInit(): void {
-    this.loadTestQuestions(); //Platzhalter zum testen bis Backendanbindung funktioniert
+
+     this.params = new Proxy(new URLSearchParams(window.location.search), {
+      get: (searchParams, prop:string) => searchParams.get(prop) });
+
+
+    this.backendService.loadPollByID(this.params.token, this.params.pollID).subscribe((poll:Vote) => this.vote = poll);
+
+    //this.loadTestQuestions(); //Platzhalter zum testen bis Backendanbindung funktioniert
 
     this.surveyForm = new FormGroup({});
     this.surveyForm.addControl("init", new FormControl(null,Validators.required)); //setzt temporäre Control um Fehler NG0100 zu vermeiden
@@ -26,9 +34,8 @@ export class SurveyComponent implements OnInit, AfterViewInit{
     this.surveyForm.removeControl("init"); //löscht nachdem die ChildComponents intitialisiert wurden,
   }
 
-  submitSurvey():void {
-    const token = "testToken" //muss noch den token aus der url ziehen
-    this.backendService.submitSurvey(this.vote, token);
+  submitSurvey():void { //muss noch den token aus der url ziehen
+    this.backendService.submitSurvey(this.vote, this.params.token);
   }
 
 
