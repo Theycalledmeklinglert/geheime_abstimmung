@@ -71,7 +71,10 @@ export class EditorComponent implements OnInit{
       const pub = keyPair.publicKey;
       const encrypted = this.cryptService.encrypt(pub, this.vote);
       let textFile =
-        "Encrypted Message:"
+        "Vote:\n\n"+
+        JSON.stringify(this.vote)+
+
+        "\nEncrypted Message:"
         +JSON.stringify(encrypted)
         +"\n \n This is the generated private key for this survey. Please save it somewhere inaccessible for others:\n \n"
         // pub+'\n'+
@@ -104,7 +107,7 @@ export class EditorComponent implements OnInit{
       }
       this.vote.questions.forEach(q =>
       {
-        if(q.type == undefined || q.type == "" || q.title == ""){
+        if(q.type == undefined || q.title == ""){
           return false;
         }
       })
