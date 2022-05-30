@@ -142,16 +142,6 @@ public class DBInstance {
         }
 
         return Optional.of(polls);
-
-            /* if(polls.isEmpty())
-            {
-                return Optional.empty();
-            }
-            else {
-                return Optional.of(polls);
-            }
-
-             */
     }
 
     public boolean createUser(Document user) {
@@ -189,11 +179,13 @@ public class DBInstance {
         return getUserAsOptDocumentByName(name).isPresent();
     }
 
-    public boolean checkEmailExistence(String email) {
+    public boolean checkEmailExistence(String email)
+    {
         return getSingleDocFromCollection(userCol, Projections.fields(), "email", email).isPresent();
     }
 
-    public void updateUserInUserCol(String originalUserID, Document updatedInfo) {
+    public void updateUserInUserCol(String originalUserID, Document updatedInfo)
+    {
         Bson filter = Filters.eq("_id", new ObjectId(originalUserID));
         BasicDBObject update = new BasicDBObject("$set", updatedInfo);
         userCol.updateOne(filter, update);                  // TODO: Test if this works
@@ -241,6 +233,19 @@ public class DBInstance {
          */
     }
 
+    public void removeFieldFromUserInUserCol(String userID, Document fieldToBeDeleted)
+    {
+        Bson filter = Filters.eq("_id", new ObjectId(userID));
+        BasicDBObject update = new BasicDBObject("$unset", fieldToBeDeleted);
+        userCol.updateOne(filter, update);
+    }
+
+    public void updateKeysInSessIDCol(String sessID, String publicKeyClient, String privateKeyServer) {      // TODO: TEST
+        BasicDBObject query = new BasicDBObject("Session ID", sessID);
+        BasicDBObject items = new BasicDBObject("Public Key Client", publicKeyClient).append("Private Key Server", privateKeyServer);
+        BasicDBObject update = new BasicDBObject("$set", items);
+        sessIDCol.updateOne(query, update);
+    }
 
     public void deleteUserByID(String id) {
         Bson query = Filters.eq("_id", new ObjectId(id));
@@ -388,8 +393,8 @@ public class DBInstance {
 
         Document user = optUser.get();
 
-        user.put("public Key Client", publicKeyClient);
-        user.append("prvate Key Server", privateKeyServer);
+        user.put("Public Key Client", publicKeyClient);
+        user.put("Private Key Server", privateKeyServer);
 
         updateUserInUserCol(user.get("_id").toString(), user);
 
@@ -409,7 +414,7 @@ public class DBInstance {
     }
 
 
-    public void generateAndSetSessID(Document user) {
+    public String generateAndSetSessID(Document user) {
 
         if (checkIfUserHasSessID(user)) {
             this.sessIDCol.deleteMany(eq("email", user.getString("email")));
@@ -421,6 +426,7 @@ public class DBInstance {
         user.append("Session ID", sessID);
 
         sessIDCol.insertOne(user);
+        return sessID;
 
     }
 

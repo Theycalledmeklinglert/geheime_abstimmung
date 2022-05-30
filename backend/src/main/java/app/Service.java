@@ -1,5 +1,6 @@
 package main.java.app;
 
+import com.mongodb.BasicDBObject;
 import main.java.app.database.DBInstance;
 import org.bson.Document;
 
@@ -13,6 +14,7 @@ import java.util.*;
 
 import org.apache.commons.codec.binary.Base64;
 
+import static main.java.app.Cryptography.*;
 import static main.java.app.database.DBInstance.getDBInstance;
 
 @Path( "polls" )
@@ -29,31 +31,28 @@ public class Service
 	@Produces( MediaType.APPLICATION_JSON )
 	public Response keyExchange(final String json)	// This method will be used to send exchange the public keys between client and server
 	{
-
 		Document doc = Document.parse(json);
 		String publicKeyClient = doc.getString("Public Key");
 		String email = doc.getString("email");
 
-		// TODO: Wo soll der PK gespeichert werden? --> In jedes SessID Dokument mit rein
-		// TODO: PK in SessID Col Dokument speichern?
+		HashMap<String, String> keyPair = generateKeyPair();
 
-		// TODO: Generate Public Key
-		String privateKeyServer = "Placeholder";
-		String publicKeyServer= "Placeholder";
+		String privateKeyServer = keyPair.get("privateKey");
+		String publicKeyServer= keyPair.get("publicKey");
 
-		Document keys = new Document("private Key", privateKeyServer).append("public Key Client", publicKeyClient);
-		INSTANCE.saveKeys(email, privateKeyServer, publicKeyClient);
+		if(!INSTANCE.saveKeys(email, privateKeyServer, publicKeyClient))
+		{
+			return Response.status(404).build();
+		}
 
-		doc = new Document().append("Public Key", publicKeyServer);
-
-		return Response.ok(doc).build();
+		return Response.ok(new Document("Public Key", publicKeyServer).toJson()).build();
 	}
 
 
 	@GET
 	@Path("{pollID}")
 	@Produces( MediaType.APPLICATION_JSON )
-	public Response getSinglePollByUser(@DefaultValue("") @QueryParam("sessionID") final String sessID, @DefaultValue( "" ) @PathParam( "pollID" ) final String poll_id)
+	public Response getSinglePollByUser(@DefaultValue("") @QueryParam("sessionID") final String sessID, @DefaultValue("") @PathParam("pollID") final String poll_id)
 	{
 		final Optional<Document> optPoll = INSTANCE.getPollAsOptDocumentByID(poll_id);
 		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
@@ -383,13 +382,19 @@ public class Service
 			throw new WebApplicationException(Response.status(404).build());
 		}
 
-		INSTANCE.generateAndSetSessID(user);
+		// Moves the Keys exchanged between Server and Browser from UserCol to SessIDCol now that a SessID exists, so that the Keys will be deleted upon
+		// logout of the user (and 60 minutes passing)
+		String sessID = INSTANCE.generateAndSetSessID(user);
+		Document sessUser = INSTANCE.getUserBySessionID(sessID).get();
+		sessUser.put("Public Key Client", user.getString("Public Key Client"));
+		sessUser.put("Private Key Server", user.getString("Private Key Server"));
+		INSTANCE.updateKeysInSessIDCol(sessID, user.getString("Public Key Client"), user.getString("Private Key Server"));		//TODO: TEST
 
-		// TODO: Public Key und private Key im jeweiligen SessID Col abspeichern
-		//
+		// TODO: Muss alles getestet werden sobald KeyExchange funktioniert
+		Document fieldsToDelete = new Document("Public Key Client", user.getString("Public Key Client")).append("Private Key Server", user.getString("Private Key Server"));
+		INSTANCE.removeFieldFromUserInUserCol(user.get("_id").toString(), fieldsToDelete);
 
-		Document res = new Document().append("Session ID", user.getString("Session ID")).append("userName", user.getString("name")).append("role", user.getString("role"));
-
+		Document res = new Document("Session ID", user.getString("Session ID")).append("userName", user.getString("name")).append("role", user.getString("role"));
 		String unencryptedJSON = res.toJson();
 
 		// TODO: Encrypt JSON before sending back
