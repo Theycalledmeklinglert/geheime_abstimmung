@@ -1,8 +1,5 @@
 // Copyright (c) 2014-present Tom Zhou<appnet.link@gmail.com>
-
-
-package de.fhws.pvs.unit13.exercise4;
-
+package main.java.app;
 import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
 import java.lang.System;

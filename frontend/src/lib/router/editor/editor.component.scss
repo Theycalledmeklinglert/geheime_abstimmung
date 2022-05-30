@@ -156,3 +156,18 @@
   width: 100%;
 
 }
+.helpwindow{
+  text-align: center;
+  position: fixed;
+  right: 40%;
+  background-color: rgba(239, 238, 238, 1);
+  width: 20%;
+  height: 20%;
+  top: 40%;
+  color: black;
+  border: 3px solid #ff8200;
+  border-radius: 15px 15px 15px 15px;
+}
+#emailInput{
+  margin-top: 2vh;
+}
