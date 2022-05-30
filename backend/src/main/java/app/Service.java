@@ -156,8 +156,14 @@ public class Service
 			emails.remove(0);
 		}
 
+		INSTANCE.removeEmailsFromPoll(poll);
+
 		// Distributor = sendEmails(emailsAndLinks) // Oder so
 		// TODO: Call corresponding method of the the distributor class to send the links per Email (has to take emailsAndTokens and answerLinks
+
+		// TODO: Remove Emails from Poll
+
+
 
 
 		// TODO: encrypt JSON

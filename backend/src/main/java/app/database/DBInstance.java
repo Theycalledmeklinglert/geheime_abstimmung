@@ -86,6 +86,14 @@ public class DBInstance {
         return true;
     }
 
+    public void removeEmailsFromPoll(Document poll)
+    {
+        Bson query = Filters.eq("_id", poll.get("_id"));
+        System.out.println(poll.get("_id").toString());
+        Bson update = Updates.unset("emails");
+        pollCol.updateOne(query, update);
+    }
+
 
     public void deletePollByID(String id) {
         Bson query = eq("_id", new ObjectId(id));
