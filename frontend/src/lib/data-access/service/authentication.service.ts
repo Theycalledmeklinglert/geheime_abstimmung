@@ -71,6 +71,10 @@ export class AuthenticationService {
     localStorage.setItem("sessionID",newSessionid);
   }
 
+  getAuthStatus():boolean {
+    return localStorage.getItem("sessionID") != null
+  }
+
 
 
 }

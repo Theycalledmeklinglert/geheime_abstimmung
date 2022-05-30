@@ -22,27 +22,17 @@ export class EditorComponent {
       emails: []
     }
   };
-  // = {
-  //   vote: {
-  //     name: "TESTVOTE",
-  //     lifetime: "1d17h10s",
-  //     questions: [{id: 1, title: "Wie geht's dir?", visible: true}, {
-  //       id: 2,
-  //       title: "Wollen wir Bier trinken gehen?",
-  //       visible: false
-  //     }],
-  //     emails: ["hallo@fhws.de"]
-  //   }
-  // };
+
   listPos?: number;
   next: boolean = false;
   tempEmail?: string;
-  // focus: boolean = false;
+  notAllFilled: boolean = false;
+  submitted: boolean = false;
 
 
   addEmptyQuestion() {
     this.editor.vote.questions.forEach(q => q.visible = false);
-    let question: Question = {id: 4, title: "", visible: true};
+    let question: Question = {id: 1, title: "", visible: true};
     this.listPos = this.editor.vote.questions.push(question) - 1;
     question.id = (this.listPos == 0) ? 1 : this.editor.vote.questions[this.listPos - 1].id + 1;
 
@@ -50,7 +40,6 @@ export class EditorComponent {
 
   deleteQuestion(question: Question){
     this.editor.vote.questions = this.editor.vote.questions.filter((q) => q != question);
-    // this.appService.deleteList(id).subscribe();
   }
 
   showQuestion(question: Question) {
@@ -58,16 +47,14 @@ export class EditorComponent {
     this.editor.vote.questions.forEach(q => (q == question) ? q.visible = true : false);
   }
   addEmail(){
-    if(this.tempEmail == '' || this.tempEmail == undefined) return;
-    this.editor.vote.emails.push(this.tempEmail);
-    this.tempEmail='';
+    if(this.tempEmail == '' || this.tempEmail == undefined || !this.tempEmail.includes('@') || !this.tempEmail.includes('.')) return;
+      this.editor.vote.emails.push(this.tempEmail);
+      this.tempEmail='';
   }
   deleteEmail(email: string){
     this.editor.vote.emails = this.editor.vote.emails.filter((e) => e != email);
   }
-  submitVote(){
-    //http to backend
-  }
+
   deleteEverything(){
     this.editor = {
       vote: {
@@ -77,18 +64,27 @@ export class EditorComponent {
         emails: []
       }
     };
+    this.submitted = false;
   }
 
-    printEncrypted(){
+    submitPoll(){
+
+      if(this.editor.vote.name == "" || this.editor.vote.lifetime == ""){
+        this.notAllFilled = true;
+        this.submitted = false;
+        return;
+      }
+      this.submitted =true;
       const keyPair = this.cryptService.generateKeyPair();
-      const priv = encodeBase64(keyPair.secretKey);
-      const pub = encodeBase64(keyPair.publicKey);
+      const priv = keyPair.privateKey;
+      const pub = keyPair.publicKey;
       const encrypted = this.cryptService.encrypt(pub, this.editor);
-      // encrypted.privateKey = priv;
-      let textFile = "This is the generated private key for this survey. Please save it somewhere inaccessible for others:\n \n"+
-        JSON.stringify(encrypted)
+      let textFile =
+        "Encrypted Message:"
+        +JSON.stringify(encrypted)
+        +"\n \n This is the generated private key for this survey. Please save it somewhere inaccessible for others:\n \n"
         // pub+'\n'+
-        // priv
+        +priv
         +"\n\n You will need it for accessing the results of this survey. Please close this window, after you copied and saved the key.";
       var data = new Blob([textFile], {type: 'text/plain'});
       if (textFile !== null) {
@@ -96,11 +92,9 @@ export class EditorComponent {
       }
       textFile = window.URL.createObjectURL(data);
       window.open(textFile);
-      console.log(this.cryptService.decrypt(priv, encrypted))
+
     }
-
-  printDecrypted(){
-
-  }
-
+    pressOkayButton(){
+      this.notAllFilled = false;
+    }
 }

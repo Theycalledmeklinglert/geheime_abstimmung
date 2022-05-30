@@ -61,7 +61,7 @@
   <ul >
     <label class="label" for="emailInput">Enter an Email:</label>
     <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
-      <input matInput type="email" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempEmail" (blur)="addEmail()">
+      <input matInput type="email" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempEmail">
       <mat-label id="inputfield">Enter here...</mat-label>
     </mat-form-field>
     <li *ngFor="let email of this.editor.vote.emails" class="emailstyle">
@@ -79,7 +79,7 @@
 </div>
 
 <div *ngIf="this.next" class="nextButton">
-  <input type="image" src="../../../assets/submit_btn.png" width="125%" height="125%" (click)="printEncrypted()">
+  <input type="image" src="../../../assets/submit_btn.png" width="125%" height="125%" (click)="submitPoll()">
 </div>
 
 
@@ -92,11 +92,33 @@
 </div>
 
 <div *ngIf="this.next" class="returnToMainButton">
-  <input type="image" src="../../assets/back_btn.png" width="125%" height="125%" (click)="this.next = false; this.printDecrypted()"/>
+  <input type="image" src="../../assets/back_btn.png" width="125%" height="125%" (click)="this.next = false;"/>
 </div>
 
 <div *ngIf="!this.next" class="returnToMainButton">
   <img src="../../../assets/returnToMain_btn.png" width="125%" height="125%" routerLink="/main" (click)="this.deleteEverything()"/>
+</div>
+
+<div class="helpwindow" *ngIf="notAllFilled">
+<br/>
+  <h1 mat-dialog-title>INFO</h1>
+  <div mat-dialog-content>Please fill in all the necessary information!
+  </div>
+  <br/>
+  <div mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="pressOkayButton()">OKAY </button>
+  </div>
+
+</div>
+<div class="helpwindow" *ngIf="submitted">
+  <br/>
+  <h1 mat-dialog-title>INFO</h1>
+  <div mat-dialog-content>Return to Main Menu
+  </div>
+  <br/>
+  <div mat-dialog-actions>
+    <button mat-flat-button color="primary" routerLink="/main" (click)="deleteEverything()">OKAY </button>
+  </div>
 </div>
 </body>
 </html>

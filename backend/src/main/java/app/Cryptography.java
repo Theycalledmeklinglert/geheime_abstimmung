@@ -1,11 +1,23 @@
-package de.fhws.pvs.unit13.exercise4;
+package main.java.app;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import static de.fhws.pvs.unit13.exercise4.TweetNaclFast.*;
+import java.util.HashMap;
 
+import static main.java.app.TweetNaclFast.*;
 
 public class Cryptography {
+
+    public static HashMap<String, String> generateKeyPair(){
+        final Box.KeyPair pair = Box.keyPair();
+        final String publicKey = Base64.getEncoder().encodeToString(pair.getPublicKey());
+        final String privateKey = Base64.getEncoder().encodeToString(pair.getSecretKey());
+        HashMap<String, String> result = new HashMap<>();
+        result.put("publicKey", publicKey);
+        result.put("privateKey", privateKey);
+        return result;
+    }
+
 
     private static EncryptedData encrypt(String pubKeyString, String msg) {
         final byte[] pubKey = Base64.getDecoder().decode(pubKeyString);
@@ -65,24 +77,8 @@ public class Cryptography {
         }
     }
 
-//    public static void main(String[] args) {
+    public static void main(String[] args) {
 
-        //Test generating pubKey in frontend, encrypt in backend and decrypt in frontend
-
-//        byte[] pubKey = Base64.getDecoder().decode("quu9xSu4WACmgAwRSuPATsyu8XGX1pihIhW+ij0OWUk=");
-//        EncryptedData encryptedData = encrypt(pubKey, "Hallo Welt");
-//        System.out.println(encryptedData);
-
-
-        //Test generating pubKey in backend, encrypt in frontend and decrypt in backend
-
-//        Box.KeyPair pair = Box.keyPair();
-//        System.out.println(Base64.getEncoder().encodeToString(pair.getPublicKey())+"\n"+Base64.getEncoder().encodeToString(pair.getSecretKey()));
-//        EncryptedData data = new EncryptedData("8MP7AvxFdGDEi5XZT2kFlzYYxTyxbbLn", "Qf/OWaa9BOZiaBhqTYnSfYhcEZ01J0R5LlCDwGtPEXg=", "vk3KYsKsj1BtoSv+BdtAnM1cEydkZfzwa8MfWBVTY/Zpc728iIQUD6SHAvObm+hoo2jfY5+bO6UsdyFTQXxhgvyQZTjIA0P9trhzsWeWxSyervw4fjMX2vFDhNajLEizxLnm09LhapUvs5TtDScvgNdUX+mKwxJDirQw");
-//        byte[] priv = Base64.getDecoder().decode("GlsQzf75xgi0oq8z64bZ8gTGUn5v6VZwwtQCj5E8FsM=");
-//        EncryptedData encryptedData = encrypt(pair.getPublicKey(), "Hallo Welt");
-//        System.out.println(encryptedData);
-//        String decrypt = decrypt(pair.getSecretKey(), encryptedData);
-//        System.out.println(decrypt);
-//    }
+        System.out.println(generateKeyPair());
+    }
 }
