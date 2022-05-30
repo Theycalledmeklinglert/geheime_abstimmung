@@ -6,14 +6,16 @@ import { LoginComponent } from 'src/lib/router/login/login.component';
 import { MainmenuComponent } from 'src/lib/router/mainmenu/mainmenu.component';
 import { SurveyComponent } from 'src/lib/router/survey/survey.component';
 import {SurveyResultComponent} from "../lib/router/surveyResult/surveyResult.component";
+import { AuthGuard } from './auth.guard';
+
 
 const myRoutes: Routes = [
   {path:'', redirectTo:'/login', pathMatch: 'full'},
   {path:'login',component: LoginComponent},
-  {path:'main', component: MainmenuComponent},
-  {path:'editor', component:EditorComponent},
+  {path:'main', component: MainmenuComponent, canActivate: [AuthGuard]},
+  {path:'editor', component:EditorComponent, canActivate:[AuthGuard]},
   {path:'survey', component:SurveyComponent},
-  {path:'result', component:SurveyResultComponent}
+  {path:'result', component:SurveyResultComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
@@ -22,6 +24,7 @@ const myRoutes: Routes = [
     CommonModule,
     RouterModule.forRoot(myRoutes)
   ],
-  exports:[RouterModule]
+  exports:[RouterModule],
+  providers:[AuthGuard]
 })
 export class AppRoutingModule { }
