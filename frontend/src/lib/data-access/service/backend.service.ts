@@ -21,7 +21,6 @@ export class BackendService {
   loadAllPollsByUser(): Observable<JSON> {
 
     return this.httpClient.get<JSON>(this.url + '/api/polls?sessionID='+ this.getSessionID());
-
   }
 
   loadPollByUser(pollId: number): Observable<Vote> {
@@ -48,18 +47,15 @@ export class BackendService {
   loadAlreadyUsedEmails():Observable<any> {
 
     return this.httpClient.get<any>( this.url + '/api/emails?sessionID='+ this.getSessionID() );
-
   }
 
-  keyExchange(): any{
-    let test: JSON = JSON.parse("Serverresponse");
-    return test;
+  keyExchange(keyandemail: JSON): Observable<any>{
+    return this.httpClient.post(this.url +'/api/polls/connect',keyandemail);
   }
 
   loadSessionID(myUserData: JSON): Observable<any> {
 
     return this.httpClient.post<any>( this.url + '/api/polls/session' , myUserData );
-
   }
 
 
@@ -81,12 +77,13 @@ export class BackendService {
     return this.httpClient.put<JSON>(this.url + '/api/polls/users?sessionID='+ this.getSessionID(), newUserData);
   }
 
+  loadPollByID(token:string, id:number):Observable<Vote> {
+    return this.httpClient.get<Vote>(this.url + '/api/polls/answers?token=' + token + '&pollID=' + id);
+  }
+
   submitSurvey(answeredPoll: Vote, token: string){
 
-    //temporäre Platzhalter für spätere Implementierungen
-    const key = this.keyExchange()
-    let encryptedData = this.encryptionService.encrypt(key, answeredPoll)
-
+    let encryptedData = this.encryptionService.encrypt(localStorage.getItem("publicKey"), answeredPoll)
 
     return this.httpClient.post<Vote>(this.url + '/api/answers?token=' + token, encryptedData)
   }

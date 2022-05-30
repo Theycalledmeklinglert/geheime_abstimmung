@@ -35,10 +35,10 @@
 }
 .toolbar .username .usericon {
   position: fixed;
-  top: -2%;
-  right: 0.1%;
+  right: 10%;
+  top: 2.5%;
 }
-.toolbar .username h1{
+.toolbar .username .usericon h1{
 
   position: fixed;
   right: 1%;

@@ -15,10 +15,11 @@
   <div class="username">
     {{isLoggedIn()}}
     <div class="usericon" *ngIf="showUsericon">
-      <input type="image" src="../assets/user_icon2.png" width="40%" height="40%">
+      <mat-icon>person</mat-icon>
+      <h1>{{getUsername()}}</h1>
     </div>
 
-    <h1>{{getUsername()}}</h1>
+
   </div>
 
 

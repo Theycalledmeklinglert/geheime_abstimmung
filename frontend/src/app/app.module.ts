@@ -28,6 +28,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {SurveyResultComponent} from "../lib/router/surveyResult/surveyResult.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatDialogModule} from '@angular/material/dialog';
 
 
 @NgModule({
@@ -41,7 +42,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     SurveyQuestionComponent,
     VoteComponent,
     VoteConainterComponent,
-    SurveyResultComponent
+    SurveyResultComponent,
 
   ],
   imports: [
@@ -64,6 +65,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     MatMenuModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
+    MatDialogModule,
 
 
   ],
