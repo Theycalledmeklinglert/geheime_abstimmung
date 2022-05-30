@@ -1,9 +1,8 @@
-import {Component} from "@angular/core";
-import {Editor} from "../../data-access/models/editor";
+import {Component, OnInit} from "@angular/core";
 import {Question} from "../../data-access/models/question";
-import {decodeBase64, encodeBase64, encodeUTF8} from 'tweetnacl-util';
 import {EncryptionService} from "../../data-access/service/encryption.service";
-import * as nacl from "tweetnacl";
+import {Vote} from "../../data-access/models/vote";
+import {BackendService} from "../../data-access/service/backend.service";
 
 @Component({
   selector: 'editor',
@@ -11,17 +10,10 @@ import * as nacl from "tweetnacl";
   styleUrls: ['./editor.component.scss'],
 })
 
-export class EditorComponent {
+export class EditorComponent implements OnInit{
 
-  constructor(private cryptService: EncryptionService){}
-  editor?: Editor = {
-    vote: {
-      name: "",
-      lifetime: "",
-      questions: [{id: 1, title: "", visible: true}],
-      emails: []
-    }
-  };
+  constructor(private cryptService: EncryptionService, private backendService: BackendService){}
+  vote: Vote;
 
   listPos?: number;
   next: boolean = false;
@@ -31,56 +23,58 @@ export class EditorComponent {
 
 
   addEmptyQuestion() {
-    this.editor.vote.questions.forEach(q => q.visible = false);
-    let question: Question = {id: 1, title: "", visible: true};
-    this.listPos = this.editor.vote.questions.push(question) - 1;
-    question.id = (this.listPos == 0) ? 1 : this.editor.vote.questions[this.listPos - 1].id + 1;
+    this.vote.questions.forEach(q => q.visible = false);
+    let question: Question = {id: 1, title: "", type:"", visible: true};
+    this.listPos = this.vote.questions.push(question) - 1;
+    question.id = (this.listPos == 0) ? 1 : this.vote.questions[this.listPos - 1].id + 1;
 
   }
 
   deleteQuestion(question: Question){
-    this.editor.vote.questions = this.editor.vote.questions.filter((q) => q != question);
+    this.vote.questions = this.vote.questions.filter((q) => q != question);
   }
 
   showQuestion(question: Question) {
-    this.editor.vote.questions.forEach(q => q.visible = false);
-    this.editor.vote.questions.forEach(q => (q == question) ? q.visible = true : false);
+    this.vote.questions.forEach(q => q.visible = false);
+    this.vote.questions.forEach(q => (q == question) ? q.visible = true : false);
   }
   addEmail(){
     if(this.tempEmail == '' || this.tempEmail == undefined || !this.tempEmail.includes('@') || !this.tempEmail.includes('.')) return;
-      this.editor.vote.emails.push(this.tempEmail);
+      this.vote.emails.push(this.tempEmail);
       this.tempEmail='';
   }
   deleteEmail(email: string){
-    this.editor.vote.emails = this.editor.vote.emails.filter((e) => e != email);
+    this.vote.emails = this.vote.emails.filter((e) => e != email);
   }
 
   deleteEverything(){
-    this.editor = {
-      vote: {
+    this.vote = {
         name: "",
         lifetime: "",
-        questions: [{id: 1, title: "New Question", visible: true}],
+        questions: [{id: 1, title: "New Question",type: "", visible: true}],
         emails: []
-      }
-    };
+      };
     this.submitted = false;
   }
 
     submitPoll(){
 
-      if(this.editor.vote.name == "" || this.editor.vote.lifetime == ""){
-        this.notAllFilled = true;
-        this.submitted = false;
-        return;
-      }
+    if(!this.isCompleteVote()){
+      this.notAllFilled = true;
+      this.submitted = false;
+      return;
+    }
+
       this.submitted =true;
       const keyPair = this.cryptService.generateKeyPair();
       const priv = keyPair.privateKey;
       const pub = keyPair.publicKey;
-      const encrypted = this.cryptService.encrypt(pub, this.editor);
+      const encrypted = this.cryptService.encrypt(pub, this.vote);
       let textFile =
-        "Encrypted Message:"
+        "Vote:\n\n"+
+        JSON.stringify(this.vote)+
+
+        "\nEncrypted Message:"
         +JSON.stringify(encrypted)
         +"\n \n This is the generated private key for this survey. Please save it somewhere inaccessible for others:\n \n"
         // pub+'\n'+
@@ -92,9 +86,32 @@ export class EditorComponent {
       }
       textFile = window.URL.createObjectURL(data);
       window.open(textFile);
-
+      this.backendService.createPoll(this.vote);
     }
     pressOkayButton(){
       this.notAllFilled = false;
+    }
+
+  ngOnInit(): void {
+    this.vote = {
+        name: "",
+        lifetime: "",
+        questions: [{id: 1, title: "",type:"", visible: true}],
+        emails: []
+      }
+    };
+
+    isCompleteVote(): boolean{
+      if(this.vote.name == "" || this.vote.lifetime == ""){
+        return false;
+      }
+      this.vote.questions.forEach(q =>
+      {
+        if(q.type == undefined || q.title == ""){
+          return false;
+        }
+      })
+      return this.vote.emails.length != 0;
+
     }
 }

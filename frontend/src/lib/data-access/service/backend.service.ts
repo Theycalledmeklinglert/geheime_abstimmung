@@ -29,12 +29,9 @@ export class BackendService {
   }
 
   createPoll(poll: Vote):Observable<Vote> {
-    let data = {
-      ...poll,
+    return this.httpClient.post<Vote>(this.url +'/api/polls?sessionID='+ this.getSessionID() ,poll)
     }
 
-    return this.httpClient.post<Vote>(this.url + '/api/polls?sessionID='+ this.getSessionID(), data);
-  }
 
   deletePollByID(pollId: number):Observable<void>  {
 
@@ -89,7 +86,7 @@ export class BackendService {
   }
 
 
-  setnewVote(): void{
+  setNewVote(vote: Vote): void{
   }
 
 

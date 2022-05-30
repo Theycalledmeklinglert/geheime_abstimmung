@@ -17,7 +17,7 @@ export class QuestionComponent{
  tempAnswer?: string;
 
  chooseFixedAnswers(){
-   this.question.type="yesNoAnswer";
+   this.question.type="fixedAnswer";
    this.fixedAnswers = true;
  }
  chooseYesNoAnswer(){
