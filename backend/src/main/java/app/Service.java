@@ -128,7 +128,7 @@ public class Service
 		// TODO: Decrypt JSON
 
 		// "accessible by" muss Array sein
-		if(!json.contains("name") || !json.contains("accessible by") || !json.contains("created by") || !json.contains("questions") || !json.contains("emails"))
+		if(!json.contains("name")  || !json.contains("questions") || !json.contains("emails")) // || !json.contains("accessible by")
 		{
 			Document error = new Document("Session ID", user.getString("Session ID"));
 			return Response.status(422).entity(error.toJson()).build();
@@ -160,10 +160,6 @@ public class Service
 
 		// Distributor = sendEmails(emailsAndLinks) // Oder so
 		// TODO: Call corresponding method of the the distributor class to send the links per Email (has to take emailsAndTokens and answerLinks
-
-		// TODO: Remove Emails from Poll
-
-
 
 
 		// TODO: encrypt JSON

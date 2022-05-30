@@ -89,7 +89,6 @@ public class DBInstance {
     public void removeEmailsFromPoll(Document poll)
     {
         Bson query = Filters.eq("_id", poll.get("_id"));
-        System.out.println(poll.get("_id").toString());
         Bson update = Updates.unset("emails");
         pollCol.updateOne(query, update);
     }
@@ -137,7 +136,7 @@ public class DBInstance {
     }
 
     public Optional<ArrayList<Document>> getAllPollsOfUser(final String userName) {
-        MongoCursor<Document> cursor = pollCol.find(or(eq("accessible by", userName), eq("created by", userName)))
+        MongoCursor<Document> cursor = pollCol.find(or(eq("created by", userName)))
                 .projection(Projections.fields())
                 .cursor();
 
@@ -211,13 +210,15 @@ public class DBInstance {
         Bson deleteOldUserName = Updates.pull("created by", originalUserName);
         pollCol.updateOne(filter, deleteOldUserName);
          */
-
+    /*
         Bson deleteOldUserName = Updates.pull("accessible by", originalUserName);
         pollCol.updateMany(filter, deleteOldUserName);
 
         filter = Filters.eq("accessible by", originalUserName);       // TODO: Test if this deletes all other content in array or just adds the new UserName
         update = new BasicDBObject("$push", new Document("accessible by", newUserName));
         pollCol.updateMany(filter, update);
+
+     */
 
     }
 
