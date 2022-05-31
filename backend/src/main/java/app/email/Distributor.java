@@ -75,8 +75,8 @@ public class Distributor {
         }
     }
 
-    public void distribute(ArrayList<String> recipients){
-        recipients.forEach(n -> sendMessage(n,generateMessage("Neues Sportzentrum", generateLink())));
+    public void distribute(ArrayList<String> recipients, String surveyName){
+        recipients.forEach(n -> sendMessage(n,generateMessage(surveyName, generateLink())));
     }
 
 
@@ -91,7 +91,7 @@ public class Distributor {
 
         Distributor test = new Distributor();
 
-        test.distribute(recipients);
+        test.distribute(recipients, "Placeholder");
 
     }
 
