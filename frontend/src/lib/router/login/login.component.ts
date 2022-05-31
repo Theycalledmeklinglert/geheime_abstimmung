@@ -37,7 +37,7 @@ export class LoginComponent{
       this.showloadingstatus = true;
       console.log("login with"+ this.password+ ","+this.userEmail)
       try {
-        let sucesslogin = await this.authService.getSessionid(this.userEmail,this.password);
+        let sucesslogin = await this.authService.getSessionid(this.userEmail.toLowerCase(),this.password);
         if (sucesslogin){
 
           this.router.navigate(['/main']);

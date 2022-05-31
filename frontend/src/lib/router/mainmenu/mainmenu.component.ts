@@ -133,12 +133,16 @@ export class MainmenuComponent{
           console.log("AddAdmin->"+"NEWKEY: "+localStorage.getItem("sessionID"));
           this.sucesssend = true;
           setTimeout(() => { this.sucesssend = false;}, 1300);
+      }, error => {
+        error.status == 422 ? console.log("Error 422"): console.log("Not Error 422")
+        console.log("Error while Send new SessionID: "+error.error["Session ID"]);
+        this.authService.updateSessionid(error.error["Session ID"]);
+          this.failsend = true;
+          setTimeout(() => { this.failsend = false;}, 1300);
+
       });
 
-
-    }catch (err){
-
-    }
+    }catch (err){}
 
 
 
@@ -160,13 +164,14 @@ export class MainmenuComponent{
         this.sureDeleteAdmin = false;
         this.sucesssend = true;
         setTimeout(() => { this.sucesssend = false;}, 1300);
-      });
+      }, error => {
+          console.log("Error while Send new SessionID: "+error.error["Session ID"]);
+          this.authService.updateSessionid(error.error["Session ID"]);
+          this.failsend = true;
+          setTimeout(() => { this.failsend = false;}, 1300);
 
-
-
-    }catch (err){
-      this.failsend = true;
-    }
+        });
+    }catch (err){}
   }
 
 
@@ -184,12 +189,18 @@ export class MainmenuComponent{
           this.sureChangePassword = false;
         this.sucesssend = true;
         setTimeout(() => { this.sucesssend = false;}, 1300);
-        });
+        }, error => {
+          console.log("Error while Send new SessionID: "+error.error["Session ID"]);
+          this.authService.updateSessionid(error.error["Session ID"]);
+          this.failsend = true;
+          setTimeout(() => { this.failsend = false;}, 1300);
+
+        }
+
+        );
 
 
-    }catch (err){
-
-    }
+    }catch (err){}
 
 
 
@@ -210,7 +221,14 @@ export class MainmenuComponent{
           this.sureChangeUsername = false;
         this.sucesssend = true;
         setTimeout(() => { this.sucesssend = false;}, 1300);
-      });
+      }, error => {
+          console.log("Error while Send new SessionID: "+error.error["Session ID"]);
+          this.authService.updateSessionid(error.error["Session ID"]);
+          this.failsend = true;
+          setTimeout(() => { this.failsend = false;}, 1300);
+
+        }
+      );
 
     }catch (err){}
 
