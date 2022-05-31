@@ -39,8 +39,8 @@
   top: 2.5%;
 }
 .toolbar .username .usericon h1{
-
   position: fixed;
+  display: flex;
   right: 1%;
   top: 2%;
 }
