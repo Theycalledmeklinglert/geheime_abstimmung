@@ -148,12 +148,12 @@ public class Service
 		ArrayList<String[]> emailsAndLinks = new ArrayList<>();
 		String baseUri = "http://localhost:4200/survey";		// TODO: BASE URI HAS TO BE CHANGED TO ACTUAL WEBSITE URI BEFORE RELEASE!!!!!!!!!!!!
 
+		int counter = 0;
 		for(String email : emails)
 		{
-			String answerLink = baseUri + "?pollID=" + poll.get("_id").toString() + "&token=" + tokens.get(0);
-			emailsAndLinks.add(new String[] {emails.get(0), answerLink});
-			tokens.remove(0);
-			emails.remove(0);
+			String answerLink = baseUri + "?pollID=" + poll.get("_id").toString() + "&token=" + tokens.get(counter);
+			emailsAndLinks.add(new String[] {emails.get(counter), answerLink});
+			counter++;
 		}
 
 		INSTANCE.removeEmailsFromPoll(poll);
