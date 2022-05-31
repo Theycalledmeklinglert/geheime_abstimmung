@@ -16,11 +16,12 @@
 
 }
 .vote .lifetimecomponentgreen #greenlifetime{
-  font-size: 30%;
+  font-size: 40%;
   position: absolute;
   color: #ffffff;
   text-align: left;
   left: 10%;
+  top: 20%;
 }
 
 .vote .lifetimecomponentgreen{
@@ -33,17 +34,19 @@
 }
 
 .vote .lifetimecomponentred #redlifetime{
-  font-size: 30%;
+  font-size: 40%;
   position: absolute;
   color: #ffffff;
   text-align: left;
   left: 10%;
+  top: 20%;
 }
 
 .vote .lifetimecomponentred{
   position: absolute;
   left: 50%;
   height: 45%;
+  top: 27.5%;
   width: 15%;
   border-radius: 10px 10px 10px 10px;
   background-color: rgba(255, 0, 0, 0.78);

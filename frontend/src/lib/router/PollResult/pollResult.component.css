@@ -1,10 +1,30 @@
+
+.printIcon{
+  position: fixed;
+  top: 20%;
+  right: 20%;
+
+}
+
+.printIcon .pinterIcon{
+  font-size: 50px;
+  cursor: pointer;
+}
+
+.printIcon .pinterIcon:hover{
+ color:#ff8200 ;
+  cursor: pointer;
+}
+
+
+
 .resultwindow  {
   text-align: center;
   font-size: 40px;
   position: fixed;
   right: 15%;
   background-color: rgba(239, 238, 238, 1);
-  border: 3px solid #ff8200;
+  border: 3px solid #2691d9;
   border-radius: 15px 15px 15px 15px;
   width: 70%;
   height: 80%;
@@ -13,7 +33,7 @@
 
 .headline{
   height: 35px;
-  background: #ff8200;
+  background: #2691d9;
   border-radius: 10px 10px 0px 0px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   color: white;
@@ -34,6 +54,15 @@
 }
 
 
+
+
+.resultwindow .Info{
+
+  position: fixed;
+  top: 50%;
+  font-size: 16px;
+  left: 50%;
+}
 
 
 

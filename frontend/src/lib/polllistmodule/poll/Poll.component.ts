@@ -31,6 +31,7 @@ export class PollComponent {
   showVoteResult(): void {
     if(this.voteisfinish == true){
       this.router.navigate(['/result']);
+      localStorage.setItem("clickedPoll",this.voteObject._id.toString())
     }
   }
 

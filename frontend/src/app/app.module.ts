@@ -26,7 +26,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {SurveyResultComponent} from "../lib/router/surveyResult/surveyResult.component";
+import {PollResultComponent} from "../lib/router/PollResult/pollResult.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatDialogModule} from '@angular/material/dialog';
 
@@ -42,7 +42,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     SurveyQuestionComponent,
     PollComponent,
     VoteConainterComponent,
-    SurveyResultComponent,
+    PollResultComponent,
 
   ],
   imports: [

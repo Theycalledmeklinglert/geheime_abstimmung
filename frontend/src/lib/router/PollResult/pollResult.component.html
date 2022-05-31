@@ -5,15 +5,21 @@
   <title>surveyResult</title>
 </head>
 <body>
-<div class="resultwindow">
+
+
+<div class="resultwindow" id="forPrint">
   <div class="headline">
     Your Result
   </div>
 
 
   <div> Here could be your Advertisement!</div>
+  <div class="Info"> You clicked Poll: {{getIDofclickedPoll()}}</div>
 
-  <mat-paginator [length]="200" [pageSize]="1"> </mat-paginator>
+</div>
+
+<div class="printIcon" (click)="print()">
+  <mat-icon class="pinterIcon">print</mat-icon>
 </div>
 
 <div class="returnToMainButton">
