@@ -13,6 +13,7 @@ export class SurveyComponent implements OnInit, AfterViewInit{
   vote:Vote;
   surveyForm: FormGroup;
   params: any;
+  submited:boolean = false;
 
   @ViewChild('callAPIDialog') callAPIDialog: TemplateRef<any>;
 
@@ -38,6 +39,7 @@ export class SurveyComponent implements OnInit, AfterViewInit{
   }
 
   submitSurvey():void { //muss noch den token aus der url ziehen
+    this.submited = true;
     this.backendService.submitSurvey(this.vote, this.params.token);
   }
 
@@ -46,6 +48,7 @@ export class SurveyComponent implements OnInit, AfterViewInit{
 
       dialogRef.afterClosed()
      // .subscribe(result => {console.log(`Dialog result: ${result}`); }); //debug
+
   }
 
   //Debug Methods
@@ -55,14 +58,6 @@ export class SurveyComponent implements OnInit, AfterViewInit{
     this.vote.questions.push({title:"FrageText1", id:1, type:"yesNoAnswer"});
     this.vote.questions.push({title:"FrageText2", id:2, type:"fixedAnswer", fixedAnswers:["AntwortText1", "AntwortText2","AntwortText3"]});
     this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
-    this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
-    this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
-    this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
-    this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
-    this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
-    this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
-    this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
-
   }
 
 

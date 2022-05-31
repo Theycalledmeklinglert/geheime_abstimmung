@@ -1,3 +1,4 @@
+<div *ngIf="!this.submited">
 <div id="head">
   <h1>{{this.vote.name}}</h1>
 </div>
@@ -32,4 +33,10 @@
 </ng-template>
 
 
-<button mat-flat-button color="primary" (click)="debug()">Debug</button>
+<!--<button mat-flat-button color="primary" (click)="debug()">Debug</button> -->
+
+</div>
+
+<div id="afterSubmit" *ngIf="this.submited">
+  <h1>Survey submitted</h1>
+</div>
