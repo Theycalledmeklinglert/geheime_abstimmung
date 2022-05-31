@@ -64,6 +64,7 @@ export class MainmenuComponent{
 
   hideAddAdmin(): void{
     this.addAdmin= false;
+    this.newadminrole = "default";
   }
 
   showDeleteAdmin(): void{

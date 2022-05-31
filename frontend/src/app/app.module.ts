@@ -10,8 +10,8 @@ import {MainmenuComponent} from "../lib/router/mainmenu/mainmenu.component";
 import {LoginComponent} from "../lib/router/login/login.component";
 import { SurveyComponent } from '../lib/router/survey/survey.component';
 import {EditorComponent} from "../lib/router/editor/editor.component";
-import {PollComponent} from "../lib/votelistmodule/vote/Poll.component";
-import {VoteConainterComponent} from "../lib/votelistmodule/votecontainer/PollContainer.component";
+import {PollComponent} from "../lib/polllistmodule/poll/Poll.component";
+import {VoteConainterComponent} from "../lib/polllistmodule/pollcontainer/PollContainer.component";
 import { SurveyQuestionComponent } from 'src/lib/survey-question/survey-question.component';
 
 //Angular-Material-Compontents

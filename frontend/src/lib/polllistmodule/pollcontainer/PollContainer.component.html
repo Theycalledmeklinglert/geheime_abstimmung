@@ -14,7 +14,7 @@
 <div id="body">
   <ul>
     <li *ngFor="let vote of vlcObject.votes">
-      <vote [voteObject]="vote" (deleteVoteEvent)="this.deleteVote($event)"></vote>
+      <vote [voteObject]="vote" (deletePollEvent)="this.deleteVote($event)"></vote>
     </li>
 
   </ul>

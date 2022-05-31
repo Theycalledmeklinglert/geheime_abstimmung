@@ -16,7 +16,7 @@
 
 }
 .vote .lifetimecomponentgreen #greenlifetime{
-  font-size: 60%;
+  font-size: 30%;
   position: absolute;
   color: #ffffff;
   text-align: left;
@@ -33,7 +33,7 @@
 }
 
 .vote .lifetimecomponentred #redlifetime{
-  font-size: 60%;
+  font-size: 30%;
   position: absolute;
   color: #ffffff;
   text-align: left;

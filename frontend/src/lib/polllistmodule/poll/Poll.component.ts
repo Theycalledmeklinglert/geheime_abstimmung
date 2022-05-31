@@ -21,9 +21,9 @@ export class PollComponent {
 
   lowlifetime: boolean = false;
   datum: Date;
-  voteisfinish: boolean = true;
+  voteisfinish: boolean = false;
   @Output()
-  deleteVoteEvent = new EventEmitter<Poll>();
+  deletePollEvent = new EventEmitter<Poll>();
 
   constructor (private backendService: BackendService, private router: Router, private authService: AuthenticationService) {}
 
@@ -39,20 +39,29 @@ export class PollComponent {
   }
 
 
-  showVoteLifetime(): number{
-
+  showVoteLifetime(): string{
+    const thelifetime = new Date(this.voteObject.lifetime);
     var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
 
-    var todayis = Date.parse( mm + '/' + dd + '/' + yyyy);
-    //console.log(todayis);
-    let testdate = new Date("09/30/2021");
-   // console.log(Date.parse(this.voteObject.lifetime));
-    var diff = Math.abs( Date.parse(this.voteObject.lifetime)-todayis);
-    //console.log("Diff: "+ diff);
-    return diff;
+    var milisec = thelifetime.getTime() - today.getTime();
+    let days = Math.floor(milisec/86400000);
+    var leftover = milisec%86400000;
+    let hours = Math.floor(leftover/3600000);
+    leftover = leftover%3600000;
+    let minutes = Math.floor(leftover/ 60000);
+    leftover = leftover%60000;
+    let seconds = Math.floor(leftover / 1000);
+
+    if(days == 0&& hours ==0 && minutes <= 45)this.lowlifetime = true;
+    if(milisec <=0){
+      this.lowlifetime = true;
+       this.voteisfinish = true;
+      return "FINISH";
+    }
+
+    var result =  days + 'd' + hours + 'h' + minutes + 'm' + seconds +'s' ;
+
+    return result;
   }
 
   stopthisVote(): void{
@@ -60,7 +69,7 @@ export class PollComponent {
 
   deletethisVote(): void{
     console.log("delete this Poll!");
-    this.deleteVoteEvent.emit(this.voteObject);
+    this.deletePollEvent.emit(this.voteObject);
     this.backendService.deletePollByID(this.voteObject._id).subscribe((response) =>{
       this.authService.updateSessionid(response["Session ID"]);
       console.log("Delete Response: "+localStorage.getItem("sessionID"));

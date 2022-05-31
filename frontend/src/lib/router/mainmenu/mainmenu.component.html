@@ -13,13 +13,13 @@
   </button>
   <mat-menu #menu="matMenu">
 
-    <div class="test" *ngIf="isSysAdmin" >
     <button mat-menu-item (click)="showAddAdmin()" >
       <mat-icon>perm_identity</mat-icon>
       <span>Add Surveyleader</span>
     </button>
 
-    <button mat-menu-item (click)="showDeleteAdmin()">
+    <div class="onlyforSysadmin" *ngIf="isSysAdmin" >
+    <button mat-menu-item (click)="showDeleteAdmin()" >
       <mat-icon>delete_forever</mat-icon>
       <span>Delete Surveyleader</span>
     </button>
@@ -91,7 +91,7 @@
 
   </div>
 
-    <mat-checkbox (change)="setadmin()">
+    <mat-checkbox (change)="setadmin()" *ngIf="isSysAdmin">
       <div class="isadmin_txt">isAdmin?</div>
     </mat-checkbox>
 
