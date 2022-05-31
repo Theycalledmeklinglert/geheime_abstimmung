@@ -10,11 +10,11 @@
 <div class="sidebar">
 
   <section id="head">
-    <h1>Create new Vote:</h1>
+    <h1>Create new Poll:</h1>
 
     <div id="surveyNameInput">
       <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 40, 'max-width.ch': 60}">
-        <mat-label>Survey Name</mat-label>
+        <mat-label>Poll Name</mat-label>
         <input matInput #inputText class="inputfield" type="text" [(ngModel)]="this.vote.name" required>
       </mat-form-field> <br>
     </div>

@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {Question} from "../../data-access/models/question";
 import {EncryptionService} from "../../data-access/service/encryption.service";
-import {Vote} from "../../data-access/models/vote";
+import {Poll} from "../../data-access/models/Poll";
 import {BackendService} from "../../data-access/service/backend.service";
 
 @Component({
@@ -13,7 +13,7 @@ import {BackendService} from "../../data-access/service/backend.service";
 export class EditorComponent implements OnInit{
 
   constructor(private cryptService: EncryptionService, private backendService: BackendService){}
-  vote: Vote;
+  vote: Poll;
 
   listPos?: number;
   next: boolean = false;
@@ -71,7 +71,7 @@ export class EditorComponent implements OnInit{
       const pub = keyPair.publicKey;
       const encrypted = this.cryptService.encrypt(pub, this.vote);
       let textFile =
-        "Vote:\n\n"+
+        "Poll:\n\n"+
         JSON.stringify(this.vote)+
 
         "\nEncrypted Message:"

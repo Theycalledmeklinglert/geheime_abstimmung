@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Vote } from '../models/vote';
+import { Poll } from '../models/Poll';
 import { EncryptionService } from './encryption.service';
 
 
@@ -23,13 +23,13 @@ export class BackendService {
     return this.httpClient.get<JSON>(this.url + '/api/polls?sessionID='+ this.getSessionID());
   }
 
-  loadPollByUser(pollId: number): Observable<Vote> {
+  loadPollByUser(pollId: number): Observable<Poll> {
 
-    return this.httpClient.get<Vote>( this.url + '/api/polls/ '+ pollId +'?sessionID='+ this.getSessionID() );
+    return this.httpClient.get<Poll>( this.url + '/api/polls/ '+ pollId +'?sessionID='+ this.getSessionID() );
   }
 
-  createPoll(poll: Vote):Observable<Vote> {
-    return this.httpClient.post<Vote>(this.url +'/api/polls?sessionID='+ this.getSessionID() ,poll)
+  createPoll(poll: Poll):Observable<Poll> {
+    return this.httpClient.post<Poll>(this.url +'/api/polls?sessionID='+ this.getSessionID() ,poll)
     }
 
 
@@ -74,19 +74,19 @@ export class BackendService {
     return this.httpClient.put<JSON>(this.url + '/api/polls/users?sessionID='+ this.getSessionID(), newUserData);
   }
 
-  loadPollByID(token:string, id:number):Observable<Vote> {
-    return this.httpClient.get<Vote>(this.url + '/api/polls/answers?token=' + token + '&pollID=' + id);
+  loadPollByID(token:string, id:number):Observable<Poll> {
+    return this.httpClient.get<Poll>(this.url + '/api/polls/answers?token=' + token + '&pollID=' + id);
   }
 
-  submitSurvey(answeredPoll: Vote, token: string){
+  submitSurvey(answeredPoll: Poll, token: string){
 
     let encryptedData = this.encryptionService.encrypt(localStorage.getItem("publicKey"), answeredPoll)
 
-    return this.httpClient.post<Vote>(this.url + '/api/answers?token=' + token, encryptedData)
+    return this.httpClient.post<Poll>(this.url + '/api/answers?token=' + token, encryptedData)
   }
 
 
-  setNewVote(vote: Vote): void{
+  setNewVote(vote: Poll): void{
   }
 
 

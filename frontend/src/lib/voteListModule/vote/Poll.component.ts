@@ -5,7 +5,7 @@ import {
   Input,
   Output
 } from '@angular/core';
-import {Vote} from "../../data-access/models/vote";
+import {Poll} from "../../data-access/models/Poll";
 import {BackendService} from "../../data-access/service/backend.service";
 import {Router} from "@angular/router";
 
@@ -13,17 +13,17 @@ import {AuthenticationService} from "../../data-access/service/authentication.se
 
 @Component({
   selector: 'vote',
-  templateUrl: './vote.component.html',
-  styleUrls: ['./vote.component.css'],
+  templateUrl: './Poll.component.html',
+  styleUrls: ['./Poll.component.css'],
 })
-export class VoteComponent {
-  @Input() voteObject: Vote;
+export class PollComponent {
+  @Input() voteObject: Poll;
 
   lowlifetime: boolean = false;
   datum: Date;
   voteisfinish: boolean = true;
   @Output()
-  deleteVoteEvent = new EventEmitter<Vote>();
+  deleteVoteEvent = new EventEmitter<Poll>();
 
   constructor (private backendService: BackendService, private router: Router, private authService: AuthenticationService) {}
 
@@ -59,7 +59,7 @@ export class VoteComponent {
   }
 
   deletethisVote(): void{
-    console.log("delete this Vote!");
+    console.log("delete this Poll!");
     this.deleteVoteEvent.emit(this.voteObject);
     this.backendService.deletePollByID(this.voteObject._id).subscribe((response) =>{
       this.authService.updateSessionid(response["Session ID"]);
