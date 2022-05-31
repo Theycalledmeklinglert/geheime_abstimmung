@@ -3,6 +3,7 @@ import {Question} from "../../data-access/models/question";
 import {EncryptionService} from "../../data-access/service/encryption.service";
 import {Poll} from "../../data-access/models/Poll";
 import {BackendService} from "../../data-access/service/backend.service";
+import {AuthenticationService} from "../../data-access/service/authentication.service";
 
 @Component({
   selector: 'editor',
@@ -12,7 +13,7 @@ import {BackendService} from "../../data-access/service/backend.service";
 
 export class EditorComponent implements OnInit{
 
-  constructor(private cryptService: EncryptionService, private backendService: BackendService){}
+  constructor(private cryptService: EncryptionService, private backendService: BackendService, private authService: AuthenticationService){}
   vote: Poll;
 
   listPos?: number;
@@ -86,7 +87,7 @@ export class EditorComponent implements OnInit{
       }
       textFile = window.URL.createObjectURL(data);
       window.open(textFile);
-      this.backendService.createPoll(this.vote).subscribe(r => console.log(r));
+      this.backendService.createPoll(this.vote).subscribe(r => this.authService.updateSessionid(r["Session ID"]));
     }
     pressOkayButton(){
       this.notAllFilled = false;

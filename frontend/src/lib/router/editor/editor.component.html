@@ -41,6 +41,9 @@
           </div>
         </li>
       </ul>
+      <button mat-icon-button (click)="addEmptyQuestion()">
+        <mat-icon>add</mat-icon>
+      </button>
     </section>
 
 
@@ -70,6 +73,9 @@
       </button>
     </li>
   </ul>
+  <button mat-icon-button (click)="addEmail()">
+    <mat-icon>add</mat-icon>
+  </button>
 </div>
 </section>
 <div *ngIf="!this.next" class="nextButton">
@@ -78,15 +84,6 @@
 
 <div *ngIf="this.next" class="nextButton">
   <input type="image" src="../../../assets/submit_btn.png" width="125%" height="125%" (click)="submitPoll()">
-</div>
-
-
-<div *ngIf="!this.next" class="newQuestionButton">
-  <input type="image" src="../../assets/addQuestion_btn.png" width="125%" height="125%" (click)="addEmptyQuestion()"/>
-</div>
-
-<div *ngIf="this.next" class="newQuestionButton">
-  <input type="image" src="../../assets/addVoter_btn.png" width="125%" height="125%" (click)="addEmail()"/>
 </div>
 
 <div *ngIf="this.next" class="returnToMainButton">
