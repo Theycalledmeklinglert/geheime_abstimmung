@@ -205,6 +205,8 @@ public class Service
 	public Response createUser(final String json, @DefaultValue("") @QueryParam("sessionID") final String sessID)
 	{
 
+		// TODO: Decrypt JSON
+
 		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
 		Document newUser = Document.parse(json);
 
@@ -215,18 +217,16 @@ public class Service
 
 		Document user = optUser.get();
 
-		if((newUser.getString("role").equals("admin") && !user.getString("role").equals("admin")))
-		{
-			Document error = new Document("Session ID", user.getString("Session ID"));
-			return Response.status(401).entity(error.toJson()).build();
-		}
-
-		// TODO: Decrypt JSON
-
 		if(!json.contains("email") ||!json.contains("name") || !json.contains("password") || !json.contains("role"))
 		{
 			Document error = new Document("Session ID", user.getString("Session ID"));
 			return Response.status(422).entity(error.toJson()).build();
+		}
+
+		if((newUser.getString("role").equals("admin") && !user.getString("role").equals("admin")))
+		{
+			Document error = new Document("Session ID", user.getString("Session ID"));
+			return Response.status(401).entity(error.toJson()).build();
 		}
 
 
