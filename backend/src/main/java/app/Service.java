@@ -481,9 +481,13 @@ public class Service
 
 		Optional<Document> poll = INSTANCE.getPollAsOptDocumentByID(pollID);
 
-		if(!poll.isPresent() || !this.INSTANCE.createAnswer(answer, pollID, token))
+		if(!poll.isPresent())
 		{
 			throw new WebApplicationException(Response.status(404).build());
+		}
+		else if(!this.INSTANCE.createAnswer(answer, pollID, token))
+		{
+			throw new WebApplicationException(Response.status(403).build());
 		}
 
 		// TODO: encrypt JSON

@@ -319,8 +319,8 @@ public class DBInstance {
         Document poll = optPoll.get();
         ArrayList<String> tokens = (ArrayList<String>) poll.get("tokens");
 
-        if (tokens.contains(answer.getString("token"))) {
-            Bson filter = Filters.eq("_id",new ObjectId(pollID));
+        if (tokens.contains(token)) {
+            Bson filter = Filters.eq("_id", new ObjectId(pollID));
             Bson delete = Updates.pull("tokens", token);
             pollCol.updateOne(filter, delete);
 
