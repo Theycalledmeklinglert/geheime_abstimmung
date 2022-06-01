@@ -78,11 +78,14 @@ export class BackendService {
     return this.httpClient.get<Poll>(this.url + '/api/polls/answers/' + id + '?token=' + token);
   }
 
-  submitSurvey(answeredPoll: Poll, token: string){
+  submitSurvey(answeredPoll: Poll, token: string, id:string){
+    console.log(JSON.stringify(answeredPoll))
+    const testUrl = this.url + '/api/polls/answers/' + id + '?token=' + token;
+    console.log(testUrl)
 
     //let encryptedData = this.encryptionService.encrypt(localStorage.getItem("publicKey"), answeredPoll)
 
-    return this.httpClient.post<Poll>(this.url + '/api/polls/answers?token=' + token, answeredPoll)
+    return this.httpClient.post<Poll>(testUrl, answeredPoll)
   }
 
 
@@ -91,4 +94,3 @@ export class BackendService {
 
 
 }
-
