@@ -7,9 +7,9 @@
 <body>
 <div class="taskbar">
 
-  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-    <mat-icon>more_vert</mat-icon>
-    Menu
+  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="OPTIONS">
+    <mat-icon>menu</mat-icon>
+    OPTIONS
   </button>
   <mat-menu #menu="matMenu">
 
@@ -39,8 +39,8 @@
       <mat-icon>exit_to_app</mat-icon>
       <span>Logout</span>
     </button>
-
   </mat-menu>
+  <mat-icon class="fastlogout" (click)="logout()" >exit_to_app</mat-icon>
 </div>
 
 
@@ -224,7 +224,7 @@
 
 
 
-<mat-icon id="sucessicon" style="color:rgba(0,253,0,0.48)" *ngIf="sucesssend == true"> cloud_done</mat-icon>
+<mat-icon id="sucessicon" style="color:rgba(0,253,0,0.48)" *ngIf="sucesssend"> cloud_done</mat-icon>
 <mat-icon id="failicon" style="color:rgba(255,0,0,0.49)" *ngIf="failsend">warning</mat-icon>
 
 

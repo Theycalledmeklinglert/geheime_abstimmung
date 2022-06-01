@@ -12,14 +12,6 @@
   position: fixed;
   right: 15%;
 
-  /*Alternative glass design
-  background: rgba(38, 145, 217, 0.39);
-  border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(3.9px);
-  -webkit-backdrop-filter: blur(3.9px);
-  border: 1px solid rgba(38, 145, 217, 1);
- */
 
   background-color: rgba(239, 238, 238, 1);
   border: 3px solid #ff8200;
@@ -33,15 +25,6 @@
 
 .headline{
   height: 35px;
-
-  /*Alternative Glass Design
-  background: rgba(3, 0, 255, 0.39);
-  border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(3.9px);
-  -webkit-backdrop-filter: blur(3.9px);
-  border: 1px solid rgba(3, 0, 255, 1);
-  */
   background: #ff8200;
   border-radius: 10px 10px 0px 0px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -182,6 +165,17 @@
   left: 15%;
   color: white;
 
+}
+
+.taskbar .fastlogout{
+  position: relative;
+  left: 20%;
+  top: 16%;
+}
+
+.taskbar .fastlogout:hover{
+  cursor: pointer;
+  color: #e5f2fa;
 }
 
 
@@ -465,19 +459,6 @@
   left: 34%;
   width: 10%;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

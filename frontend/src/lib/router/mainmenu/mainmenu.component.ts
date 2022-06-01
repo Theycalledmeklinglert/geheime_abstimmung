@@ -122,32 +122,40 @@ export class MainmenuComponent{
   }
 
   sendAddAdminrequest(): void{
-    //toDO INFO if add was sucessfull
-    let userData = '{"password":"'+this.newadminpassword+'", "email" :"'+this.newadminadress+'", "name" :"'+this.newadminusername+'", "role" :"'+this.newadminrole+'"}';
-    const userDataJSON: JSON = JSON.parse(userData);
-    console.log("Add Admin"+userDataJSON);
+    if(this.newadminpassword != ""&& this.newadminadress !=""&&this.newadminusername!="") {
 
-    try {
-      this.backendService.addnewSurveLeader(userDataJSON).subscribe((response) =>{
-          console.log("returnt key from Backend: "+ response["Session ID"] );
+      let userData = '{"password":"' + this.newadminpassword + '", "email" :"' + this.newadminadress.toLowerCase() + '", "name" :"' + this.newadminusername + '", "role" :"' + this.newadminrole + '"}';
+      const userDataJSON: JSON = JSON.parse(userData);
+      console.log("Add Admin" + userDataJSON);
+
+      try {
+        this.backendService.addnewSurveLeader(userDataJSON).subscribe((response) => {
+          console.log("returnt key from Backend: " + response["Session ID"]);
           this.authService.updateSessionid(response["Session ID"]);
-          console.log("AddAdmin->"+"NEWKEY: "+localStorage.getItem("sessionID"));
+          console.log("AddAdmin->" + "NEWKEY: " + localStorage.getItem("sessionID"));
           this.sucesssend = true;
-          setTimeout(() => { this.sucesssend = false;}, 1300);
-      }, error => {
-        error.status == 422 ? console.log("Error 422"): console.log("Not Error 422")
-        console.log("Error while Send new SessionID: "+error.error["Session ID"]);
-        this.authService.updateSessionid(error.error["Session ID"]);
+          setTimeout(() => {
+            this.sucesssend = false;
+          }, 1300);
+        }, error => {
+          error.status == 422 ? console.log("Error 422") : console.log("Not Error 422")
+          console.log("Error while Send new SessionID: " + error.error["Session ID"]);
+          this.authService.updateSessionid(error.error["Session ID"]);
           this.failsend = true;
-          setTimeout(() => { this.failsend = false;}, 1300);
+          setTimeout(() => {
+            this.failsend = false;
+          }, 1300);
 
-      });
+        });
 
-    }catch (err){}
+      } catch (err) {
+      }
 
 
-
-    this.addAdmin = false;
+      this.addAdmin = false;
+    }else {
+      alert("Please fill all inputs!")
+    }
   }
 
 
