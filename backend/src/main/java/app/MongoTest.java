@@ -102,10 +102,10 @@ public class MongoTest {
         System.out.println(doc.get("_id").toString());
         System.out.println(answer.getString("poll_id"));
 
-        INSTANCE.createAnswer(answer);
-        INSTANCE.createAnswer(answer2);
+        //INSTANCE.createAnswer(answer);
+        //INSTANCE.createAnswer(answer2);
 
-        INSTANCE.deleteAnswersOfPollByPollID("AnswerTestPoll");
+        //INSTANCE.deleteAnswersOfPollByPollID("AnswerTestPoll");
 
 
         doc = new Document().append("name", "AnswerTestPoll2").append("admin", "Blofeld2").append("tokens", Arrays.asList(new String[]{"MyToken"}));
@@ -113,7 +113,7 @@ public class MongoTest {
         Document answer3 = new Document("poll_id", doc.get("_id").toString()).append("token", "MyToken").append("question_id", "3");
         doc.put("tokens", Arrays.asList(new String[]{"MyToken"}));
 
-        INSTANCE.createAnswer(answer3);     // TODO: Polls MUESSEN ein ArrayFeld names "tokens" enthalten
+        //INSTANCE.createAnswer(answer3);     // TODO: Polls MUESSEN ein ArrayFeld names "tokens" enthalten
 
 
         // ArrayList<Document> res = INSTANCE.getAllPollsOfUser("Ernst Blofeld").get();

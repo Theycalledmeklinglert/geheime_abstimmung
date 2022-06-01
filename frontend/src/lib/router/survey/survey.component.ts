@@ -65,6 +65,7 @@ export class SurveyComponent implements OnInit, AfterViewInit{
 
   debug() {
     console.log(JSON.stringify(this.vote))
+    console.log(this.params.token)
   }
 
 }

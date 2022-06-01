@@ -481,7 +481,7 @@ public class Service
 
 		Optional<Document> poll = INSTANCE.getPollAsOptDocumentByID(pollID);
 
-		if(!poll.isPresent() || !this.INSTANCE.createAnswer(answer))
+		if(!poll.isPresent() || !this.INSTANCE.createAnswer(answer, pollID, token))
 		{
 			throw new WebApplicationException(Response.status(404).build());
 		}
