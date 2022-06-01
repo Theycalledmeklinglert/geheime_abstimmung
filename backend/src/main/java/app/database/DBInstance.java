@@ -488,6 +488,8 @@ public class DBInstance {
             String token = String.valueOf(System.currentTimeMillis()).substring(8, 13) + UUID.randomUUID().toString().substring(1, 10);
             tokens.add(token);
         }
+        System.out.println(tokens);
+
         return tokens;
     }
 

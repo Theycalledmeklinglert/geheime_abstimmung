@@ -461,20 +461,23 @@ public class Service
 
 
 	@POST
-	@Path("/answers")
+	@Path("/answers/{pollID}")
 	@Consumes( MediaType.APPLICATION_JSON )
-	public Response postAnswer(final String json, @DefaultValue("") @QueryParam("token") final String token)
+	public Response postAnswer(final String json,@DefaultValue("") @PathParam("pollID") final String pollID ,@DefaultValue("") @QueryParam("token") final String token)
 	{
 
 		// TODO: Decrypt JSON
 
+		/*
 		if(!json.contains("poll_id") || !json.contains("token"))
 		{
 			throw new WebApplicationException(Response.status(422).build());
 		}
+		*/
+
 
 		Document answer = Document.parse(json);
-		String pollID = answer.getString("poll_id");
+		//String pollID = answer.getString("poll_id");
 
 		Optional<Document> poll = INSTANCE.getPollAsOptDocumentByID(pollID);
 
@@ -599,4 +602,3 @@ public class Service
 	}
 
 }
-
