@@ -450,7 +450,7 @@ public class Service
 
 		ArrayList<String> tokens = (ArrayList<String>) poll.get("tokens");
 
-		if(!tokens.contains("token"))
+		if(!tokens.contains(token))
 		{
 			return Response.status(404).build();
 		}

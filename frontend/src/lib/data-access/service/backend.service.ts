@@ -75,14 +75,14 @@ export class BackendService {
   }
 
   loadPollByID(token:string, id:number):Observable<Poll> {
-    return this.httpClient.get<Poll>(this.url + '/api/polls/answers?token=' + token + '&pollID=' + id);
+    return this.httpClient.get<Poll>(this.url + '/api/polls/answers/' + id + '?token=' + token);
   }
 
   submitSurvey(answeredPoll: Poll, token: string){
 
-    let encryptedData = this.encryptionService.encrypt(localStorage.getItem("publicKey"), answeredPoll)
+    //let encryptedData = this.encryptionService.encrypt(localStorage.getItem("publicKey"), answeredPoll)
 
-    return this.httpClient.post<Poll>(this.url + '/api/answers?token=' + token, encryptedData)
+    return this.httpClient.post<Poll>(this.url + '/api/polls/answers?token=' + token, answeredPoll)
   }
 
 

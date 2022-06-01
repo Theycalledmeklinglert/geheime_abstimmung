@@ -22,13 +22,15 @@ export class SurveyComponent implements OnInit, AfterViewInit{
 
   ngOnInit(): void {
 
+    this.vote= {name:"Offline", lifetime:"1650250688", questions:[]}; //only for init
+
      this.params = new Proxy(new URLSearchParams(window.location.search), {
       get: (searchParams, prop:string) => searchParams.get(prop) });
 
 
-   //this.backendService.loadPollByID(this.params.token, this.params.pollID).subscribe((poll:Poll) => this.vote = poll);
+   this.backendService.loadPollByID(this.params.token, this.params.pollID).subscribe((poll:Poll) => this.vote = poll);
 
-    this.loadTestQuestions(); //Platzhalter zum testen bis Backendanbindung funktioniert
+   // this.loadTestQuestions(); //Platzhalter zum testen bis Backendanbindung funktioniert
 
     this.surveyForm = new FormGroup({});
     this.surveyForm.addControl("init", new FormControl(null,Validators.required)); //setzt temporäre Control um Fehler NG0100 zu vermeiden
