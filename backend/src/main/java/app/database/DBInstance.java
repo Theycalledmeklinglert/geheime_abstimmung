@@ -320,7 +320,7 @@ public class DBInstance {
         ArrayList<String> tokens = (ArrayList<String>) poll.get("tokens");
 
         if (tokens.contains(answer.getString("token"))) {
-            Bson filter = Filters.eq("poll_id", poll.get("_id").toString());
+            Bson filter = Filters.eq("_id", (ObjectId) poll.get("_id"));
             Bson delete = Updates.pull("tokens", answer.getString("token"));
             pollCol.updateOne(filter, delete);
 

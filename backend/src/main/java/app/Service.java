@@ -468,13 +468,13 @@ public class Service
 
 		// TODO: Decrypt JSON
 
-		if(!json.contains("id") || !json.contains("token"))
+		if(!json.contains("poll_id") || !json.contains("token"))
 		{
 			throw new WebApplicationException(Response.status(422).build());
 		}
 
 		Document answer = Document.parse(json);
-		String pollID = answer.getString("id");
+		String pollID = answer.getString("poll_id");
 
 		Optional<Document> poll = INSTANCE.getPollAsOptDocumentByID(pollID);
 
