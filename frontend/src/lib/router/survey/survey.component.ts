@@ -42,7 +42,7 @@ export class SurveyComponent implements OnInit, AfterViewInit{
 
   submitSurvey():void { //muss noch den token aus der url ziehen
     this.submited = true;
-    this.backendService.submitSurvey(this.vote, this.params.token, this.params.pollID);
+    this.backendService.submitSurvey(this.vote, this.params.token, this.params.pollID).subscribe();
   }
 
   openDialog():void {
