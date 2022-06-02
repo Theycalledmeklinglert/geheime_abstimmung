@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
-
+import {NgApexchartsModule} from "ng-apexcharts";
 //Custom-Components
 import {QuestionComponent} from "../lib/question/question.component";
 import {MainmenuComponent} from "../lib/router/mainmenu/mainmenu.component";
@@ -31,6 +31,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatDialogModule} from '@angular/material/dialog';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,8 +43,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     SurveyQuestionComponent,
     PollComponent,
     VoteConainterComponent,
-    PollResultComponent,
-
+    PollResultComponent
   ],
   imports: [
     BrowserModule,
@@ -66,7 +66,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatDialogModule,
-
+    NgApexchartsModule
 
   ],
   providers: [],

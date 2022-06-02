@@ -1,9 +1,11 @@
-import {Component, ViewChild} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {LoginComponent} from "../login/login.component";
 import {BackendService} from "../../data-access/service/backend.service";
 import {AuthenticationService} from "../../data-access/service/authentication.service";
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {ChartComponent, ApexNonAxisChartSeries, ApexResponsive, ApexChart, ApexOptions} from "ng-apexcharts";
+import {EncryptionService} from "../../data-access/service/encryption.service";
+import {EncryptedData} from "../../data-access/models/encryptedData";
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -19,36 +21,64 @@ export type ChartOptions = {
   styleUrls: ['./pollResult.component.css'],
 })
 
-export class PollResultComponent {
+export class PollResultComponent implements OnInit{
   @ViewChild("chart") chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
+  private answers: string[];
+  private values: number[];
+  validated: boolean;
+  tempPrivKey: string;
+  enterCounter: number;
+  encryptedAnswers: EncryptedData[];
+
+  constructor(private backendService: BackendService, private cryptService: EncryptionService) {}
 
 
-  constructor() {
-    this.chartOptions = {
-      series: [50, 50],
-      chart: {
-        type: "donut"
-      },
-      labels: ["Yes", "No"],
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200
-            },
-            legend: {
-              position: "bottom"
+  ngOnInit(): void {
+    // this.encryptedAnswers = this.backendService.getAnswers();
+    this.enterCounter = 5;
+  }
+
+
+
+  showChart(){
+
+    // this.answers = this.encryptedAnswers.map( a => this.cryptService.decrypt(this.tempPrivKey, a));
+
+    if(this.enterCounter == 0) this.encryptedAnswers = undefined;
+
+    if(this.tempPrivKey == 'Swordfish') {
+      this.answers = ["Ja lass saufen", "Ne muss morgen Programmierprojekt präsentieren", "Ein Bier geht"];
+      this.values = [69.420, 10.13, 20.87];
+      this.validated = true;
+      this.chartOptions = {
+        series: this.values,
+        chart: {
+          type: "donut"
+        },
+        labels: this.answers,
+        responsive: [
+          {
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 400
+              },
+              legend: {
+                position: "bottom"
+              }
             }
           }
-        }
-      ]
-    };
-}
+        ]
+      };
+    } else{
+      this.enterCounter--;
+    }
+  }
 
 
-  getIDofclickedPoll():string{
+
+  getIDofClickedPoll():string{
     return localStorage.getItem("clickedPoll");
   }
 
@@ -63,5 +93,6 @@ export class PollResultComponent {
     WindowPrt.print();
     WindowPrt.close();
   }
+
 }
 

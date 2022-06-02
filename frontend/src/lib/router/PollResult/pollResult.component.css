@@ -9,6 +9,7 @@
 .printIcon .pinterIcon{
   font-size: 50px;
   cursor: pointer;
+  margin-top: 50px;
 }
 
 .printIcon .pinterIcon:hover{
@@ -16,9 +17,10 @@
   cursor: pointer;
 }
 #chart {
-  max-width: 500px;
+  max-width: 70%;
   margin: 50px;
   padding: 0;
+  margin-left: 300px;
 }
 
 
@@ -36,15 +38,20 @@
 }
 
 .headline{
-  height: 35px;
+  height: 60px;
   background: #2691d9;
   border-radius: 10px 10px 0px 0px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   color: white;
   font-weight: 600;
   font-size: 25px;
+  text-align: center;
 }
-
+#pollnumber{
+  font-size: 20px;
+  font-weight: 400;
+  margin: 10px;
+}
 
 .returnToMainButton {
   text-align: center;
@@ -69,4 +76,17 @@
 }
 
 
-
+#decryptWindow{
+  text-align: center;
+  position: fixed;
+  right: 40%;
+  background-color: rgba(239, 238, 238, 1);
+  width: 30%;
+  height: 30%;
+  top: 40%;
+  color: black;
+  border: 3px solid #ff8200;
+  border-radius: 15px 15px 15px 15px;
+  font-size: 20px;
+  font-weight: bolder;
+}

@@ -9,21 +9,35 @@
 
 <div class="resultwindow" id="forPrint">
   <div class="headline">
-    Your Result
-    <div id="chart">
+    Your Result <br/>
+    <div id="pollnumber"> You clicked Poll: {{getIDofClickedPoll()}}</div>
+  </div>
+
+  <div *ngIf="!this.validated" id="decryptWindow">
+    <br/>
+    <div mat-dialog-content>Please fill in the private key for this poll:</div>
+      <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
+        <input matInput type="text" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempPrivKey">
+        <mat-label id="inputfield">Enter here...</mat-label>
+      </mat-form-field>
+      <br/>
+    <div mat-dialog-content>Remaining attempts: {{this.enterCounter}}</div>
+    <br/>
+    <div mat-dialog-actions>
+      <button mat-flat-button color="primary" (click)="this.showChart()">Enter</button>
+    </div>
+  </div>
+    <div *ngIf="this.validated" id="chart">
       <apx-chart
         [series]="chartOptions.series"
         [chart]="chartOptions.chart"
         [labels]="chartOptions.labels"
         [responsive]="chartOptions.responsive"
-        [colors]="['#00ff00', '#ff0000']"
+        [colors]="['#00ff00', '#ff0000', '#0000ff', '#fdd551']"
       ></apx-chart>
-    </div>
+
   </div>
 
-
-  <div> Here could be your Advertisement!</div>
-  <div class="Info"> You clicked Poll: {{getIDofclickedPoll()}}</div>
 
 </div>
 
