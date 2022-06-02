@@ -10,6 +10,15 @@
 <div class="resultwindow" id="forPrint">
   <div class="headline">
     Your Result
+    <div id="chart">
+      <apx-chart
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [labels]="chartOptions.labels"
+        [responsive]="chartOptions.responsive"
+        [colors]="['#00ff00', '#ff0000']"
+      ></apx-chart>
+    </div>
   </div>
 
 
