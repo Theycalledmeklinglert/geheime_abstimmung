@@ -6,6 +6,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {ChartComponent, ApexNonAxisChartSeries, ApexResponsive, ApexChart, ApexOptions} from "ng-apexcharts";
 import {EncryptionService} from "../../data-access/service/encryption.service";
 import {EncryptedData} from "../../data-access/models/encryptedData";
+import {Poll} from "../../data-access/models/Poll";
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -29,6 +30,8 @@ export class PollResultComponent implements OnInit{
   validated: boolean;
   tempPrivKey: string;
   enterCounter: number;
+  poll: Poll;
+  questionCount;
   encryptedAnswers: EncryptedData[];
 
   constructor(private backendService: BackendService, private cryptService: EncryptionService) {}
@@ -37,6 +40,12 @@ export class PollResultComponent implements OnInit{
   ngOnInit(): void {
     // this.encryptedAnswers = this.backendService.getAnswers();
     this.enterCounter = 5;
+    this.poll = {name: "ResultTestPoll", lifetime: "0",
+      questions:[
+        {title: "Heut hart ballern?", type:"fixedAnswers", id: 1, fixedAnswers:["Ja lass saufen", "Ne muss morgen Programmierprojekt präsentieren", "Ein Bier geht"]},
+        {title: "Morgen hart ballern?", type:"yesNo", id: 2,fixedAnswers:["Ja lass saufen", "Ne muss morgen Programmierprojekt präsentieren", "Ein Bier geht"]},
+        {title: "Uebermorgen hart ballern?", type:"yesNo", id: 3,fixedAnswers:["Ja lass saufen", "Ne muss morgen Programmierprojekt präsentieren", "Ein Bier geht"]}]};
+    this.questionCount = 0;
   }
 
 
@@ -45,12 +54,11 @@ export class PollResultComponent implements OnInit{
 
     // this.answers = this.encryptedAnswers.map( a => this.cryptService.decrypt(this.tempPrivKey, a));
 
-    if(this.enterCounter == 0) this.encryptedAnswers = undefined;
-
-    if(this.tempPrivKey == 'Swordfish') {
-      this.answers = ["Ja lass saufen", "Ne muss morgen Programmierprojekt präsentieren", "Ein Bier geht"];
+    if(this.enterCounter == 0) this.poll = undefined;
+    this.validated = this.tempPrivKey == 'Swordfish';
+    if(this.validated) {
+      this.answers = this.poll.questions[this.questionCount].fixedAnswers;
       this.values = [69.420, 10.13, 20.87];
-      this.validated = true;
       this.chartOptions = {
         series: this.values,
         chart: {
@@ -65,7 +73,8 @@ export class PollResultComponent implements OnInit{
                 width: 400
               },
               legend: {
-                position: "bottom"
+                position: "top",
+                horizontalAlign:"left"
               }
             }
           }
@@ -73,6 +82,7 @@ export class PollResultComponent implements OnInit{
       };
     } else{
       this.enterCounter--;
+      this.tempPrivKey = '';
     }
   }
 

@@ -27,7 +27,10 @@
       <button mat-flat-button color="primary" (click)="this.showChart()">Enter</button>
     </div>
   </div>
-    <div *ngIf="this.validated" id="chart">
+  <div *ngIf="this.validated" id="questiontitle">
+      {{this.poll.questions[this.questionCount].title}}
+  </div>
+        <div *ngIf="this.validated" id="chart">
       <apx-chart
         [series]="chartOptions.series"
         [chart]="chartOptions.chart"
@@ -35,9 +38,13 @@
         [responsive]="chartOptions.responsive"
         [colors]="['#00ff00', '#ff0000', '#0000ff', '#fdd551']"
       ></apx-chart>
-
   </div>
-
+  <button mat-flat-button (click)="this.showChart(); questionCount = questionCount - 1;" *ngIf="this.questionCount - 1 >= 0">
+  <mat-icon>keyboard_arrow_left</mat-icon>
+</button>
+  <button mat-flat-button (click)="this.showChart(); questionCount = questionCount + 1;" *ngIf="this.questionCount + 1 < this.poll.questions.length">
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </button>
 
 </div>
 
@@ -48,6 +55,7 @@
 <div class="returnToMainButton">
   <input type="image" src="../../assets/returnToMain_btn.png" width="125%" height="125%" routerLink="/main"/>
 </div>
+
 
 </body>
 </html>
