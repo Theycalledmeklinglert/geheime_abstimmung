@@ -41,3 +41,33 @@
 
 }
 
+
+
+.sureDeletePoll{
+  text-align: center;
+  position: fixed;
+  right: 40%;
+  width: 20%;
+  top: 40%;
+  font-size: 15px;
+  background-color: rgba(239, 238, 238, 1);
+  height: 20%;
+  color: black;
+  border: 3px solid #ff8200;
+  border-radius: 15px 15px 15px 15px;
+}
+
+.sureDeletePoll .cancel_btn{
+  position: absolute;
+  bottom: 5%;
+  left: 10%;
+  cursor: pointer;
+}
+
+.sureDeletePoll .delete_btn{
+  position: absolute;
+  bottom: 5%;
+  right: 10%;
+  cursor: pointer;
+}
+

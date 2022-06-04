@@ -14,16 +14,18 @@ import {lastValueFrom} from "rxjs";
 export class VoteConainterComponent implements OnInit{
   vlcObject?: PollContainer;
   newListIndex?: number;
+  sureDeletePoll: boolean = false;
+  tempPoll: Poll;
 
   constructor(private backendService: BackendService, private authService: AuthenticationService) {}
 
 
 
   ngOnInit(): void{
-    this.vlcObject = {name:"testcontainer", votes:[] };
+    this.vlcObject = {name:"testcontainer", polls:[] };
     console.log("PollContainer->"+"OLDKEY: "+localStorage.getItem("sessionID"));
     this.backendService.loadAllPollsByUser().subscribe((response) =>{
-      this.vlcObject.votes = response["polls"];
+      this.vlcObject.polls = response["polls"];
       this.authService.updateSessionid(response["Session ID"]);
       console.log("PollContainer->"+"NEWKEY: "+localStorage.getItem("sessionID"));
     });
@@ -32,11 +34,34 @@ export class VoteConainterComponent implements OnInit{
 
 
   setVotes(votes: Poll[]){
-    this.vlcObject.votes = votes;
+    this.vlcObject.polls = votes;
   }
 
-  deleteVote(vote: Poll){
-    this.vlcObject.votes = this.vlcObject.votes.filter(v => v != vote);
+  realydelete(poll: Poll){
+    this.sureDeletePoll = true;
+    this.tempPoll = poll;
+    console.log("Are you Sure to Delete?")
+  }
+  yessDelete(){
+    this.vlcObject.polls = this.vlcObject.polls.filter(v => v != this.tempPoll);
+    console.log("delete this Poll!");
+
+    this.backendService.deletePollByID(this.tempPoll._id).subscribe((response) =>{
+      this.authService.updateSessionid(response["Session ID"]);
+      console.log("Delete Response: "+localStorage.getItem("sessionID"));
+      this.sureDeletePoll = false;
+      }
+    );
+
+  }
+
+  noSkipDelete(){
+    this.tempPoll = null;
+    this.sureDeletePoll = false;
+  }
+
+  deleteVote(poll: Poll){
+    this.realydelete(poll);
   }
 
 }

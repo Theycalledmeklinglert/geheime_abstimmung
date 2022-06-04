@@ -69,15 +69,7 @@ export class PollComponent {
   }
 
   deletethisVote(): void{
-    console.log("delete this Poll!");
     this.deletePollEvent.emit(this.voteObject);
-    this.backendService.deletePollByID(this.voteObject._id).subscribe((response) =>{
-      this.authService.updateSessionid(response["Session ID"]);
-      console.log("Delete Response: "+localStorage.getItem("sessionID"));
-    }
-
-    );
-
   }
 
 
