@@ -78,7 +78,10 @@
     >
     <span></span>
     <label>Password</label>
+    <div class="invalidPasswordLength" *ngIf="invalidPasswordlengthfornewUser"> Invalid Password length min. 8 Characters</div>
   </div>
+
+
 
   <div class="txt_field">
     <input type="text" required
@@ -158,6 +161,7 @@
     >
     <span></span>
     <label>New Password</label>
+    <div class="invalidPasswordLength" *ngIf="invalidPasswordlengthforCurrentUser"> Invalid Password length min. 8 Characters</div>
   </div>
 
   <div class="change" >

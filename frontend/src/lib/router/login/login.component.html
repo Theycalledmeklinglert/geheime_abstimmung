@@ -28,11 +28,15 @@
           <span></span>
           <label *ngIf="wrongUsernameorPassword == false">Password</label>
           <label *ngIf="wrongUsernameorPassword" style="color:red">Password</label>
+          <div class="wronguserdata" *ngIf="wrongUsernameorPassword">
+            Password or Username is incorrect!
+          </div>
+
+          <div class="helpbutton" (click)="presshelpbutton()"> Need help?</div>
+
         </div>
-        <div class="helpbutton" (click)="presshelpbutton()"> Need help?</div>
-        <div class="wronguserdata" *ngIf="wrongUsernameorPassword">
-          Password or Username is incorrect!
-        </div>
+
+
         <input type="submit" value="Login"  (click)="submitlogin()">
         <div class="loading" *ngIf="showloadingstatus">
           <mat-spinner [diameter]="40"></mat-spinner>

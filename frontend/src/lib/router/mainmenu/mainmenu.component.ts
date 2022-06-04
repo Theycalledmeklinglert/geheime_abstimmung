@@ -31,6 +31,7 @@ export class MainmenuComponent{
 
   //change Password
   changedPassword: string= "";
+  invalidPasswordlengthforCurrentUser: boolean = false;
 
   //change Username
   changedUsername: string= "";
@@ -42,8 +43,11 @@ export class MainmenuComponent{
   newadminpassword: string= "";
   newadminusername: string= "";
   newadminrole: string= "default";
+  invalidPasswordlengthfornewUser: boolean = false;
+
   //test
   username: string= "defaultname";
+
 
   //delete Admin
   deleteadminadress: string= "";
@@ -112,8 +116,10 @@ export class MainmenuComponent{
   }
 
   changemyPassword(): void{
-    this.changePassword = false;
-    this.sureChangePassword = true;
+    if(this.changedPassword != "" && this.invalidPasswordlengthforCurrentUser == false) {
+      this.changePassword = false;
+      this.sureChangePassword = true;
+    }else {}
   }
 
   changemyUsername(): void{
@@ -122,7 +128,7 @@ export class MainmenuComponent{
   }
 
   sendAddAdminrequest(): void{
-    if(this.newadminpassword != ""&& this.newadminadress !=""&&this.newadminusername!="") {
+    if(this.newadminpassword != ""&& this.newadminadress !=""&&this.newadminusername!="" && this.invalidPasswordlengthfornewUser == false) {
 
       let userData = '{"password":"' + this.newadminpassword + '", "email" :"' + this.newadminadress.toLowerCase() + '", "name" :"' + this.newadminusername + '", "role" :"' + this.newadminrole + '"}';
       const userDataJSON: JSON = JSON.parse(userData);
@@ -154,7 +160,7 @@ export class MainmenuComponent{
 
       this.addAdmin = false;
     }else {
-      alert("Please fill all inputs!")
+      alert("Please fill all inputs correct!")
     }
   }
 
@@ -163,7 +169,7 @@ export class MainmenuComponent{
 
 
   sendDeleteAdminrequest(): void{
-    //toDo INFO if change was sucessfull
+
     let userData = '{"name" :"'+localStorage.getItem("userName")+ '", "role" :"'+localStorage.getItem("userRole")+'"}';
 
     try {
@@ -186,7 +192,6 @@ export class MainmenuComponent{
 
 
   sendChangePasswordrequest(): void{
-    //toDo INFO if change was sucessfull
     let userData = '{"password":"'+this.changedPassword+'", "name" :"'+localStorage.getItem("userName")+'", "email" :"'+localStorage.getItem("userEmail")+'"}';
     console.log("Paswordchange send:"+ userData);
     const passwordandUsername: JSON = JSON.parse(userData);
@@ -211,13 +216,10 @@ export class MainmenuComponent{
 
     }catch (err){}
 
-
-
   }
 
-  sendChangeUsernamerequest(): void{
-    //toDO INFO if change was sucessfull
 
+  sendChangeUsernamerequest(): void{
     let userData = '{"password":"'+localStorage.getItem("userPassword")+'", "name" :"'+this.changedUsername+'", "email" :"'+localStorage.getItem("userEmail")+'"}';
     console.log("Usernamechange send:"+ userData);
     const passwordandUsername: JSON = JSON.parse(userData);
@@ -252,6 +254,9 @@ export class MainmenuComponent{
 
   setpasswordofnewAdmin(event: any): void{
     this.newadminpassword = event.target.value;
+    if(event.target.value.length < 8){
+      this.invalidPasswordlengthfornewUser = true;
+    }else {this.invalidPasswordlengthfornewUser = false;}
   }
 
   setUsernameofnewAdmin(event: any): void{
@@ -263,6 +268,10 @@ export class MainmenuComponent{
 
   setnewPassword(event: any): void{
     this.changedPassword = event.target.value;
+    if(event.target.value.length < 8){
+      this.invalidPasswordlengthforCurrentUser = true;
+    }else {this.invalidPasswordlengthforCurrentUser = false;}
+
   }
 
   setnewUsername(event: any): void{
