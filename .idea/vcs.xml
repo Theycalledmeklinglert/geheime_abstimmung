@@ -3,5 +3,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/backend/tweetnacl-java" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/frontend/src/ssl/generate-trusted-ssl-certificate" vcs="Git" />
   </component>
 </project>

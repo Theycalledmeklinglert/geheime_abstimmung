@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Vote } from 'src/lib/data-access/models/vote';
+import { Poll } from 'src/lib/data-access/models/Poll';
 import { BackendService } from 'src/lib/data-access/service/backend.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { BackendService } from 'src/lib/data-access/service/backend.service';
   styleUrls: ['./survey.component.css']
 })
 export class SurveyComponent implements OnInit, AfterViewInit{
-  vote:Vote;
+  vote:Poll;
   surveyForm: FormGroup;
   params: any;
   submited:boolean = false;
@@ -22,13 +22,15 @@ export class SurveyComponent implements OnInit, AfterViewInit{
 
   ngOnInit(): void {
 
+    this.vote= {name:"Offline", lifetime:"1650250688", questions:[]}; //only for init
+
      this.params = new Proxy(new URLSearchParams(window.location.search), {
       get: (searchParams, prop:string) => searchParams.get(prop) });
 
 
-   //this.backendService.loadPollByID(this.params.token, this.params.pollID).subscribe((poll:Vote) => this.vote = poll);
+   this.backendService.loadPollByID(this.params.token, this.params.pollID).subscribe((poll:Poll) => this.vote = poll);
 
-    this.loadTestQuestions(); //Platzhalter zum testen bis Backendanbindung funktioniert
+   // this.loadTestQuestions(); //Platzhalter zum testen bis Backendanbindung funktioniert
 
     this.surveyForm = new FormGroup({});
     this.surveyForm.addControl("init", new FormControl(null,Validators.required)); //setzt temporäre Control um Fehler NG0100 zu vermeiden
@@ -40,7 +42,7 @@ export class SurveyComponent implements OnInit, AfterViewInit{
 
   submitSurvey():void { //muss noch den token aus der url ziehen
     this.submited = true;
-    this.backendService.submitSurvey(this.vote, this.params.token);
+    this.backendService.submitSurvey(this.vote, this.params.token, this.params.pollID).subscribe();
   }
 
   openDialog():void {
@@ -62,8 +64,8 @@ export class SurveyComponent implements OnInit, AfterViewInit{
 
 
   debug() {
-    this.openDialog()
+    console.log(JSON.stringify(this.vote))
+    console.log(this.params.token)
   }
 
 }
-

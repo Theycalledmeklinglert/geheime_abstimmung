@@ -1,6 +1,6 @@
 import {Question} from "./question";
 
-export interface Vote{
+export interface Poll {
   _id?: number;
   name: string;
   lifetime: string;

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>$Title$</title>
+</head>
+
+<div class="voteContainer">
+<div class="containerHeader">
+  <div id = "name" title = "NAME"> Name</div>
+  <div id = "lifetime" title = "LIFETIME">Lifetime</div>
+</div>
+
+<div id="body">
+  <ul>
+    <li *ngFor="let vote of vlcObject.polls">
+      <vote [voteObject]="vote" (deletePollEvent)="this.deleteVote($event)"></vote>
+    </li>
+
+  </ul>
+</div>
+
+
+  <div class="sureDeletePoll" *ngIf="sureDeletePoll">
+
+    <h1 mat-dialog-title>Info</h1>
+    <div mat-dialog-content>Are you sure you want to delete Poll?</div>
+    <div class="delete_btn"mat-dialog-actions>
+      <button mat-flat-button color="primary" (click)="yessDelete()">Delete </button>
+    </div>
+    <div  class="cancel_btn" mat-dialog-actions>
+      <button mat-flat-button color="primary" (click)="noSkipDelete()">Cancel </button>
+    </div>
+
+  </div>
+
+
+
+
+
+
+</div>
+
+
+
+</html>

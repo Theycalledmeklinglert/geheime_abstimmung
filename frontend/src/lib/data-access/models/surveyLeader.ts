@@ -1,7 +1,7 @@
-import {VoteContainer} from "./voteContainer";
+import {PollContainer} from "./PollContainer";
 export interface SurveyLeader {
   id?: number;
   username: string;
   password: string;
-  currentPolls?: VoteContainer;
+  currentPolls?: PollContainer;
 }

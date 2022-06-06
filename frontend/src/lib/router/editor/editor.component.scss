@@ -34,19 +34,17 @@
 
 #questionList{
   position: relative;
-  align-items: center ;
   overflow-y: scroll;
 
 }
 
 #questionList ul li {
 
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 37.45px;
+  //margin-right: auto;
   margin-bottom: 10px;
   background-color: white;
   list-style: none;
-  align-items: flex-start;
   width: 20vw;
 }
 
@@ -94,6 +92,7 @@
   cursor: pointer;
   word-wrap: break-word;
   font-weight: bold;
+
 }
 
 .questioneditor{
@@ -114,7 +113,7 @@
   background-color: white;
   list-style: none;
   align-items: flex-start;
-  width: 20vw;
+  width: 30vw;
   //max-height: 30px;
 }
 .emailstyle{

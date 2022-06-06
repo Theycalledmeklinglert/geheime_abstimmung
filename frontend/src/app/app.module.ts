@@ -3,15 +3,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
-
+import {NgApexchartsModule} from "ng-apexcharts";
 //Custom-Components
 import {QuestionComponent} from "../lib/question/question.component";
 import {MainmenuComponent} from "../lib/router/mainmenu/mainmenu.component";
 import {LoginComponent} from "../lib/router/login/login.component";
 import { SurveyComponent } from '../lib/router/survey/survey.component';
 import {EditorComponent} from "../lib/router/editor/editor.component";
-import {VoteComponent} from "../lib/voteListModule/vote/vote.component";
-import {VoteConainterComponent} from "../lib/voteListModule/votecontainer/voteContainer.component";
+import {PollComponent} from "../lib/polllistmodule/poll/Poll.component";
+import {VoteConainterComponent} from "../lib/polllistmodule/pollcontainer/PollContainer.component";
 import { SurveyQuestionComponent } from 'src/lib/survey-question/survey-question.component';
 
 //Angular-Material-Compontents
@@ -26,9 +26,10 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {SurveyResultComponent} from "../lib/router/surveyResult/surveyResult.component";
+import {PollResultComponent} from "../lib/router/PollResult/pollResult.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatDialogModule} from '@angular/material/dialog';
+
 
 
 @NgModule({
@@ -40,10 +41,9 @@ import {MatDialogModule} from '@angular/material/dialog';
     LoginComponent,
     SurveyComponent,
     SurveyQuestionComponent,
-    VoteComponent,
+    PollComponent,
     VoteConainterComponent,
-    SurveyResultComponent,
-
+    PollResultComponent
   ],
   imports: [
     BrowserModule,
@@ -66,7 +66,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatDialogModule,
-
+    NgApexchartsModule
 
   ],
   providers: [],

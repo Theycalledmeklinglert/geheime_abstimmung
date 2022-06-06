@@ -305,11 +305,11 @@ public class DBInstance {
     }
 
 
-    public boolean createAnswer(Document answer) {
+    public boolean createAnswer(Document answer, String pollID, String token) {
         // TODO: Answer MUSS ein Attribut namens poll_id UND ein Attribut question_id UND ein Attribut content enthalten!!!
         // + Attribut namens "token"
         // Konstruktion des Answer-JSON muss mit FrontEnd abgestimmt werden
-        Optional<Document> optPoll = getPollAsOptDocumentByID(answer.getString("poll_id"));
+        Optional<Document> optPoll = getPollAsOptDocumentByID(pollID);
 
         if (!optPoll.isPresent()) {
             System.out.println("This answer does not belong to an exisitng poll");
@@ -319,12 +319,12 @@ public class DBInstance {
         Document poll = optPoll.get();
         ArrayList<String> tokens = (ArrayList<String>) poll.get("tokens");
 
-        if (tokens.contains(answer.getString("token"))) {
-            Bson filter = Filters.eq("poll_id", poll.get("_id").toString());
-            Bson delete = Updates.pull("tokens", answer.getString("token"));
+        if (tokens.contains(token)) {
+            Bson filter = Filters.eq("_id", new ObjectId(pollID));
+            Bson delete = Updates.pull("tokens", token);
             pollCol.updateOne(filter, delete);
 
-            filter = Filters.eq("poll_id", answer.getString("poll_id"));
+            filter = Filters.eq("token", token);
             BasicDBObject listItem = new BasicDBObject("answers", answer);
             Bson pushToQuestList = new BasicDBObject("$push", listItem);
 
@@ -487,7 +487,10 @@ public class DBInstance {
         for (int i = 0; i < size; i++) {
             String token = String.valueOf(System.currentTimeMillis()).substring(8, 13) + UUID.randomUUID().toString().substring(1, 10);
             tokens.add(token);
+            System.out.println("http://localhost:4200/survey?token="+token+"&pollID=");
         }
+
+
         return tokens;
     }
 

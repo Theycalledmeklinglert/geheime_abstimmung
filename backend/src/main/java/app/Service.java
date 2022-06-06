@@ -148,12 +148,12 @@ public class Service
 		ArrayList<String[]> emailsAndLinks = new ArrayList<>();
 		String baseUri = "http://localhost:4200/survey";		// TODO: BASE URI HAS TO BE CHANGED TO ACTUAL WEBSITE URI BEFORE RELEASE!!!!!!!!!!!!
 
+		int counter = 0;
 		for(String email : emails)
 		{
-			String answerLink = baseUri + "?pollID=" + poll.get("_id").toString() + "&token=" + tokens.get(0);
-			emailsAndLinks.add(new String[] {emails.get(0), answerLink});
-			tokens.remove(0);
-			emails.remove(0);
+			String answerLink = baseUri + "?pollID=" + poll.get("_id").toString() + "&token=" + tokens.get(counter);
+			emailsAndLinks.add(new String[] {emails.get(counter), answerLink});
+			counter++;
 		}
 
 		INSTANCE.removeEmailsFromPoll(poll);
@@ -450,7 +450,7 @@ public class Service
 
 		ArrayList<String> tokens = (ArrayList<String>) poll.get("tokens");
 
-		if(!tokens.contains("token"))
+		if(!tokens.contains(token))
 		{
 			return Response.status(404).build();
 		}
@@ -461,26 +461,33 @@ public class Service
 
 
 	@POST
-	@Path("/answers")
+	@Path("/answers/{pollID}")
 	@Consumes( MediaType.APPLICATION_JSON )
-	public Response postAnswer(final String json, @DefaultValue("") @QueryParam("token") final String token)
+	public Response postAnswer(final String json,@DefaultValue("") @PathParam("pollID") final String pollID ,@DefaultValue("") @QueryParam("token") final String token)
 	{
 
 		// TODO: Decrypt JSON
 
-		if(!json.contains("id") || !json.contains("token"))
+		/*
+		if(!json.contains("poll_id") || !json.contains("token"))
 		{
 			throw new WebApplicationException(Response.status(422).build());
 		}
+		*/
+
 
 		Document answer = Document.parse(json);
-		String pollID = answer.getString("id");
+		//String pollID = answer.getString("poll_id");
 
 		Optional<Document> poll = INSTANCE.getPollAsOptDocumentByID(pollID);
 
-		if(!poll.isPresent() || !this.INSTANCE.createAnswer(answer))
+		if(!poll.isPresent())
 		{
 			throw new WebApplicationException(Response.status(404).build());
+		}
+		else if(!this.INSTANCE.createAnswer(answer, pollID, token))
+		{
+			throw new WebApplicationException(Response.status(403).build());
 		}
 
 		// TODO: encrypt JSON
@@ -599,4 +606,3 @@ public class Service
 	}
 
 }
-

@@ -2,6 +2,7 @@ package main.java.app;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.WebResourceRoot;
+import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
@@ -17,8 +18,9 @@ public class Start
 
 	public static void main( final String[] args ) throws Exception
 	{
+
 		final Tomcat tomcat = new Tomcat( );
-		tomcat.setPort( 8080 );
+		tomcat.setPort(8080);
 
 		final Context context = tomcat.addWebapp( CONTEXT_PATH, new File( WEB_APP_LOCATION ).getAbsolutePath( ) );
 		final String pathToClasses = new File( WEB_APP_CLASSES ).getAbsolutePath( );
@@ -32,3 +34,15 @@ public class Start
 		tomcat.getServer( ).await( );
 	}
 }
+
+//	Connector httpsConnector = new Connector();
+//		httpsConnector.setPort(8080);
+//				httpsConnector.setSecure(true);
+//				httpsConnector.setScheme("https");
+//				httpsConnector.setAttribute("SSLCertificateFile", "../frontend/src/ssl/certificate.pem");
+//				httpsConnector.setAttribute("SSLCertificateKeyFile", "../frontend/src/ssl/key.pem");
+//				httpsConnector.setAttribute("clientAuth", "false");
+//				httpsConnector.setAttribute("sslProtocol", "TLS");
+//				httpsConnector.setAttribute("SSLEnabled", true);
+//				httpsConnector.setURIEncoding("UTF-8");
+//tomcat.setConnector(httpsConnector);

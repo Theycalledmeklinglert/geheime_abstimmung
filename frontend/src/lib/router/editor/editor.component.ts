@@ -1,8 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 import {Question} from "../../data-access/models/question";
 import {EncryptionService} from "../../data-access/service/encryption.service";
-import {Vote} from "../../data-access/models/vote";
+import {Poll} from "../../data-access/models/Poll";
 import {BackendService} from "../../data-access/service/backend.service";
+import {AuthenticationService} from "../../data-access/service/authentication.service";
 
 @Component({
   selector: 'editor',
@@ -12,8 +13,8 @@ import {BackendService} from "../../data-access/service/backend.service";
 
 export class EditorComponent implements OnInit{
 
-  constructor(private cryptService: EncryptionService, private backendService: BackendService){}
-  vote: Vote;
+  constructor(private cryptService: EncryptionService, private backendService: BackendService, private authService: AuthenticationService){}
+  vote: Poll;
 
   listPos?: number;
   next: boolean = false;
@@ -71,7 +72,7 @@ export class EditorComponent implements OnInit{
       const pub = keyPair.publicKey;
       const encrypted = this.cryptService.encrypt(pub, this.vote);
       let textFile =
-        "Vote:\n\n"+
+        "Poll:\n\n"+
         JSON.stringify(this.vote)+
 
         "\nEncrypted Message:"
@@ -86,7 +87,7 @@ export class EditorComponent implements OnInit{
       }
       textFile = window.URL.createObjectURL(data);
       window.open(textFile);
-      this.backendService.createPoll(this.vote).subscribe(r => console.log(r));
+      this.backendService.createPoll(this.vote).subscribe(r => this.authService.updateSessionid(r["Session ID"]));
     }
     pressOkayButton(){
       this.notAllFilled = false;

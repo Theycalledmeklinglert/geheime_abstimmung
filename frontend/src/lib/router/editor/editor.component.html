@@ -10,11 +10,11 @@
 <div class="sidebar">
 
   <section id="head">
-    <h1>Create new Vote:</h1>
+    <h1>Create new Poll:</h1>
 
     <div id="surveyNameInput">
       <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 40, 'max-width.ch': 60}">
-        <mat-label>Survey Name</mat-label>
+        <mat-label>Poll Name</mat-label>
         <input matInput #inputText class="inputfield" type="text" [(ngModel)]="this.vote.name" required>
       </mat-form-field> <br>
     </div>
@@ -41,6 +41,9 @@
           </div>
         </li>
       </ul>
+      <button mat-icon-button (click)="addEmptyQuestion()">
+        <mat-icon>add</mat-icon>
+      </button>
     </section>
 
 
@@ -70,6 +73,9 @@
       </button>
     </li>
   </ul>
+  <button mat-icon-button (click)="addEmail()">
+    <mat-icon>add</mat-icon>
+  </button>
 </div>
 </section>
 <div *ngIf="!this.next" class="nextButton">
@@ -78,15 +84,6 @@
 
 <div *ngIf="this.next" class="nextButton">
   <input type="image" src="../../../assets/submit_btn.png" width="125%" height="125%" (click)="submitPoll()">
-</div>
-
-
-<div *ngIf="!this.next" class="newQuestionButton">
-  <input type="image" src="../../assets/addQuestion_btn.png" width="125%" height="125%" (click)="addEmptyQuestion()"/>
-</div>
-
-<div *ngIf="this.next" class="newQuestionButton">
-  <input type="image" src="../../assets/addVoter_btn.png" width="125%" height="125%" (click)="addEmail()"/>
 </div>
 
 <div *ngIf="this.next" class="returnToMainButton">
