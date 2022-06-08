@@ -68,9 +68,13 @@ public class DBInstance {
     }
 
     public Optional<Document> getPollAsOptDocumentByID(final String id) {
-        Document doc = pollCol.find(eq("_id", new ObjectId(id)))
-                .projection(Projections.fields())
-                .first();
+        Document doc = null;
+
+        if(ObjectId.isValid(id)) {
+             doc = pollCol.find(eq("_id", new ObjectId(id)))
+                     .projection(Projections.fields())
+                     .first();
+        }
 
         if (doc == null) {
             return Optional.empty();

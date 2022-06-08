@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Poll } from 'src/lib/data-access/models/Poll';
@@ -9,7 +9,7 @@ import { BackendService } from 'src/lib/data-access/service/backend.service';
   templateUrl: './survey.component.html',
   styleUrls: ['./survey.component.css']
 })
-export class SurveyComponent implements OnInit, AfterViewInit{
+export class SurveyComponent implements OnInit{
   vote:Poll;
   surveyForm: FormGroup;
   params: any;
@@ -54,10 +54,6 @@ export class SurveyComponent implements OnInit, AfterViewInit{
 
     this.surveyForm = new FormGroup({});
     this.surveyForm.addControl("init", new FormControl(null,Validators.required)); //setzt temporäre Control um Fehler NG0100 zu vermeiden
-  }
-
-  ngAfterViewInit(): void {
-    this.surveyForm.removeControl("init"); //löscht nachdem die ChildComponents intitialisiert wurden,
   }
 
   submitSurvey():void {
