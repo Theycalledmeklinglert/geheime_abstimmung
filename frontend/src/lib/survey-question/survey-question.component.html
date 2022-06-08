@@ -3,6 +3,12 @@
 </div>
 
 
+<section class="description" *ngIf="descriptionProvided()">
+  <h3>description:</h3>
+  {{this.question.description}}
+</section>
+
+
 <div id="body" [formGroup]="this.parentForm">
 
   <section class="yesNoAnswer" *ngIf="this.question.type=='yesNoAnswer' ">
@@ -33,6 +39,7 @@
       >
     </mat-form-field>
   </section>
+
 
 </div>
 

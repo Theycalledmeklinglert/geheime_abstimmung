@@ -25,7 +25,19 @@
   position: relative;
 }
 
-.fixedAnswer{
+.description h3{
+  font-size: small;
+  margin-bottom: 1%;
+}
+
+.description {
+  width: fit-content;
+  padding-left: 5px;
+  padding-right: 5px;
+  border: 1px solid grey;
+  font-size: smaller;
+  margin-bottom: 2%;
+
 }
 
 

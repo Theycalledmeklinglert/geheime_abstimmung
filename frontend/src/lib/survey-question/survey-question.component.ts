@@ -64,4 +64,8 @@ export class SurveyQuestionComponent implements OnInit {
     this.question.individualAnswer = event.target.value;
   }
 
+  descriptionProvided():boolean {
+    return this.question.description!=undefined;
+  }
+
 }
