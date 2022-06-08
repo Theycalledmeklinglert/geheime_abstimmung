@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { catchError, of } from 'rxjs';
 import { Poll } from 'src/lib/data-access/models/Poll';
 import { BackendService } from 'src/lib/data-access/service/backend.service';
 
@@ -25,28 +24,33 @@ export class SurveyComponent implements OnInit, AfterViewInit{
   constructor(private backendService: BackendService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
-
-    this.vote= {name:"Offline", lifetime:"1650250688", questions:[]}; //only for init
-
     this.params = new Proxy(new URLSearchParams(window.location.search), {
       get: (searchParams, prop:string) => searchParams.get(prop) });
-
 
       if(this.params.token == undefined || this.params.pollID == undefined) {
         this.errorMessage = "Invalid URL";
         this.loaded=true;
       }
 
-
     this.backendService.loadPollByID(this.params.token, this.params.pollID)
-      .pipe(catchError(val => of(`I caught: ${val}`)))
-      .subscribe((poll:Poll) =>{
-        this.vote = poll;
-        this.loaded = true;
-      }
-    );
+      .subscribe({
+        next: (response:Poll) => {
+          this.vote = response;
+          this.loaded = true;
+        },
+        error: (error) => {
+          switch(error.status) {
+            default: this.errorMessage = "Special Error: " + error.status; break;
+            case 500: this.errorMessage = "Internal Server Error (500)";break;
+            case 504: this.errorMessage = "Gateway Timout (504)"; break;
+            case 404: this.errorMessage = "Poll Not Found (404)"; break;
+            case 403: this.errorMessage = "Invalid Token (403)"; break;
+          }
+          this.loaded = true;
+        }
+      });
 
-   this.loadTestQuestions(); //Platzhalter zum testen bis Backendanbindung funktioniert
+   //this.loadTestQuestions(); //Platzhalter zum testen bis Backendanbindung funktioniert
 
     this.surveyForm = new FormGroup({});
     this.surveyForm.addControl("init", new FormControl(null,Validators.required)); //setzt temporäre Control um Fehler NG0100 zu vermeiden
@@ -62,11 +66,7 @@ export class SurveyComponent implements OnInit, AfterViewInit{
   }
 
   openDialog():void {
-      const dialogRef = this.dialog.open(this.callAPIDialog);
-
-      dialogRef.afterClosed()
-     // .subscribe(result => {console.log(`Dialog result: ${result}`); }); //debug
-
+    this.dialog.open(this.callAPIDialog);
   }
 
   //Debug Methods
