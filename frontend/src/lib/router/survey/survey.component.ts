@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Poll } from 'src/lib/data-access/models/Poll';
 import { BackendService } from 'src/lib/data-access/service/backend.service';
@@ -9,63 +9,81 @@ import { BackendService } from 'src/lib/data-access/service/backend.service';
   templateUrl: './survey.component.html',
   styleUrls: ['./survey.component.css']
 })
-export class SurveyComponent implements OnInit, AfterViewInit{
-  vote:Poll;
+export class SurveyComponent implements OnInit{
+  poll:Poll;
   surveyForm: FormGroup;
   params: any;
   submited:boolean = false;
+  loaded:boolean = false;
+
+  errorMessage:string = undefined;
 
   @ViewChild('callAPIDialog') callAPIDialog: TemplateRef<any>;
-
 
   constructor(private backendService: BackendService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
-
-    this.vote= {name:"Offline", lifetime:"1650250688", questions:[]}; //only for init
-
-     this.params = new Proxy(new URLSearchParams(window.location.search), {
+    this.params = new Proxy(new URLSearchParams(window.location.search), {
       get: (searchParams, prop:string) => searchParams.get(prop) });
 
-
-   this.backendService.loadPollByID(this.params.token, this.params.pollID).subscribe((poll:Poll) => this.vote = poll);
-
-   // this.loadTestQuestions(); //Platzhalter zum testen bis Backendanbindung funktioniert
+      if(this.params.token == undefined || this.params.pollID == undefined) {
+        this.errorMessage = "Invalid URL";
+        this.loaded=true;
+      }
+      else {
+        this.backendService.loadPollByID(this.params.token, this.params.pollID)
+          .subscribe({
+            next: (response: Poll) => {
+              this.poll = response;
+              this.loaded = true;
+            },
+            error: (error) => {
+              switch (error.status) {
+                default: this.createErrorMessage(error); break;
+                case 404: this.errorMessage = "Poll Not Found (404)"; break;
+                case 403: this.errorMessage = "Invalid Token (403)"; break;
+              }
+              this.loaded = true;
+            },
+          });
+      }
+   //this.loadTestQuestions(); //Platzhalter zum testen bis Backendanbindung funktioniert
 
     this.surveyForm = new FormGroup({});
-    this.surveyForm.addControl("init", new FormControl(null,Validators.required)); //setzt temporäre Control um Fehler NG0100 zu vermeiden
   }
 
-  ngAfterViewInit(): void {
-    this.surveyForm.removeControl("init"); //löscht nachdem die ChildComponents intitialisiert wurden,
+  submitSurvey():void {
+    this.backendService.submitSurvey(this.poll, this.params.token, this.params.pollID).subscribe({
+      next: (response) => console.log(response),
+      error: (error) => this.createErrorMessage(error),
+      complete: () => this.submited = true
+    });
   }
 
-  submitSurvey():void { //muss noch den token aus der url ziehen
-    this.submited = true;
-    this.backendService.submitSurvey(this.vote, this.params.token, this.params.pollID).subscribe();
+  createErrorMessage(error:any):void {
+    this.errorMessage = error.statusText  + " (" + error.status + ")";
   }
 
   openDialog():void {
-      const dialogRef = this.dialog.open(this.callAPIDialog);
-
-      dialogRef.afterClosed()
-     // .subscribe(result => {console.log(`Dialog result: ${result}`); }); //debug
-
+    this.dialog.open(this.callAPIDialog);
   }
 
   //Debug Methods
 
   loadTestQuestions():void {
-    this.vote= {name:"Testumfrage", lifetime:"1650250688", questions:[]};
-    this.vote.questions.push({title:"FrageText1", id:1, type:"yesNoAnswer"});
-    this.vote.questions.push({title:"FrageText2", id:2, type:"fixedAnswer", fixedAnswers:["AntwortText1", "AntwortText2","AntwortText3"]});
-    this.vote.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:""});
+    this.poll= {name:"Testumfrage", lifetime:"1650250688", questions:[]};
+    this.poll.questions.push({title:"FrageText1", id:1, type:"yesNoAnswer"});
+    this.poll.questions.push({title:"FrageText2", id:2, type:"fixedAnswer", fixedAnswers:["AntwortText1", "AntwortText2","AntwortText3"]});
+    this.poll.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:"", description:"Testbeschreibung für Testfrage 3"});
   }
 
 
   debug() {
-    console.log(JSON.stringify(this.vote))
+    console.log(JSON.stringify(this.poll))
     console.log(this.params.token)
+    //this.submitSurvey()
+    this.errorMessage=undefined;
+    this.loaded=true;
   }
 
 }

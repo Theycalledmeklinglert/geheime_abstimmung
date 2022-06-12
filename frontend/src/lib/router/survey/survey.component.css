@@ -2,12 +2,14 @@
   text-align: center;
   align-items: center;
   position: relative;
+
 }
 
 #head{
   background: #ff8200;
-  font-size: 15px;
-  width: 20vw;
+  width: fit-content;
+  padding-left: 10px;
+  padding-right: 10px;
   display: block;
   margin-top: 10vh;
   margin-left: auto;
@@ -19,9 +21,8 @@
 
 #body{
 
-    font-size: 40px;
     display: block;
-    width: 150vh;
+    width: 80%;
     display: block;
     background-color: #eee;
     margin-left: auto;
@@ -45,22 +46,50 @@
   margin-top: 1vh;
 }
 
-#afterSubmit {
+.altView {
+  padding: 10px;
   background-color: #eee;
   display: block;
-  align-items: center;
-  top:40%;
-  height: 10%;
-  margin-left: auto;
-  margin-right: auto;
+
+  height: auto;
   border: 3px solid #ff8200;
   border-radius: 20px 20px 20px 20px;
-  width: 20%;
 
-}
 
-#afterSubmit h1 {
+  text-align: center;
   font-size: 30px;
-  font-weight: 400;
+  font-weight: 500;
+  line-height: 30px;
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 
+.altView p {
+  font-weight: lighter;
+  font-size: small;
+}
+
+
+.altView #submittedIcon {
+  margin-top: 6%;
+  margin-bottom: 1%;
+}
+
+#spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+
+#debug {
+  position: fixed;
+  bottom: 1%;
+  right: 1%;
+}

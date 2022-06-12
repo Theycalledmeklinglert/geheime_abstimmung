@@ -452,7 +452,7 @@ public class Service
 
 		if(!tokens.contains(token))
 		{
-			return Response.status(404).build();
+			return Response.status(403).build();
 		}
 
 		// TODO: Decrypt JSON
@@ -487,7 +487,7 @@ public class Service
 		}
 		else if(!this.INSTANCE.createAnswer(answer, pollID, token))
 		{
-			throw new WebApplicationException(Response.status(403).build());
+			throw new WebApplicationException(Response.status(404).build());
 		}
 
 		// TODO: encrypt JSON

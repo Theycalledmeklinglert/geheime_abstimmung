@@ -1,13 +1,15 @@
-<div *ngIf="!this.submited">
+<mat-spinner id="spinner" *ngIf="!this.loaded"></mat-spinner>
+
+<div *ngIf="this.errorMessage == undefined && !this.submited && this.loaded">
 <div id="head">
-  <h1>{{this.vote.name}}</h1>
+  <h1>{{this.poll.name}}</h1>
 </div>
 
 <div id="body">
 
   <form [formGroup]="surveyForm" >
     <ul>
-      <li *ngFor="let question of this.vote.questions">
+      <li *ngFor="let question of this.poll.questions">
         <surveyQuestion
           [question]="question"
           [parentForm]="surveyForm"
@@ -32,11 +34,17 @@
   </mat-dialog-actions>
 </ng-template>
 
-
-<button mat-flat-button color="primary" (click)="debug()">Debug</button>
-
 </div>
 
-<div id="afterSubmit" *ngIf="this.submited">
-  <h1>Survey submitted</h1>
+<div class="altView" *ngIf="this.submited">
+  Survey submitted<br>
+  <mat-icon color="primary" id="submittedIcon">check_circle_outline</mat-icon>
+  <p>(You can close the Tab)</p>
 </div>
+
+<div class="altView" *ngIf="this.errorMessage != undefined">
+  Error <br>
+  <p>{{this.errorMessage}}</p>
+</div>
+
+<button mat-flat-button color="primary" id="debug" (click)="debug()">Debug</button>
