@@ -125,10 +125,9 @@ public class Service
 		}
 
 		Document user = optUser.get();
-		// TODO: Decrypt JSON
 
 		// "accessible by" muss Array sein
-		if(!json.contains("name")  || !json.contains("questions") || !json.contains("emails")) // || !json.contains("accessible by")
+		if(!json.contains("name")  || !json.contains("questions") || !json.contains("emails") || !json.contains("publicKey")) // || !json.contains("accessible by")
 		{
 			Document error = new Document("Session ID", user.getString("Session ID"));
 			return Response.status(422).entity(error.toJson()).build();
@@ -161,8 +160,6 @@ public class Service
 		// Distributor = sendEmails(emailsAndLinks) // Oder so
 		// TODO: Call corresponding method of the the distributor class to send the links per Email (has to take emailsAndTokens and answerLinks
 
-
-		// TODO: encrypt JSON
 		return Response.ok(new Document("Session ID", user.getString("Session ID")).toJson()).build();
 	}
 
@@ -205,8 +202,6 @@ public class Service
 	public Response createUser(final String json, @DefaultValue("") @QueryParam("sessionID") final String sessID)
 	{
 
-		// TODO: Decrypt JSON
-
 		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
 		Document newUser = Document.parse(json);
 
@@ -237,8 +232,6 @@ public class Service
 		}
 
 		newUser.append("Session ID", user.getString("Session ID")).append("_id", newUser.get("_id").toString());
-
-		// TODO: encrypt Response?
 
 		return Response.ok(newUser).build();
 	}
@@ -465,23 +458,13 @@ public class Service
 	@Consumes( MediaType.APPLICATION_JSON )
 	public Response postAnswer(final String json,@DefaultValue("") @PathParam("pollID") final String pollID ,@DefaultValue("") @QueryParam("token") final String token)
 	{
-
 		// TODO: Decrypt JSON
 
-		/*
-		if(!json.contains("poll_id") || !json.contains("token"))
-		{
-			throw new WebApplicationException(Response.status(422).build());
-		}
-		*/
-
-
 		Document answer = Document.parse(json);
-		//String pollID = answer.getString("poll_id");
 
 		Optional<Document> poll = INSTANCE.getPollAsOptDocumentByID(pollID);
 
-		if(!poll.isPresent())
+		if(!poll.isPresent() || !json.contains("nonce") || !json.contains("ephemPubKey") || !json.contains("message"))
 		{
 			throw new WebApplicationException(Response.status(404).build());
 		}

@@ -323,12 +323,14 @@ public class DBInstance {
         Document poll = optPoll.get();
         ArrayList<String> tokens = (ArrayList<String>) poll.get("tokens");
 
+        answer.append("token", token); // For test purposes
+
         if (tokens.contains(token)) {
             Bson filter = Filters.eq("_id", new ObjectId(pollID));
             Bson delete = Updates.pull("tokens", token);
             pollCol.updateOne(filter, delete);
 
-            filter = Filters.eq("token", token);
+            filter = Filters.eq("poll_id", pollID);
             BasicDBObject listItem = new BasicDBObject("answers", answer);
             Bson pushToQuestList = new BasicDBObject("$push", listItem);
 
