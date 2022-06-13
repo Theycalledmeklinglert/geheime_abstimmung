@@ -37,6 +37,6 @@ export class EncryptionService {
       const ephemKeyPair = box.keyPair();
       const publicKey = decodeBase64(publicKeyString);
       const encrypted = box(messageUint8, nonce, publicKey, ephemKeyPair.secretKey);
-      return {nonce: encodeBase64(nonce), ephemPubKey: encodeBase64(ephemKeyPair.publicKey), message: encodeBase64(encrypted), publicKey: publicKeyString};
+      return {nonce: encodeBase64(nonce), ephemPubKey: encodeBase64(ephemKeyPair.publicKey), message: encodeBase64(encrypted)};
     }
 }

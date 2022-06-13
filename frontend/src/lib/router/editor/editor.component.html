@@ -15,14 +15,14 @@
     <div id="surveyNameInput">
       <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 40, 'max-width.ch': 60}">
         <mat-label>Poll Name</mat-label>
-        <input matInput #inputText class="inputfield" type="text" [(ngModel)]="this.vote.name" required>
+        <input matInput #inputText class="inputfield" type="text" [(ngModel)]="this.poll.name" required>
       </mat-form-field> <br>
     </div>
     <br/>
 
     <div id="expirationDateInput">
       <mat-label>Expiration</mat-label><br/>
-      <input  class="inputfield" type="datetime-local" id="timeinputfield" [(ngModel)]="this.vote.lifetime" required><br/>
+      <input class="inputfield" type="datetime-local" id="timeinputfield" [(ngModel)]="this.poll.lifetime" required><br/>
     </div>
 
   </section>
@@ -30,18 +30,18 @@
     <section id="questionList">
       <h2>Questions:</h2>
       <ul>
-        <li *ngFor="let question of vote.questions">
+        <li *ngFor="let question of poll.questions">
           <div class="questiontitle" (click)="this.next = false; showQuestion(question)">
             {{question.title}}
 
-            <button id="delete" mat-icon-button (click)="deleteQuestion(question)">
+            <button id="deleteQuestion" mat-icon-button (click)="deleteQuestion(question)">
               <mat-icon>delete</mat-icon>
             </button>
 
           </div>
         </li>
       </ul>
-      <button mat-icon-button (click)="addEmptyQuestion()">
+      <button mat-icon-button id="addQuestion" (click)="addEmptyQuestion()">
         <mat-icon>add</mat-icon>
       </button>
     </section>
@@ -50,7 +50,7 @@
   <div *ngIf="!this.next" class="questionwindow">
 
     <ul class="questioneditor">
-      <li *ngFor="let question of vote.questions">
+      <li *ngFor="let question of poll.questions">
         <question *ngIf="question.visible" [question]="question"></question>
       </li>
     </ul>
@@ -66,9 +66,9 @@
       <input matInput type="email" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempEmail">
       <mat-label id="inputfield">Enter here...</mat-label>
     </mat-form-field>
-    <li *ngFor="let email of this.vote.emails" class="emailstyle">
+    <li *ngFor="let email of this.poll.emails" class="emailstyle">
       {{email}}
-      <button id="delete" mat-icon-button (click)="deleteEmail(email)">
+      <button id="deleteEmail" mat-icon-button (click)="deleteEmail(email)">
         <mat-icon>delete</mat-icon>
       </button>
     </li>
@@ -91,7 +91,7 @@
 </div>
 
 <div *ngIf="!this.next" class="returnToMainButton">
-  <img src="../../../assets/returnToMain_btn.png" width="125%" height="125%" routerLink="/main" (click)="this.deleteEverything()"/>
+  <input type="image" src="../../../assets/returnToMain_btn.png" routerLink="/main" width="125%" height="125%" (click)="this.deleteEverything()"/>
 </div>
 
 <div class="helpwindow" *ngIf="notAllFilled">

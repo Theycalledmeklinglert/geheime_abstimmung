@@ -7,6 +7,7 @@ import {ChartComponent, ApexNonAxisChartSeries, ApexResponsive, ApexChart, ApexO
 import {EncryptionService} from "../../data-access/service/encryption.service";
 import {EncryptedData} from "../../data-access/models/encryptedData";
 import {Poll} from "../../data-access/models/Poll";
+import {Answer} from "../../data-access/models/answer";
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -25,7 +26,7 @@ export type ChartOptions = {
 export class PollResultComponent implements OnInit{
   @ViewChild("chart") chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
-  private answers: string[];
+  private answers: Answer[];
   private values: number[];
   validated: boolean;
   tempPrivKey: string;
@@ -57,14 +58,15 @@ export class PollResultComponent implements OnInit{
     if(this.enterCounter == 0) this.poll = undefined;
     this.validated = this.tempPrivKey == 'Swordfish';
     if(this.validated) {
-      this.answers = this.poll.questions[this.questionCount].fixedAnswers;
+      this.answers = this.poll.questions[this.questionCount].encryptedAnswers;
+      let decryptedAnswers = this.getDecryptedAnswers();
       this.values = [69.420, 10.13, 20.87];
       this.chartOptions = {
         series: this.values,
         chart: {
           type: "donut"
         },
-        labels: this.answers,
+        labels: decryptedAnswers,
         responsive: [
           {
             breakpoint: 480,
@@ -87,6 +89,9 @@ export class PollResultComponent implements OnInit{
   }
 
 
+  private getDecryptedAnswers() {
+    return this.answers.map(a => this.cryptService.decrypt(this.tempPrivKey, a.answer));
+  }
 
   getIDofClickedPoll():string{
     return localStorage.getItem("clickedPoll");

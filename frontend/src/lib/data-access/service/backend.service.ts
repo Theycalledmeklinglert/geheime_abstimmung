@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Poll } from '../models/Poll';
 import { EncryptionService } from './encryption.service';
+import {Answer} from "../models/answer";
+import {EncryptedData} from "../models/encryptedData";
 
 
 @Injectable({
@@ -78,14 +80,11 @@ export class BackendService {
     return this.httpClient.get<Poll>(this.url + '/api/polls/answers/' + id + '?token=' + token);
   }
 
-  submitSurvey(answeredPoll: Poll, token: string, id:string){
-    console.log(JSON.stringify(answeredPoll))
+  submitSurvey(answers: EncryptedData, token: string, id:string){
+    console.log(JSON.stringify(answers));
     const testUrl = this.url + '/api/polls/answers/' + id + '?token=' + token;
-    console.log(testUrl)
-
-    //let encryptedData = this.encryptionService.encrypt(localStorage.getItem("publicKey"), answeredPoll)
-
-    return this.httpClient.post<Poll>(testUrl, answeredPoll)
+    console.log(testUrl);
+    return this.httpClient.post<void>(testUrl, answers);
   }
 
 

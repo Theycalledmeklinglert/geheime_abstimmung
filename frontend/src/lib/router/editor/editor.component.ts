@@ -14,7 +14,7 @@ import {AuthenticationService} from "../../data-access/service/authentication.se
 export class EditorComponent implements OnInit{
 
   constructor(private cryptService: EncryptionService, private backendService: BackendService, private authService: AuthenticationService){}
-  vote: Poll;
+  poll: Poll;
 
   listPos?: number;
   next: boolean = false;
@@ -24,32 +24,37 @@ export class EditorComponent implements OnInit{
 
 
   addEmptyQuestion() {
-    this.vote.questions.forEach(q => q.visible = false);
+    this.poll.questions.forEach(q => q.visible = false);
     let question: Question = {id: 1, title: "",type:"", visible: true};
-    this.listPos = this.vote.questions.push(question) - 1;
-    question.id = (this.listPos == 0) ? 1 : this.vote.questions[this.listPos - 1].id + 1;
+    this.listPos = this.poll.questions.push(question) - 1;
+    question.id = (this.listPos == 0) ? 1 : this.poll.questions[this.listPos - 1].id + 1;
 
   }
 
   deleteQuestion(question: Question){
-    this.vote.questions = this.vote.questions.filter((q) => q != question);
+    this.poll.questions = this.poll.questions.filter((q) => q != question);
   }
 
   showQuestion(question: Question) {
-    this.vote.questions.forEach(q => q.visible = false);
-    this.vote.questions.forEach(q => (q == question) ? q.visible = true : false);
+    this.poll.questions.forEach(q => q.visible = false);
+    this.poll.questions.forEach(q => (q == question) ? q.visible = true : false);
   }
   addEmail(){
-    if(this.tempEmail == '' || this.tempEmail == undefined || !this.tempEmail.includes('@') || !this.tempEmail.includes('.')) return;
-      this.vote.emails.push(this.tempEmail);
+    if(this.isValidEmail()) return;
+      this.poll.emails.push(this.tempEmail);
       this.tempEmail='';
   }
+
+  private isValidEmail(): boolean {
+    return this.tempEmail == '' || this.tempEmail == undefined || !this.tempEmail.includes('@') || !this.tempEmail.includes('.');
+  }
+
   deleteEmail(email: string){
-    this.vote.emails = this.vote.emails.filter((e) => e != email);
+    this.poll.emails = this.poll.emails.filter((e) => e != email);
   }
 
   deleteEverything(){
-    this.vote = {
+    this.poll = {
         name: "",
         lifetime: "",
         questions: [{id: 1, title: "New Question",type:"", visible: true}],
@@ -69,14 +74,10 @@ export class EditorComponent implements OnInit{
       this.submitted =true;
       const keyPair = this.cryptService.generateKeyPair();
       const priv = keyPair.privateKey;
-      const pub = keyPair.publicKey;
-      const encrypted = this.cryptService.encrypt(pub, this.vote);
+      this.poll.publicKey = keyPair.publicKey;
       let textFile =
         "Poll:\n\n"+
-        JSON.stringify(this.vote)+
-
-        "\nEncrypted Message:"
-        +JSON.stringify(encrypted)
+        JSON.stringify(this.poll)+
         +"\n \n This is the generated private key for this survey. Please save it somewhere inaccessible for others:\n \n"
         // pub+'\n'+
         +priv
@@ -87,14 +88,14 @@ export class EditorComponent implements OnInit{
       }
       textFile = window.URL.createObjectURL(data);
       window.open(textFile);
-      this.backendService.createPoll(this.vote).subscribe(r => this.authService.updateSessionid(r["Session ID"]));
+      this.backendService.createPoll(this.poll).subscribe(response => this.authService.updateSessionid(response["Session ID"]));
     }
     pressOkayButton(){
       this.notAllFilled = false;
     }
 
   ngOnInit(): void {
-    this.vote = {
+    this.poll = {
         name: "",
         lifetime: "",
         questions: [{id: 1, title: "",type:"", visible: true}],
@@ -104,13 +105,13 @@ export class EditorComponent implements OnInit{
 
     isCompleteVote(): boolean{
       let result: boolean = true;
-      if(this.vote.name == "" || this.vote.lifetime == ""){
+      if(this.poll.name == "" || this.poll.lifetime == ""){
         result = false;
       }
-      for(let q of this.vote.questions){
+      for(let q of this.poll.questions){
         if(q.type == "" || q.title == "") result = false;
       }
-      if (this.vote.emails.length == 0) result = false;
+      if (this.poll.emails.length == 0) result = false;
       return result;
 
     }

@@ -19,7 +19,7 @@ public class Cryptography {
     }
 
 
-    private static EncryptedData encrypt(String pubKeyString, String msg) {
+    public static EncryptedData encrypt(String pubKeyString, String msg) {
         final byte[] pubKey = Base64.getDecoder().decode(pubKeyString);
         final Box.KeyPair ephemKeys = Box.keyPair();
         final byte[] msgArr = msg.getBytes(StandardCharsets.UTF_8);
@@ -34,7 +34,8 @@ public class Cryptography {
         return new EncryptedData(nonce64, ephemPubKey64, encrypted64);
     }
 
-    private static String decrypt(byte[]privKey, EncryptedData data){
+    public static String decrypt(String privKeyString, EncryptedData data){
+        final byte[] privKey = Base64.getDecoder().decode(privKeyString);
         final byte[] nonce = Base64.getDecoder().decode(data.getNonce());
         final byte[] ephemPubKey = Base64.getDecoder().decode(data.getEphemPubKey());
         final byte[] msg = Base64.getDecoder().decode(data.getMessage());
@@ -78,7 +79,14 @@ public class Cryptography {
     }
 
     public static void main(String[] args) {
-
-        System.out.println(generateKeyPair());
+        final EncryptedData data = new EncryptedData("B3/TONhH8u0eiTpO1NA0CTA43/dEMTaE",
+                "5LUyNZkgEviAO6qx3tFkrxdbt29sjbRlXxm/ZosZG3s=",
+                "5G8ZJZ+E/mOmJ1YZFlq72cNOH6btw02Yn6JTAx/shmh+FtKc+4FAwWIHP9bi0ueyC4cGa" +
+                        "+pfCk/1WdAJNJCsrDb5ao5bsppXvu4wrMu1dMuo5CrLITtI03FtLWeNjhu9tui1A63XwgJ01Nn" +
+                        "52zA7B4llDMu5eSwmQIBQAjxzlKwUNniDwGVwepaiuk9M0QlRnfCGdcMlYWOHtzJaK+NJ2Oe/BX" +
+                        "7+t9SAgypcAt/FKE1og19PifKFdyCjIkq785g8bX89Qwn8zrAM/H6W5iw/9ciwrKl1WG7t94ccrZ" +
+                        "GKYXJNPYWJHZW44ZmzVideboDUaTOPtA==");
+        final String decrypted = decrypt("uS/W2ViCSGguZhHOuKvp/GACKxoieeNbXS2OjaFY4Ho=", data);
+        System.out.println(decrypted);
     }
 }

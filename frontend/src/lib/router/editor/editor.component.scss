@@ -61,18 +61,6 @@
 
 }
 
- .newQuestionButton{
-  text-align: center;
-  position: absolute;
-  right: 5%;
-  width: 7%;
-  height: 7%;
-  bottom: 15%;
-
-  align-items:flex-end;
-
-}
-
 .addButton {
   height: 0px;
   align-items: center;
@@ -128,8 +116,9 @@
   right: 5%;
   width: 7%;
   height: 7%;
-  bottom: 25%;
+  bottom: 15%;
   cursor: pointer;
+  align-items: flex-end;
 }
 .inputfield{
   font-size: 20px;

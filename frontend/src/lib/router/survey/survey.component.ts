@@ -3,6 +3,9 @@ import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Poll } from 'src/lib/data-access/models/Poll';
 import { BackendService } from 'src/lib/data-access/service/backend.service';
+import {EncryptionService} from "../../data-access/service/encryption.service";
+import {EncryptedData} from "../../data-access/models/encryptedData";
+import {Answer} from "../../data-access/models/answer";
 
 @Component({
   selector: 'app-survey',
@@ -20,7 +23,7 @@ export class SurveyComponent implements OnInit{
 
   @ViewChild('callAPIDialog') callAPIDialog: TemplateRef<any>;
 
-  constructor(private backendService: BackendService, public dialog: MatDialog) {}
+  constructor(private backendService: BackendService, public dialog: MatDialog, private cryptService: EncryptionService) {}
 
   ngOnInit(): void {
     this.params = new Proxy(new URLSearchParams(window.location.search), {
@@ -48,12 +51,13 @@ export class SurveyComponent implements OnInit{
           });
       }
    //this.loadTestQuestions(); //Platzhalter zum testen bis Backendanbindung funktioniert
-
     this.surveyForm = new FormGroup({});
   }
 
   submitSurvey():void {
-    this.backendService.submitSurvey(this.poll, this.params.token, this.params.pollID).subscribe({
+    let answers: Answer[] = this.collectAnswers();
+    let encrypted: EncryptedData = this.cryptService.encrypt(this.poll.publicKey, answers);
+    this.backendService.submitSurvey(encrypted, this.params.token, this.params.pollID).subscribe({
       next: (response) => console.log(response),
       error: (error) => this.createErrorMessage(error),
       complete: () => this.submited = true
@@ -68,19 +72,31 @@ export class SurveyComponent implements OnInit{
     this.dialog.open(this.callAPIDialog);
   }
 
+  collectAnswers(){
+    let result: Answer[] = [];
+    this.poll.questions.forEach(q => {
+      if(q.type == 'yesNoAnswer') result.push( {id: q.id, answer: q.yesNo});
+      else if (q.type == 'fixedAnswer') result.push({id: q.id, answer: q.fixedAnswers});
+      else result.push( {id: q.id, answer: q.individualAnswer});
+    })
+    return result;
+  }
+
   //Debug Methods
 
   loadTestQuestions():void {
-    this.poll= {name:"Testumfrage", lifetime:"1650250688", questions:[]};
+    this.poll= {name:"Testumfrage", lifetime:"1650250688", questions:[], publicKey: "12345"};
     this.poll.questions.push({title:"FrageText1", id:1, type:"yesNoAnswer"});
     this.poll.questions.push({title:"FrageText2", id:2, type:"fixedAnswer", fixedAnswers:["AntwortText1", "AntwortText2","AntwortText3"]});
-    this.poll.questions.push({title:"FrageText3", id:3, type:"individualAnswer", individualAnswer:"", description:"Testbeschreibung für Testfrage 3"});
+    this.poll.questions.push({title:"FrageText3", id:3, type:"individualAnswer", description:"Testbeschreibung für Testfrage 3"});
   }
 
 
   debug() {
     console.log(JSON.stringify(this.poll))
     console.log(this.params.token)
+    console.log(this.collectAnswers());
+    console.log(this.cryptService.encrypt(this.poll.publicKey, this.collectAnswers()));
     //this.submitSurvey()
     this.errorMessage=undefined;
     this.loaded=true;
