@@ -195,6 +195,36 @@ public class Service
 		return Response.ok(newSessID).build();
 	}
 
+
+	@GET
+	@Path("/users")
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response getAllUsers(final String json, @DefaultValue("") @QueryParam("sessionID") final String sessID)
+	{
+
+		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
+
+		if(!optUser.isPresent())
+		{
+			throw new WebApplicationException(Response.status(401).build());  	// Session ID doesn't exist
+		}
+
+		Document user = optUser.get();
+
+		if(!user.getString("role").equals("admin"))
+		{
+			Document error = new Document("Session ID", user.getString("Session ID"));
+			return Response.status(403).entity(error.toJson()).build();
+		}
+
+		ArrayList<Document> users = INSTANCE.getAllUsers();
+		user.remove(user);
+
+		return Response.ok(users).build();
+	}
+
+
+
 	@POST	// TODO: Email mit Zugangsdaten (UserName, PW, Email an Email Adresse wenn ein neuer User erstellt wird
 	@Path("/users")
 	@Consumes( MediaType.APPLICATION_JSON )
@@ -426,7 +456,7 @@ public class Service
 
 		return Response.ok( answers ).build( );
 	}
-
+/*
 	@GET
 	@Path("/answers/{pollID}")
 	@Produces( MediaType.APPLICATION_JSON )
@@ -451,6 +481,8 @@ public class Service
 		// TODO: Decrypt JSON
 		return Response.ok(poll.toJson()).build();
 	}
+
+ */
 
 
 	@POST

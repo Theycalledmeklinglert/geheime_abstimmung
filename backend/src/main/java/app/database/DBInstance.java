@@ -127,16 +127,15 @@ public class DBInstance {
         return optDoc;
     }
 
-    // This method simply returns all registered usernames
-    public ArrayList<String> getAllUserNames() {
-        ArrayList<String> users = new ArrayList<>();
+    // returns all registered users
+    public ArrayList<Document> getAllUsers() {
+        ArrayList<Document> users = new ArrayList<>();
         MongoCursor<Document> cursor = userCol.find().cursor();
 
         while (cursor.hasNext()) {
-            Document userDoc = (Document) cursor.next();
-            users.add(userDoc.getString("name"));
+            users.add((Document) cursor.next());
         }
-        return userNames;
+        return users;
     }
 
     public Optional<ArrayList<Document>> getAllPollsOfUser(final String userName) {
