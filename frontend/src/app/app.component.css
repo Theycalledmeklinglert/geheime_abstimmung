@@ -28,19 +28,20 @@
   font-size: 1.3ch;
 }
 
-.toolbar .username {
-  font-size: 0.9ch;
+.toolbar #userfield {
   position: fixed;
   right: 1%;
+  width: max-content;
+  height: 30px;
 }
-.toolbar .username .usericon {
-  position: fixed;
-  right: 10%;
-  top: 2.5%;
+#icon {
+  position: relative;
 }
-.toolbar .username .usericon h1{
-  position: fixed;
-  display: flex;
-  right: 1%;
-  top: 2%;
+
+#userName{
+  margin-top: 1%;
+  margin-right: 7px;
+  position: relative;
+  font-size: large;
+  float:left;
 }

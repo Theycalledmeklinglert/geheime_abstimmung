@@ -29,11 +29,7 @@ export class AppComponent {
   }
 
   isLoggedIn():void{
-    if(localStorage.getItem("userName") != null){
-    this.showUsericon = true;
-    }else if(localStorage.getItem("userName") == null){
-      this.showUsericon = false;
-    }
+    this.showUsericon = localStorage.getItem("userName") != null
   }
 
 

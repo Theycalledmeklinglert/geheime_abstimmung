@@ -8,17 +8,16 @@
 <div class="toolbar" role="banner">
 
   <div class="text" >
-    <input type="image" src="../assets/FHWS_Logo_Vote.png" width="15%" height="15%">
+    <input type="image" src="../assets/FHWS_Logo_Vote.png" width="150px" height="15%">
   </div>
 
 
-  <div class="username">
+  <div id="userfield" >
     {{isLoggedIn()}}
     <div class="usericon" *ngIf="showUsericon">
-      <mat-icon>person</mat-icon>
-      <h1>{{getUsername()}}</h1>
+      <mat-icon id="icon">person</mat-icon>
+      <div id="userName">{{getUsername()}}</div>
     </div>
-
 
   </div>
 
