@@ -1,0 +1,76 @@
+
+.userContainer{
+  bottom: 10px;
+  /*height: 1%;
+
+   */
+}
+
+.userContainer .usercontainerHeader #name{
+  top: 10%;
+  position: absolute;
+  left: 15%;
+}
+
+.userContainer .usercontainerHeader #sysadmin{
+  top: 10%;
+  position: absolute;
+  left: 50%;
+}
+
+.userContainer #body{
+  position: relative;
+  overflow-x: hidden;
+  height: 35%;
+  background-color: transparent;
+  top: 5vh;
+  color: transparent;
+}
+
+
+#body ul{
+  align-items: center;
+  position: relative;
+  background-color: transparent;
+  height: 25vh;
+}
+
+
+#body ul li {
+  overflow: auto;
+  background-color: transparent;
+  display: inline-block;
+  width: 100%;
+
+}
+
+
+
+.sureDeleteUser{
+  text-align: center;
+  position: fixed;
+  right: 40%;
+  width: 20%;
+  top: 40%;
+  font-size: 15px;
+  background-color: rgba(239, 238, 238, 1);
+  height: 20%;
+  color: black;
+  border: 3px solid #ff8200;
+  border-radius: 15px 15px 15px 15px;
+}
+
+.sureDeleteUser .cancel_btn{
+  position: absolute;
+  bottom: 5%;
+  left: 10%;
+  cursor: pointer;
+}
+
+.sureDeleteUser .delete_btn{
+  position: absolute;
+  bottom: 5%;
+  right: 10%;
+  cursor: pointer;
+}
+

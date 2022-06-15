@@ -25,6 +25,12 @@ export class BackendService {
     return this.httpClient.get<JSON>(this.url + '/api/polls?sessionID='+ this.getSessionID());
   }
 
+  loadAllUseryBySysadmin(): Observable<JSON> {
+
+    return this.httpClient.get<JSON>(this.url + '/api/polls/users?sessionID='+ this.getSessionID());
+  }
+
+
   loadPollByUser(pollId: number): Observable<Poll> {
 
     return this.httpClient.get<Poll>( this.url + '/api/polls/ '+ pollId +'?sessionID='+ this.getSessionID() );

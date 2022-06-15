@@ -1,4 +1,4 @@
-import { Component} from "@angular/core";
+import {Component, ViewEncapsulation} from "@angular/core";
 import {LoginComponent} from "../login/login.component";
 import {BackendService} from "../../data-access/service/backend.service";
 import {AuthenticationService} from "../../data-access/service/authentication.service";
@@ -10,6 +10,7 @@ import {Router} from "@angular/router";
   selector: 'mainmenu',
   templateUrl: './mainmenu.component.html',
   styleUrls: ['./mainmenu.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 
 export class MainmenuComponent{

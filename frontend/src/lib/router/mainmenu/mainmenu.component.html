@@ -72,13 +72,14 @@
   </div>
 
   <div class="txt_field">
+    <div class="info_txt"  matTooltip="Info about the action"> <mat-icon id="theicon2" style="transform: rotate(180deg)">error_outline</mat-icon></div>
     <input type="text" required
            [value]="this.newadminpassword"
            (change)="setpasswordofnewAdmin($event)"
     >
     <span></span>
     <label>Password</label>
-    <div class="invalidPasswordLength" *ngIf="invalidPasswordlengthfornewUser"> Invalid Password length min. 8 Characters</div>
+    <div class="invalidPasswordLength" *ngIf="invalidPasswordlengthfornewUser"> The Password field must be at least 8 Characters.</div>
   </div>
 
 
@@ -113,37 +114,11 @@
 
 <div class="deleteAdmin" *ngIf="deleteAdmin">
   <div class="headline">Delete Surveyleader</div>
-
-  <div class="txt_field">
-    <input type="text" required
-           [value]="this.deleteadminadress"
-           (change)="setUsernameoftoDeleteAdmin($event)"
-    >
-    <span></span>
-    <label>Username</label>
-  </div>
-
-  <div class="delete" >
-    <button mat-flat-button color="primary" (click)="DeleteAdmin()">Delete </button>
-  </div>
+ <userContainer></userContainer>
   <div class="cancel">
     <button mat-flat-button color="primary" (click)="hideDeleteAdmin()">Cancel </button>
   </div>
 </div>
-
-<div class="sureDelete" *ngIf="sureDeleteAdmin">
-
-  <h1 mat-dialog-title>Info</h1>
-  <div mat-dialog-content>Are you sure you want to delete admin?</div>
-  <div class="delete_btn"mat-dialog-actions>
-    <button mat-flat-button color="primary" (click)="sendDeleteAdminrequest()">Delete </button>
-  </div>
-  <div  class="cancel_btn" mat-dialog-actions>
-    <button mat-flat-button color="primary" (click)="hidesureDeleteAdmin()">Cancel </button>
-  </div>
-
-</div>
-
 
 
 
@@ -155,13 +130,14 @@
   <div class="headline">Change Password</div>
 
   <div class="txt_field">
+    <div class="info_txt"> <mat-icon id="theicon" style="transform: rotate(180deg)" >error_outline</mat-icon> min. 8 Characters</div>
     <input type="text" required
            [value]="this.changedPassword"
            (change)="setnewPassword($event)"
     >
     <span></span>
     <label>New Password</label>
-    <div class="invalidPasswordLength" *ngIf="invalidPasswordlengthforCurrentUser"> Invalid Password length min. 8 Characters</div>
+    <div class="invalidPasswordLength" *ngIf="invalidPasswordlengthforCurrentUser"> The Password field must be at least 8 Characters.</div>
   </div>
 
   <div class="change" >

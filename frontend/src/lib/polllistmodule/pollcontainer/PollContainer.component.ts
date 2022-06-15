@@ -11,7 +11,7 @@ import {lastValueFrom} from "rxjs";
   templateUrl: './PollContainer.component.html',
   styleUrls: ['./PollContainer.component.css'],
 })
-export class VoteConainterComponent implements OnInit{
+export class PollConainterComponent implements OnInit{
   vlcObject?: PollContainer;
   newListIndex?: number;
   sureDeletePoll: boolean = false;
