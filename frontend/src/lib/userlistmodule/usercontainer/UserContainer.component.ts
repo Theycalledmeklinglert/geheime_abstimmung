@@ -17,6 +17,10 @@ export class UserConainterComponent implements OnInit{
   sureDeleteUsers: boolean = false;
   tempUsers: users;
 
+  //icons
+  sucesssend: boolean = false;
+  failsend: boolean = false;
+
   constructor(private backendService: BackendService, private authService: AuthenticationService) {}
 
 
@@ -49,9 +53,6 @@ export class UserConainterComponent implements OnInit{
     console.log("delete this Poll!");
 
 
-
-
-
     let userData = '{"name" :"'+localStorage.getItem("userName")+ '", "role" :"'+localStorage.getItem("userRole")+'"}';
 
     try {
@@ -59,13 +60,14 @@ export class UserConainterComponent implements OnInit{
         this.authService.updateSessionid(response["Session ID"]);
         console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
         this.sureDeleteUsers = false;
-      //  this.sucesssend = true;
-       // setTimeout(() => { this.sucesssend = false;}, 1300);
+        this.sucesssend = true;
+        setTimeout(() => { this.sucesssend = false;}, 1500);
       }, error => {
         console.log("Error while Send new SessionID: "+error.error["Session ID"]);
         this.authService.updateSessionid(error.error["Session ID"]);
-       // this.failsend = true;
-       // setTimeout(() => { this.failsend = false;}, 1300);
+        this.failsend = true;
+        this.sureDeleteUsers = false;
+        setTimeout(() => { this.failsend = false;}, 1300);
 
       });
     }catch (err){}

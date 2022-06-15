@@ -13,9 +13,10 @@
   border: 3px solid #ea7609;
   border-radius: 15px 15px 15px 15px;
 }
-.loginfield .headline{
+.loginfield .loginheadline{
   margin-top: 5%;
   text-align: center;
+  color: black;
 }
 
  .helpwindow{

@@ -16,8 +16,9 @@
     <li *ngFor="let user of ucobject.users">
       <user [userObject]="user" (deleteUserEvent)="this.deleteUser($event)"></user>
     </li>
-
   </ul>
+  <mat-icon id="sucessdeletedicon" style="color:rgba(0,253,0,0.48)" *ngIf="sucesssend"> cloud_done</mat-icon>
+  <mat-icon id="faildeleteicon" style="color:rgba(255,0,0,0.49)" *ngIf="failsend">warning</mat-icon>
 </div>
 
 
