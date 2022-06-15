@@ -218,7 +218,7 @@ public class Service
 		}
 
 		ArrayList<Document> users = INSTANCE.getAllUsers();
-		Document res = new Document("users", users).append("Session", user.getString("Session ID"));
+		Document res = new Document("users", users).append("Session ID", user.getString("Session ID"));
 
 		return Response.ok(res).build();
 	}
