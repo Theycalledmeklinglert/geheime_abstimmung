@@ -127,16 +127,6 @@ public class DBInstance {
         return optDoc;
     }
 
-    // returns all registered users
-    public ArrayList<Document> getAllUsers() {
-        ArrayList<Document> users = new ArrayList<>();
-        MongoCursor<Document> cursor = userCol.find().cursor();
-
-        while (cursor.hasNext()) {
-            users.add((Document) cursor.next());
-        }
-        return users;
-    }
 
     public Optional<ArrayList<Document>> getAllPollsOfUser(final String userName) {
         MongoCursor<Document> cursor = pollCol.find(or(eq("created by", userName)))
@@ -152,6 +142,18 @@ public class DBInstance {
         }
 
         return Optional.of(polls);
+    }
+
+    // returns all registered users
+    public ArrayList<Document> getAllUsers() {
+        ArrayList<Document> users = new ArrayList<>();
+        Bson projection = Projections.fields(Projections.exclude("_id"), Projections.exclude("pwHash"), Projections.exclude("salt"));
+        MongoCursor<Document> cursor = userCol.find().projection(projection).cursor();
+
+        while (cursor.hasNext()) {
+            users.add((Document) cursor.next());
+        }
+        return users;
     }
 
     public boolean createUser(Document user) {

@@ -199,7 +199,7 @@ public class Service
 	@GET
 	@Path("/users")
 	@Produces( MediaType.APPLICATION_JSON )
-	public Response getAllUsers(final String json, @DefaultValue("") @QueryParam("sessionID") final String sessID)
+	public Response getAllUsers(@DefaultValue("") @QueryParam("sessionID") final String sessID)
 	{
 
 		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
@@ -219,8 +219,9 @@ public class Service
 
 		ArrayList<Document> users = INSTANCE.getAllUsers();
 		user.remove(user);
+		Document res = new Document("users", users);
 
-		return Response.ok(users).build();
+		return Response.ok(res).build();
 	}
 
 
