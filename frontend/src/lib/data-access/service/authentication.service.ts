@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {EncryptionService} from "./encryption.service";
-import {BackendService} from "./backend.service";
-import {firstValueFrom, lastValueFrom, Observable} from "rxjs";
+import { EncryptionService } from "./encryption.service";
+import { BackendService } from "./backend.service";
+import { Observable } from "rxjs";
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -49,7 +49,7 @@ export class AuthenticationService {
 
 
   updateSessionid(newSessionid: string){
-    window.localStorage.setItem('sessionID',newSessionid);
+    localStorage.setItem('sessionID',newSessionid);
   }
 
 
