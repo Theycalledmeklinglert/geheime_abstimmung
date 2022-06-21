@@ -15,9 +15,6 @@ export class AppComponent {
 
 
   constructor() {
-    localStorage.removeItem("userName");
-    localStorage.removeItem("sessionID");
-    localStorage.removeItem("backendpublickey");
   }
 
   getUsername(): string{

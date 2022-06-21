@@ -47,6 +47,10 @@ export class BackendService {
 
   }
 
+  authSessionId():Observable<any> {
+    return this.httpClient.get<any>(this.url + '/api/polls/session?sessionID=' +  this.getSessionID());
+  }
+
 
   //temp any!!!!!!!!!!!!!!!!!!!
   loadAlreadyUsedEmails():Observable<any> {

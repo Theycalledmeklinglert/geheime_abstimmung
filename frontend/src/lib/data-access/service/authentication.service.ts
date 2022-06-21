@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {EncryptionService} from "./encryption.service";
 import {BackendService} from "./backend.service";
 import {firstValueFrom, lastValueFrom, Observable} from "rxjs";
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -10,35 +11,16 @@ import {firstValueFrom, lastValueFrom, Observable} from "rxjs";
 export class AuthenticationService {
 
   loginsucess: boolean;
-  constructor(private cryptService: EncryptionService, private backendS: BackendService) {
+  authenticated: boolean = false;
+  constructor(private cryptService: EncryptionService, private backendS: BackendService, private router: Router) {
   }
 
 
-  async getSessionid(email: string, password: string): Promise<any> {
-
-
-
-    //toDo hash password
-
+  getAuthUser(email: string, password: string): Observable<any> {
     let userData = '{"password":"' + password + '","email" :"' + email + '"}';
-    console.log("authservice: " + userData);
     const passwordandUsername: JSON = JSON.parse(userData);
 
-    /*
-    let encryptedPasswordandUsernameAsString: string = this.cryptService.encryptMessage(backendPublicKey,PasswordandUsername);
-    let encryptedPasswordandUsernameJSON: JSON = JSON.parse('{"Encrypted Username and Password":'+encryptedPasswordandUsernameAsString+'}');
-
-     */
-    let response: Promise<Observable<any>> = await lastValueFrom(this.backendS.loadSessionID(passwordandUsername));
-    if(response["Session ID"]) {
-      localStorage.setItem("sessionID", response["Session ID"]);
-      localStorage.setItem("userName",response["userName"]);
-      localStorage.setItem("userRole",response["role"]);
-      console.log(localStorage.getItem("userRole"));
-      console.log("Auth-Service->" + "KEY: " + localStorage.getItem("sessionID"));
-      this.loginsucess = true;
-    }
-    return this.loginsucess;
+    return this.backendS.loadSessionID(passwordandUsername);
   }
 
 
@@ -67,12 +49,17 @@ export class AuthenticationService {
 
 
   updateSessionid(newSessionid: string){
-    localStorage.setItem("sessionID",newSessionid);
+    window.localStorage.setItem('sessionID',newSessionid);
   }
 
-  getAuthStatus():boolean {
-    return localStorage.getItem("sessionID") != null
+
+  getAuthStatus():Observable<any> {
+
+    return this.backendS.authSessionId();
+
   }
+
+
 
 
 }
