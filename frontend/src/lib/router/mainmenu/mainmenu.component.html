@@ -151,7 +151,7 @@
 
 
 <div class="sureChangePassword" *ngIf="sureChangePassword">
-  <h1 mat-dialog-title>Info</h1>
+  <div class="headline">Info</div>
   <div mat-dialog-content>Are you sure you want to change your Password?</div>
   <div class="change_btn"mat-dialog-actions>
     <button mat-flat-button color="primary" (click)="sendChangePasswordrequest()">Change </button>
@@ -173,8 +173,7 @@
   <div class="txt_field">
     <input type="text" required
            [value]="this.changedUsername"
-           (change)="setnewUsername($event)"
-    >
+           (change)="setnewUsername($event)">
     <span></span>
     <label>New Username</label>
   </div>
@@ -190,8 +189,7 @@
 
 
 <div class="sureChangeUsername" *ngIf="sureChangeUsername">
-
-  <h1 mat-dialog-title>Info</h1>
+  <div class="headline">Info</div>
   <div mat-dialog-content>Are you sure you want to change your Username?</div>
   <div class="change_btn"mat-dialog-actions>
     <button mat-flat-button color="primary" (click)="sendChangeUsernamerequest()">Change </button>

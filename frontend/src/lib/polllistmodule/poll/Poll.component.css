@@ -3,7 +3,7 @@
   left: 7.5%;
   width: 85%;
   height: 70px;
-  background-color: white;
+  background-color: #e5e5e5;
   display: flex;
   align-items: center;
   border-radius: 5px;
@@ -22,6 +22,7 @@
   text-align: left;
   left: 10%;
   top: 20%;
+
 }
 
 .vote .lifetimecomponentgreen{
