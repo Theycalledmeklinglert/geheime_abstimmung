@@ -224,7 +224,6 @@ public class Service
 	}
 
 
-
 	@POST	// TODO: Email mit Zugangsdaten (UserName, PW, Email an Email Adresse wenn ein neuer User erstellt wird
 	@Path("/users")
 	@Consumes( MediaType.APPLICATION_JSON )
@@ -374,6 +373,25 @@ public class Service
 		return Response.ok(new Document().append("Session ID", newSessID).toJson()).build();
 	}
 
+	@GET
+	@Path("/session")
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response authSessionID(@DefaultValue("") @QueryParam("sessionID") final String sessID)
+	{
+
+		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
+
+		if(!optUser.isPresent())
+		{
+			throw new WebApplicationException(Response.status(401).build());  	// Session ID doesn't exist
+		}
+
+		Document user = optUser.get();
+		return Response.ok(user).build();
+	}
+
+
+
 
 	// Session ID of user lasts for 60 Minutes
 	@POST
@@ -383,8 +401,6 @@ public class Service
 	public Response getSessIDForUser(final String json)
 	{
 
-		// TODO: Decrypt JSON
-		// Wie checken ob JSON verschluesselt wurde?
 
 		Document doc = Document.parse(json);
 		String email = doc.getString("email");
@@ -427,6 +443,8 @@ public class Service
 		return Response.ok(unencryptedJSON).build();
 
 	}
+
+
 
 	@GET
 	@Path ("/answers")
