@@ -387,7 +387,9 @@ public class Service
 		}
 
 		Document user = optUser.get();
-		return Response.ok(user).build();
+		Document userWithOutOtherParams = new Document("Session ID", user.getString("Session ID"));
+
+		return Response.ok(userWithOutOtherParams).build();
 	}
 
 
