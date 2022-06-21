@@ -11,26 +11,23 @@
   font-size: 40px;
   position: fixed;
   right: 15%;
-
-
   background-color: rgba(239, 238, 238, 1);
   border: 3px solid #ff8200;
-  border-radius: 15px 15px 15px 15px;
+  border-radius: 10px 10px 10px 10px;
   width: 70%;
   height: 80%;
   top: 15%;
-
 
 }
 
 .headline{
   height: 35px;
-  background: #ff8200;
-  border-radius: 10px 10px 0px 0px;
+  background:  #ff8200;
+  border-radius: 7px 7px 0px 0px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  color: white;
   font-weight: 600;
   font-size: 25px;
+  color: white;
 }
 
 .headline .headline_txt{
@@ -191,7 +188,7 @@
   position: fixed;
   font-weight: 700;
   left: 15%;
-  color: white;
+  color: black;
 
 }
 
@@ -203,7 +200,7 @@
 
 .taskbar .fastlogout:hover{
   cursor: pointer;
-  color: #e5f2fa;
+  color: #ff8200;
 }
 
 
@@ -541,7 +538,6 @@
 
 
 
-
  #sucessicon {
    position: fixed;
   font-size: 100px;
@@ -557,24 +553,7 @@
 }
 
 
-
-
-
- /*
-  <div class="txt_field">
-    <input type="text" required
-           [value]="this.deleteadminadress"
-           (change)="setUsernameoftoDeleteAdmin($event)"
-    >
-    <span></span>
-    <label>Username</label>
-  </div>
-
-  <div class="delete" >
-    <button mat-flat-button color="primary" (click)="DeleteAdmin()">Delete </button>
-  </div>
-  <div class="cancel">
-    <button mat-flat-button color="primary" (click)="hideDeleteAdmin()">Cancel </button>
-  </div>
-  */
+ .taskbar #menuicon :hover{
+   color: #ff8200;
+ }
 

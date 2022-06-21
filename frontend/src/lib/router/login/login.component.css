@@ -6,30 +6,32 @@
 .loginfield #loginwindow {
   position: fixed;
   right: 35%;
-  background-color: rgba(239, 238, 238, 0.97);
+  background-color: rgba(255, 255, 255, 0.97);
   width: 30%;
   height: 70%;
   top: 20%;
-  border: 3px solid #ea7609;
-  border-radius: 15px 15px 15px 15px;
+  border-radius: 10px 10px 10px 10px;
 }
 .loginfield .loginheadline{
   margin-top: 5%;
   text-align: center;
-  color: black;
+  color: #ff8200;
+  font-weight: 700;
 }
 
  .helpwindow{
    text-align: center;
-  position: fixed;
-  right: 40%;
-  background-color: rgba(239, 238, 238, 1);
-  width: 20%;
-  height: 20%;
-  top: 40%;
-  color: black;
-  border: 3px solid #ff8200;
-  border-radius: 15px 15px 15px 15px;
+   position: fixed;
+   right: 40%;
+   background-color: rgba(255, 255, 255, 0.97);
+
+   box-shadow: 1px 1px 1px silver;
+   width: 20%;
+   height: 20%;
+   top: 40%;
+   color: black;
+   border-radius: 10px 10px 10px 10px;
+   border: 1px solid lightgray;
 }
 
 
