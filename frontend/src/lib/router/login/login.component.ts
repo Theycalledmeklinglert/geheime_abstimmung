@@ -1,6 +1,6 @@
 import {Component, Output} from "@angular/core";
 import {SurveyLeader} from "../../data-access/models/surveyLeader";
-import {Router, RouterModule} from "@angular/router";
+import {Router} from "@angular/router";
 import {AuthenticationService} from "../../data-access/service/authentication.service";
 
 
@@ -42,6 +42,8 @@ export class LoginComponent {
         next: response => {
           console.log(response);
           localStorage.setItem('sessionID', response['Session ID']);
+          localStorage.setItem("userEmail", this.userEmail);
+          localStorage.setItem("userPassword", this.password);
           localStorage.setItem("userName",response["userName"]);
           localStorage.setItem("userRole",response["role"]);
           console.log(localStorage.getItem("userRole"));

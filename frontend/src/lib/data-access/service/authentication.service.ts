@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
 export class AuthenticationService {
 
   loginsucess: boolean;
-  authenticated: boolean = false;
   constructor(private cryptService: EncryptionService, private backendS: BackendService, private router: Router) {
   }
 

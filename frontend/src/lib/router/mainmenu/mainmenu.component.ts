@@ -1,5 +1,4 @@
 import {Component, ViewEncapsulation} from "@angular/core";
-import {LoginComponent} from "../login/login.component";
 import {BackendService} from "../../data-access/service/backend.service";
 import {AuthenticationService} from "../../data-access/service/authentication.service";
 import {Router} from "@angular/router";
@@ -135,32 +134,28 @@ export class MainmenuComponent{
       const userDataJSON: JSON = JSON.parse(userData);
       console.log("Add Admin" + userDataJSON);
 
-      try {
-        this.backendService.addnewSurveLeader(userDataJSON).subscribe((response) => {
+      this.backendService.addnewSurveLeader(userDataJSON).subscribe({
+        next:(response) => {
           console.log("returnt key from Backend: " + response["Session ID"]);
           this.authService.updateSessionid(response["Session ID"]);
           console.log("AddAdmin->" + "NEWKEY: " + localStorage.getItem("sessionID"));
+
           this.sucesssend = true;
-          setTimeout(() => {
-            this.sucesssend = false;
-          }, 1300);
-        }, error => {
+          setTimeout(() => {this.sucesssend = false;}, 1300);
+        },
+        error: error => {
           error.status == 422 ? console.log("Error 422") : console.log("Not Error 422")
           console.log("Error while Send new SessionID: " + error.error["Session ID"]);
+
           this.authService.updateSessionid(error.error["Session ID"]);
           this.failsend = true;
-          setTimeout(() => {
-            this.failsend = false;
-          }, 1300);
 
-        });
-
-      } catch (err) {
-      }
-
-
+          setTimeout(() => {this.failsend = false;}, 1300);
+        }
+      });
       this.addAdmin = false;
-    }else {
+    }
+    else {
       alert("Please fill all inputs correct!")
     }
   }
@@ -173,21 +168,24 @@ export class MainmenuComponent{
 
     let userData = '{"name" :"'+localStorage.getItem("userName")+ '", "role" :"'+localStorage.getItem("userRole")+'"}';
 
-    try {
-      this.backendService.deleteUser(this.deleteadminadress).subscribe((response) =>{
+    this.backendService.deleteUser(this.deleteadminadress).subscribe({
+      next:(response) =>{
         this.authService.updateSessionid(response["Session ID"]);
         console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
+
         this.sureDeleteAdmin = false;
         this.sucesssend = true;
         setTimeout(() => { this.sucesssend = false;}, 1300);
-      }, error => {
-          console.log("Error while Send new SessionID: "+error.error["Session ID"]);
-          this.authService.updateSessionid(error.error["Session ID"]);
-          this.failsend = true;
-          setTimeout(() => { this.failsend = false;}, 1300);
+      },
+      error: error => {
+        console.log("Error while Send new SessionID: "+error.error["Session ID"]);
 
-        });
-    }catch (err){}
+        this.authService.updateSessionid(error.error["Session ID"]);
+        this.failsend = true;
+
+        setTimeout(() => { this.failsend = false;}, 1300);
+      }
+    });
   }
 
 
@@ -197,26 +195,24 @@ export class MainmenuComponent{
     console.log("Paswordchange send:"+ userData);
     const passwordandUsername: JSON = JSON.parse(userData);
 
-    try {
-      this.backendService.updatePasswordorUsernameSurveyLeader(passwordandUsername).subscribe((response) =>{
-          this.authService.updateSessionid(response["Session ID"]);
-          console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
-          this.sureChangePassword = false;
+    this.backendService.updatePasswordorUsernameSurveyLeader(passwordandUsername).subscribe({
+      next:(response) =>{
+        this.authService.updateSessionid(response["Session ID"]);
+        console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
+        this.sureChangePassword = false;
         this.sucesssend = true;
+
         setTimeout(() => { this.sucesssend = false;}, 1300);
-        }, error => {
-          console.log("Error while Send new SessionID: "+error.error["Session ID"]);
-          this.authService.updateSessionid(error.error["Session ID"]);
-          this.failsend = true;
-          setTimeout(() => { this.failsend = false;}, 1300);
+        },
+      error: error => {
+        console.log("Error while Send new SessionID: "+error.error["Session ID"]);
 
-        }
+        this.authService.updateSessionid(error.error["Session ID"]);
+        this.failsend = true;
 
-        );
-
-
-    }catch (err){}
-
+        setTimeout(() => { this.failsend = false;}, 1300);
+      }
+    });
   }
 
 
@@ -225,27 +221,28 @@ export class MainmenuComponent{
     console.log("Usernamechange send:"+ userData);
     const passwordandUsername: JSON = JSON.parse(userData);
 
-    try {
-      this.backendService.updatePasswordorUsernameSurveyLeader(passwordandUsername).subscribe((response) =>{
-          this.authService.updateSessionid(response["Session ID"]);
-          localStorage.setItem("userName", this.changedUsername);
-          console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
-          this.sureChangeUsername = false;
+
+    this.backendService.updatePasswordorUsernameSurveyLeader(passwordandUsername).subscribe({
+      next:(response) =>{
+        this.authService.updateSessionid(response["Session ID"]);
+
+        localStorage.setItem("userName", this.changedUsername);
+        console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
+
+        this.sureChangeUsername = false;
         this.sucesssend = true;
+
         setTimeout(() => { this.sucesssend = false;}, 1300);
-      }, error => {
-          console.log("Error while Send new SessionID: "+error.error["Session ID"]);
-          this.authService.updateSessionid(error.error["Session ID"]);
-          this.failsend = true;
-          setTimeout(() => { this.failsend = false;}, 1300);
+      },
+      error: error => {
+        console.log("Error while Send new SessionID: "+error.error["Session ID"]);
 
-        }
-      );
+        this.authService.updateSessionid(error.error["Session ID"]);
+        this.failsend = true;
 
-    }catch (err){}
-
-
-
+        setTimeout(() => { this.failsend = false;}, 1300);
+      }
+    });
   }
 
 
@@ -288,11 +285,6 @@ export class MainmenuComponent{
       console.log("set normal")
     }
   }
-
-
-
-
-
 
   logout():void{
     localStorage.clear();
