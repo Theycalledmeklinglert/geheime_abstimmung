@@ -19,6 +19,7 @@ import {AuthenticationService} from "../../data-access/service/authentication.se
 export class UserComponent {
   @Input() userObject: users;
   result: String = "";
+  sysAdmin: boolean = false;
 
   @Output()
   deleteUserEvent = new EventEmitter<users>();
@@ -30,12 +31,11 @@ export class UserComponent {
   }
 
 
-  isSysadmin(): String{
-   if(this.userObject.role == "admin"){this.result = "Y"}
-   else {this.result = "N"}
+  isSysadmin(): boolean{
+   if(this.userObject.role == "admin"){ this.sysAdmin = true}
+   else {this.sysAdmin = false}
 
-
-    return this.result;
+   return this.sysAdmin;
   }
 
 

@@ -28,6 +28,10 @@
   font-size: 1.3ch;
 }
 
+.toolbar #fhwslogo{
+  cursor: default;
+}
+
 .toolbar #userfield {
   cursor: pointer;
   position: fixed;

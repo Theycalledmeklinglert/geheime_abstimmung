@@ -18,11 +18,15 @@
 }
 
 .user #issysadmin{
-  color: black;
+  color: green;
   position: absolute;
   left: 50%;
   font-size: 16px;
 
+}
+
+.user #issysadmin #nosysadmin{
+  color: red;
 }
 
 .user #delete{
@@ -32,8 +36,8 @@
 
 .user:hover {
   background-color: #ff8200;
-
 }
+
 .user #delete:hover{
   transform: scaleX(115%);
   transform: rotate(-20deg);

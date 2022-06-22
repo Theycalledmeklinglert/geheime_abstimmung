@@ -18,6 +18,7 @@ export class LoginComponent {
   userObject: SurveyLeader;
   helpbuttonpressed: boolean;
   correctUserdata: boolean = true;
+
   constructor(private authService: AuthenticationService, private router: Router) {}
 
   showloadingstatus: boolean = false;
@@ -70,6 +71,10 @@ export class LoginComponent {
   pressokaybutton():void{
     this.helpbuttonpressed = false;
   }
+
+
+
+
 
 
 }
