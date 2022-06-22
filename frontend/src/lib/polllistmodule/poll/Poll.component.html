@@ -1,34 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
 <div class="vote">
-  <div id = "name" title = "VOTE NAME" (click)="showVoteResult()" >{{showVoteName()}}</div>
-
-
+  <span id = "name" title = "VOTE NAME" (click)="showVoteResult()" >{{showVoteName()}}</span>
 
   <div *ngIf="lowlifetime;else longlifetime">
-    <div class="lifetimecomponentred">
+    <div id="lifetimecomponentred">
       <div id = "redlifetime" title = "VOTE LIFETIME">{{showVoteLifetime()}}</div>
     </div>
   </div>
   <ng-template #longlifetime>
-    <div class="lifetimecomponentgreen">
+    <div id="lifetimecomponentgreen">
       <div id = "greenlifetime" title = "VOTE LIFETIME">{{showVoteLifetime()}}</div>
     </div>
   </ng-template>
 
-  <div id="delete" title="DELETE VOTE" (click)="deletethisVote()" >
+  <span id="delete" title="DELETE VOTE" (click)="deletethisVote()" >
     <input type="image" src="../../../assets/deleteButton.png" width="30%" height="30%">
-  </div>
+  </span>
 
-  <div class="resultbutton" (click)="showVoteResult()"></div>
+  <div class="resultbutton" *ngIf="voteisfinish" (click)="showVoteResult()"></div>
 
 </div>
 
 
-</body>
-</html>
+

@@ -38,6 +38,7 @@
   background-color: transparent;
   display: inline-block;
   width: 100%;
+  margin-bottom: 10px;
 
 }
 
@@ -53,9 +54,10 @@
   background-color: rgba(239, 238, 238, 1);
   height: 20%;
   color: black;
-  border-right: 2px solid #2c2c2c;
-  border-left: 2px solid #2c2c2c;
-  border-bottom: 2px solid #2c2c2c;
+  box-shadow: 0 0 0.5em #000000;
+  border-right: 1px solid #2c2c2c;
+  border-left: 1px solid #2c2c2c;
+  border-bottom: 1px solid #2c2c2c;
   border-radius: 10px 10px 10px 10px;
 }
 

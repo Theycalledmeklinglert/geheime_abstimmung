@@ -15,18 +15,16 @@
   left: 2%;
 
 }
-.vote .lifetimecomponentgreen #greenlifetime{
-  font-size: 40%;
-  position: absolute;
+.vote #lifetimecomponentgreen #greenlifetime{
+  font-size: 1.2vw;
+  position: relative;
   color: #ffffff;
-  text-align: left;
-  left: 10%;
+  text-align: center;
   top: 20%;
-
 }
 
-.vote .lifetimecomponentgreen{
-  position: absolute;
+.vote #lifetimecomponentgreen{
+  position: relative;
   left: 50%;
   height: 45%;
   width: 15%;
@@ -34,16 +32,15 @@
   background-color: #5bcb36;
 }
 
-.vote .lifetimecomponentred #redlifetime{
-  font-size: 40%;
-  position: absolute;
+.vote #lifetimecomponentred #redlifetime{
+  font-size: 1.2vw;
+  position: relative;
   color: #ffffff;
-  text-align: left;
-  left: 10%;
+  text-align: center;
   top: 20%;
 }
 
-.vote .lifetimecomponentred{
+.vote #lifetimecomponentred{
   position: absolute;
   left: 50%;
   height: 45%;
@@ -72,6 +69,7 @@
 }
 
 .vote .resultbutton{
+  cursor: pointer;
   left: 7.5%;
   width: 80%;
   height: 70px;
