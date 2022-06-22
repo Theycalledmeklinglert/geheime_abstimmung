@@ -7,12 +7,12 @@
 <!-- Toolbar -->
 <div class="toolbar" role="banner">
 
-  <div class="text" >
+  <div class="text">
     <input type="image" src="../assets/FHWS_Logo_Vote2.png" width="150px" height="15%">
   </div>
 
 
-  <div id="userfield" >
+  <div id="userfield" routerLink="/main">
     {{isLoggedIn()}}
     <div class="usericon" *ngIf="showUsericon">
       <mat-icon id="icon">person</mat-icon>

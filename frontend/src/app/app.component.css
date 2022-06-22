@@ -19,7 +19,7 @@
   display: flex;
   align-items: center;
   background-color: #ffffff;
-  color: white;
+  color: #ff8000;
   font-weight: 600;
 }
 
@@ -29,6 +29,7 @@
 }
 
 .toolbar #userfield {
+  cursor: pointer;
   position: fixed;
   right: 1%;
   width: max-content;

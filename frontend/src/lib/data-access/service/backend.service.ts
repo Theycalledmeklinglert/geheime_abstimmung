@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Poll } from '../models/Poll';
 import { EncryptionService } from './encryption.service';
-import {Answer} from "../models/answer";
 import {EncryptedData} from "../models/encryptedData";
 
 
@@ -47,6 +46,10 @@ export class BackendService {
 
   }
 
+  authSessionId():Observable<any> {
+    return this.httpClient.get<any>(this.url + '/api/polls/session?sessionID=' +  this.getSessionID());
+  }
+
 
   //temp any!!!!!!!!!!!!!!!!!!!
   loadAlreadyUsedEmails():Observable<any> {
@@ -79,7 +82,7 @@ export class BackendService {
   }
 
   updatePasswordorUsernameSurveyLeader(newUserData: JSON): Observable<JSON>{
-    return this.httpClient.put<JSON>(this.url + '/api/polls/users?sessionID='+ this.getSessionID(), newUserData);
+    return this.httpClient.put<any>(this.url + '/api/polls/users?sessionID='+ this.getSessionID(), newUserData);
   }
 
   loadPollByID(token:string, id:number):Observable<Poll> {

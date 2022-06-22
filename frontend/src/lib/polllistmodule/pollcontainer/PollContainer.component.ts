@@ -23,11 +23,9 @@ export class PollConainterComponent implements OnInit{
 
   ngOnInit(): void{
     this.vlcObject = {name:"testcontainer", polls:[] };
-    console.log("PollContainer->"+"OLDKEY: "+localStorage.getItem("sessionID"));
     this.backendService.loadAllPollsByUser().subscribe((response) =>{
       this.vlcObject.polls = response["polls"];
       this.authService.updateSessionid(response["Session ID"]);
-      console.log("PollContainer->"+"NEWKEY: "+localStorage.getItem("sessionID"));
     });
   }
 

@@ -1,6 +1,6 @@
 import {Component, Output} from "@angular/core";
 import {SurveyLeader} from "../../data-access/models/surveyLeader";
-import {Router, RouterModule} from "@angular/router";
+import {Router} from "@angular/router";
 import {AuthenticationService} from "../../data-access/service/authentication.service";
 
 
@@ -11,15 +11,14 @@ import {AuthenticationService} from "../../data-access/service/authentication.se
   styleUrls: ['./login.component.css'],
 })
 
-export class LoginComponent{
+export class LoginComponent {
 
   @Output()userEmail: string = "";
   password: string = "";
   userObject: SurveyLeader;
   helpbuttonpressed: boolean;
   correctUserdata: boolean = true;
-  constructor(private authService: AuthenticationService, private router: Router) {
-  }
+  constructor(private authService: AuthenticationService, private router: Router) {}
 
   showloadingstatus: boolean = false;
 
@@ -32,32 +31,36 @@ export class LoginComponent{
     this.password = event.target.value;
   }
 
-  async submitlogin(): Promise<void>{
-    if(this.userEmail != "" && this.password != ""){
-      this.showloadingstatus = true;
-      console.log("login with"+ this.password+ ","+this.userEmail)
-      try {
-        let sucesslogin = await this.authService.getSessionid(this.userEmail.toLowerCase(),this.password);
-        if (sucesslogin){
+  submitlogin(e:any){
 
-          this.router.navigate(['/main']);
-          console.log("LoginComponent->"+"KEY: " + localStorage.getItem("sessionID"));
-          localStorage.setItem("userEmail",this.userEmail);
+    if(this.userEmail != "" && this.password != ""){
+
+      this.showloadingstatus = true;
+      e.preventDefault();
+
+      this.authService.getAuthUser(this.userEmail.toLowerCase(),this.password).subscribe({
+        next: response => {
+          console.log(response);
+          localStorage.setItem('sessionID', response['Session ID']);
+          localStorage.setItem("userEmail", this.userEmail);
           localStorage.setItem("userPassword", this.password);
+          localStorage.setItem("userName",response["userName"]);
+          localStorage.setItem("userRole",response["role"]);
+          console.log(localStorage.getItem("userRole"));
+
+          this.router.navigateByUrl('/main')
+        },
+        error: error => {
+          console.log(error)
+          this.showloadingstatus = false;
+          this.wrongUsernameorPassword = true;
         }
 
-      }catch (err){
-        console.log("ERROR invalid SessionKey!");
-        this.showloadingstatus = false;
-        this.wrongUsernameorPassword = true;
-      }
-
-
-    }else {
+      });
+    }
+    else {
       alert("Emailadress or Password is empty!");
     }
-
-
   }
 
   presshelpbutton():void{
