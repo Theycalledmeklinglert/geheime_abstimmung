@@ -393,8 +393,6 @@ public class Service
 	}
 
 
-
-
 	// Session ID of user lasts for 60 Minutes
 	@POST
 	@Path("/session")
@@ -402,7 +400,6 @@ public class Service
 	@Produces( MediaType.APPLICATION_JSON )
 	public Response getSessIDForUser(final String json)
 	{
-
 
 		Document doc = Document.parse(json);
 		String email = doc.getString("email");
@@ -419,8 +416,14 @@ public class Service
 
 		if(!INSTANCE.comparePWHash(user.getString("pwHash"), INSTANCE.generatePWHash(password, Base64.decodeBase64(user.getString("salt")))))
 		{
+			long timeoutDur = INSTANCE.checkForTimeOut(email);
+			if(timeoutDur != 0)
+			{
+				throw new WebApplicationException(Response.status(403).entity(new Document("Timeout Duration in Minutes", timeoutDur)).build()); 	// Return amount of remaining timeout duration
+			}
+			int curAttempt = INSTANCE.addLoginAttempt(email);
 			System.out.println("Incorrect Password");
-			throw new WebApplicationException(Response.status(404).build());
+			throw new WebApplicationException(Response.status(404).entity(new Document("attempt", curAttempt)).build());
 		}
 
 		// Moves the Keys exchanged between Server and Browser from UserCol to SessIDCol now that a SessID exists, so that the Keys will be deleted upon
