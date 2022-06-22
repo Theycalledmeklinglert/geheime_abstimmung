@@ -17,6 +17,12 @@
   height: 80%;
   top: 15%;
 }
+
+.listwindow #addNewVote{
+  position: fixed;
+  right: 16%;
+  top: 87%;
+}
 .headline{
   height: 35px;
   background:  #ff8200;
@@ -104,7 +110,7 @@
   transition: .4s;
 }
 
-.adminGenerator .txt_field .info_txt{
+.adminGenerator  .info_txt{
   color: #000000;
   font-size: 15px;
   position: absolute;
@@ -116,7 +122,7 @@
   font-weight: 600;
 }
 
-.adminGenerator .txt_field .info_txt #theicon2{
+.adminGenerator  .info_txt #theicon2{
   vertical-align: middle;
   color: #adadad;
 }
@@ -576,3 +582,12 @@
    color: #ff8200;
  }
 
+
+
+
+ /*old Button
+
+ <div class="newVoteButton">
+  <input type="image" src="../../assets/newVote_btn.png" width="125%" height="125%" routerLink="/editor"/>
+</div>
+  */

@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {LoginComponent} from "../lib/router/login/login.component";
 import {BackendService} from "../lib/data-access/service/backend.service";
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,7 +13,7 @@ export class AppComponent {
 
   currentuser: string = "";
   showUsericon : boolean = false;
-
+  connectionIsLost: boolean = false;
 
   constructor() {
   }

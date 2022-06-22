@@ -124,16 +124,20 @@
   color: #2691d9;
 }
 
-.loginfield #loginwindow .txt_field .wronguserdata{
+.loginfield #loginwindow .txt_field .loginFailed{
 
   position: absolute;
   width: 100%;
-  top: 180%;
+  top: 255%;
   text-align: center;
   color: #ff0000;
   font-size: 16px;
   pointer-events: none;
 
+}
+
+.loginfield #loginwindow .txt_field .loginFailed #serverproblemicon{
+  vertical-align: middle;
 }
 
 .loginfield #loginwindow input[type="submit"]{

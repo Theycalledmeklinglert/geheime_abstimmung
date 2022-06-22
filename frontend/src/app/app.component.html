@@ -27,3 +27,7 @@
 
 <router-outlet></router-outlet>
 
+<div class="connectionLost" *ngIf="connectionIsLost">
+  <mat-icon id="connectionLosticon">report_problem</mat-icon>
+  <div id="connectionLost_txt"> SERVER ERROR!</div>
+</div>

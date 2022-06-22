@@ -28,8 +28,13 @@
           <span></span>
           <label *ngIf="wrongUsernameorPassword == false">Password</label>
           <label *ngIf="wrongUsernameorPassword" style="color:red">Password</label>
-          <div class="wronguserdata" *ngIf="wrongUsernameorPassword">
+          <div class="loginFailed" *ngIf="wrongUsernameorPassword">
             Password or Username is incorrect!
+          </div>
+
+          <div class="loginFailed" *ngIf="serverproblems">
+            <mat-icon id="serverproblemicon">report_problem</mat-icon>
+            Oh it seems there are Serverproblems!
           </div>
 
           <div class="helpbutton" (click)="presshelpbutton()"> Need help?</div>

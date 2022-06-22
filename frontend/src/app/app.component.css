@@ -50,3 +50,25 @@
   font-size: large;
   float:left;
 }
+
+.connectionLost{
+  position: fixed;
+  top: 100px;
+  right: 0;
+  height: 60px;
+  width: 175px;
+  background-color: rgba(255, 0, 0, 0.65);
+  color: white;
+}
+.connectionLost #connectionLosticon{
+  position: fixed;
+  top: 115px;
+  right: 140px;
+}
+
+.connectionLost #connectionLost_txt{
+  position: fixed;
+  top: 120px;
+  right: 20px;
+  vertical-align: middle;
+}

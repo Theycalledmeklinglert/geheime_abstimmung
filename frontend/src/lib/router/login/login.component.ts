@@ -1,7 +1,8 @@
-import {Component, Output} from "@angular/core";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {SurveyLeader} from "../../data-access/models/surveyLeader";
 import {Router} from "@angular/router";
 import {AuthenticationService} from "../../data-access/service/authentication.service";
+import {users} from "../../data-access/models/users";
 
 
 
@@ -13,17 +14,21 @@ import {AuthenticationService} from "../../data-access/service/authentication.se
 
 export class LoginComponent {
 
+  @Output()
+  serverError = new EventEmitter<boolean>();
   @Output()userEmail: string = "";
   password: string = "";
   userObject: SurveyLeader;
   helpbuttonpressed: boolean;
   correctUserdata: boolean = true;
 
+
   constructor(private authService: AuthenticationService, private router: Router) {}
 
   showloadingstatus: boolean = false;
 
   wrongUsernameorPassword: boolean = false;
+  serverproblems: boolean = false;
 
   setUsername(event: any): void{
     this.userEmail = event.target.value;
@@ -35,7 +40,7 @@ export class LoginComponent {
   submitlogin(e:any){
 
     if(this.userEmail != "" && this.password != ""){
-
+      this.serverproblems= false;
       this.showloadingstatus = true;
       e.preventDefault();
 
@@ -54,7 +59,14 @@ export class LoginComponent {
         error: error => {
           console.log(error)
           this.showloadingstatus = false;
-          this.wrongUsernameorPassword = true;
+          if(error.status == 404){
+            this.wrongUsernameorPassword = true;
+          }else {
+
+            this.serverError.emit(true);
+            this.serverproblems = true;
+          }
+
         }
 
       });

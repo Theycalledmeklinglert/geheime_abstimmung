@@ -54,6 +54,9 @@
       </div>
 
     <voteContainer></voteContainer>
+    <button  id="addNewVote" mat-fab color="primary" matTooltip="Create New Poll" routerLink="/editor">
+      <mat-icon>add</mat-icon>
+    </button>
   </div>
 
 </div>
@@ -66,16 +69,17 @@
     <input type="text" required
            [value]="this.newadminadress"
            (change)="setUseradressofnewAdmin($event)"
+           matTooltip="Email of new Surveyleader"
     >
     <span></span>
     <label>Email</label>
   </div>
 
   <div class="txt_field">
-    <div class="info_txt"  matTooltip="Info about the action"> <mat-icon id="theicon2" style="transform: rotate(180deg)">error_outline</mat-icon></div>
     <input type="text" required
            [value]="this.newadminpassword"
            (change)="setpasswordofnewAdmin($event)"
+           matTooltip="min. 8 Characters"
     >
     <span></span>
     <label>Password</label>
@@ -88,6 +92,7 @@
     <input type="text" required
            [value]="this.newadminusername"
            (change)="setUsernameofnewAdmin($event)"
+           matTooltip="Username of new Surveyleader"
     >
     <span></span>
 
@@ -132,6 +137,7 @@
     <input type="text" required
            [value]="this.changedPassword"
            (change)="setnewPassword($event)"
+           matTooltip="min. 8 Characters"
     >
     <span></span>
     <label>New Password</label>
@@ -171,7 +177,9 @@
   <div class="txt_field">
     <input type="text" required
            [value]="this.changedUsername"
-           (change)="setnewUsername($event)">
+           (change)="setnewUsername($event)"
+           matTooltip="Your new Username"
+    >
     <span></span>
     <label>New Username</label>
   </div>
@@ -208,10 +216,6 @@
 
 
 
-
-<div class="newVoteButton">
-  <input type="image" src="../../assets/newVote_btn.png" width="125%" height="125%" routerLink="/editor"/>
-</div>
 
 </body>
 </html>

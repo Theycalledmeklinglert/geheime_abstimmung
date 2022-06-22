@@ -7,12 +7,12 @@
 .containerHeader #lifetime{
   top: 10%;
   position: absolute;
-  left: 52%;
+  left: 49%;
 }
 .containerHeader #name{
   top: 10%;
   position: absolute;
-  left: 15%;
+  left: 11%;
 }
 
 .voteContainer #body{
@@ -51,7 +51,7 @@
   width: 20%;
   top: 40%;
   font-size: 15px;
-  background-color: rgba(239, 238, 238, 1);
+  background-color: rgb(255, 255, 255);
   height: 20%;
   color: black;
   box-shadow: 0 0 0.5em #000000;
