@@ -10,6 +10,7 @@ import org.bson.types.ObjectId;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import javax.swing.text.html.Option;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -70,17 +71,14 @@ public class DBInstance {
     public Optional<Document> getPollAsOptDocumentByID(final String id) {
         Document doc = null;
 
-        if(ObjectId.isValid(id)) {
-             doc = pollCol.find(eq("_id", new ObjectId(id)))
+        doc = pollCol.find(eq("_id", new ObjectId(id)))
                      .projection(Projections.fields())
                      .first();
-        }
 
-        if (doc == null) {
+        if(doc == null) {
             return Optional.empty();
-        } else {
-            return Optional.of(doc);
         }
+        else return Optional.of(doc);
     }
 
     public boolean createPoll(Document poll) {

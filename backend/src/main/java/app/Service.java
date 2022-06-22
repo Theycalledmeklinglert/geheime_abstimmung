@@ -482,7 +482,7 @@ public class Service
 	@Produces( MediaType.APPLICATION_JSON )
 	public Response getSinglePollByID(@DefaultValue( "" ) @PathParam( "pollID" ) final String poll_id, @DefaultValue("") @QueryParam("token") final String token)
 	{
-		final Optional<Document> optPoll = INSTANCE.getPollAsOptDocumentByID(poll_id);
+		final Optional<Document> optPoll = INSTANCE.getPollAsOptDocumentByID(poll_id.substring(poll_id.indexOf("=")+1));	// removed "poll_id=" from the poll_id
 
 		if(!optPoll.isPresent())
 		{
@@ -490,19 +490,21 @@ public class Service
 		}
 
 		Document poll = optPoll.get();
-
 		ArrayList<String> tokens = (ArrayList<String>) poll.get("tokens");
+
+		System.out.println(poll.getString("name"));
 
 		if(!tokens.contains(token))
 		{
-			return Response.status(403).build();
+			return Response.status(404).build();
 		}
 
-		// TODO: Decrypt JSON
+		System.out.println(poll);
+		System.out.println();
+		System.out.println(poll.toJson());
+
 		return Response.ok(poll.toJson()).build();
 	}
-
- 
 
 
 	@POST
