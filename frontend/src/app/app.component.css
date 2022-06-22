@@ -29,6 +29,7 @@
 }
 
 .toolbar #userfield {
+  cursor: pointer;
   position: fixed;
   right: 1%;
   width: max-content;

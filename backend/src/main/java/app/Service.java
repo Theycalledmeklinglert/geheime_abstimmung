@@ -474,7 +474,7 @@ public class Service
 
 		return Response.ok( answers ).build( );
 	}
-/*
+
 	@GET
 	@Path("/answers/{pollID}")
 	@Produces( MediaType.APPLICATION_JSON )
@@ -500,7 +500,7 @@ public class Service
 		return Response.ok(poll.toJson()).build();
 	}
 
- */
+ 
 
 
 	@POST

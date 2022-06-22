@@ -25,7 +25,7 @@ export class AuthGuard implements CanActivate {
         }),
         catchError(e => {
           console.log("Fail");
-          localStorage.removeItem('sessionID');
+          localStorage.clear();
           this.router.navigate(['/login']);
           return of(false);
         })
