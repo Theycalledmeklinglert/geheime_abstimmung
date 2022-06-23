@@ -6,47 +6,71 @@
 </head>
 <body>
 
-
 <div class="resultwindow" id="forPrint">
+
   <div class="headline">
     Your Result <br/>
-    <div id="pollnumber"> You clicked Poll: {{getIDofClickedPoll()}}</div>
+    Poll: "{{this.poll.name}}" <br/>
   </div>
 
   <div *ngIf="!this.validated" id="decryptWindow">
+
     <br/>
+
     <div mat-dialog-content>Please fill in the private key for this poll:</div>
-      <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
-        <input matInput type="text" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempPrivKey">
-        <mat-label id="inputfield">Enter here...</mat-label>
-      </mat-form-field>
-      <br/>
-    <div mat-dialog-content>Remaining attempts: {{this.enterCounter}}</div>
+
+    <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
+      <input matInput type="text" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempPrivKey">
+      <mat-label id="inputfield">Enter here...</mat-label>
+    </mat-form-field>
+
     <br/>
+
+    <div mat-dialog-content>Remaining attempts: {{this.enterCounter}}</div>
+
+    <br/>
+
     <div mat-dialog-actions>
-      <button mat-flat-button color="primary" (click)="this.showChart()">Enter</button>
+      <button mat-flat-button color="primary" (click)="this.getDecryptedAnswers()">Enter</button>
+
     </div>
   </div>
+
   <div *ngIf="this.validated" id="questiontitle">
-      {{this.poll.questions[this.questionCount].title}}
+    {{this.poll.questions[this.questionCount].title}}
   </div>
-        <div *ngIf="this.validated" id="chart">
-      <apx-chart
-        [series]="chartOptions.series"
-        [chart]="chartOptions.chart"
-        [labels]="chartOptions.labels"
-        [responsive]="chartOptions.responsive"
-        [colors]="['#00ff00', '#ff0000', '#0000ff', '#fdd551']"
-      ></apx-chart>
+
+  <div *ngIf="this.validated && !individual" id="chart">
+    <apx-chart
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [labels]="chartOptions.labels"
+      [responsive]="chartOptions.responsive"
+      [colors]="['#00ff00', '#ff0000', '#0000ff', '#fdd551']"
+    ></apx-chart>
   </div>
-  <button mat-flat-button (click)="this.showChart(); questionCount = questionCount - 1;" *ngIf="this.questionCount - 1 >= 0">
-  <mat-icon>keyboard_arrow_left</mat-icon>
-</button>
-  <button mat-flat-button (click)="this.showChart(); questionCount = questionCount + 1;" *ngIf="this.questionCount + 1 < this.poll.questions.length">
-    <mat-icon>keyboard_arrow_right</mat-icon>
-  </button>
+
+  <div *ngIf="individual && this.validated" id="individualList">
+    <ul>
+      <li *ngFor="let answer of getIndividualAnswers()">
+        <div id="answer"><span>{{answer}}</span></div>
+      </li>
+    </ul>
+  </div>
 
 </div>
+
+<div *ngIf="validated" id="arrows">
+  <button mat-flat-button (click)="questionCount = questionCount - 1; this.showQuestionResult();"
+          *ngIf="this.questionCount - 1 >= 0">
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+  <button mat-flat-button (click)="questionCount = questionCount + 1; this.showQuestionResult();"
+          *ngIf="this.questionCount + 1 < this.poll.questions.length">
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </button>
+</div>
+
 
 <div class="printIcon" (click)="print()">
   <mat-icon class="pinterIcon">print</mat-icon>

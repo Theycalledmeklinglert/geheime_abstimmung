@@ -17,7 +17,6 @@ export class EncryptionService {
   }
 
   decrypt(secretKey: string, data: EncryptedData) {
-
     let nonce = decodeBase64(data.nonce);
     let ephemPubKey = decodeBase64(data.ephemPubKey);
     let encrypted = decodeBase64(data.message);

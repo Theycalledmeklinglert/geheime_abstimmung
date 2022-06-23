@@ -76,11 +76,8 @@ export class EditorComponent implements OnInit{
       const priv = keyPair.privateKey;
       this.poll.publicKey = keyPair.publicKey;
       let textFile =
-        "Poll:\n\n"+
-        JSON.stringify(this.poll)+
         +"\n \n This is the generated private key for this survey. Please save it somewhere inaccessible for others:\n \n"
-        // pub+'\n'+
-        +priv
+        + "\t\t"+priv+"\t\t"
         +"\n\n You will need it for accessing the results of this survey. Please close this window, after you copied and saved the key.";
       var data = new Blob([textFile], {type: 'text/plain'});
       if (textFile !== null) {
