@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Poll } from '../models/Poll';
-import { EncryptionService } from './encryption.service';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {Poll} from '../models/Poll';
+import {EncryptionService} from './encryption.service';
 import {EncryptedData} from "../models/encryptedData";
 
 
@@ -95,7 +95,9 @@ export class BackendService {
     console.log(testUrl);
     return this.httpClient.post<void>(testUrl, answers);
   }
-
+  loadAnswers(pollID: number){
+    return this.httpClient.get<any>(this.url + "/api/polls/answers?sessionID=" + this.getSessionID() + "&pollID=" + pollID);
+  }
 
   setNewVote(vote: Poll): void{
   }
