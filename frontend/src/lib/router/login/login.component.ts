@@ -78,7 +78,7 @@ export class LoginComponent {
             }
 
           }else {
-
+            this.timeout == false;
             this.serverError.emit(true);
             this.serverproblems = true;
           }
