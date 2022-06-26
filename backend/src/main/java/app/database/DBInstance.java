@@ -72,7 +72,7 @@ public class DBInstance {
         //  sessIDCol.dropIndex(Indexes.ascending("created at"));
         sessIDCol.createIndex(Indexes.ascending("created at"), new IndexOptions().expireAfter(60L, TimeUnit.MINUTES));
         loginAttemptCol = db.getCollection("LoginAttempts");
-        loginAttemptCol.createIndex(Indexes.ascending("expires at"), new IndexOptions().expireAfter(0L, TimeUnit.MINUTES)); // Allows us to specify a varying TTL (Time to live) for each document
+        loginAttemptCol.createIndex(Indexes.ascending("Timeout until"), new IndexOptions().expireAfter(0L, TimeUnit.MINUTES)); // Allows us to specify a varying TTL (Time to live) for each document
     }
 
     public Optional<Document> getPollAsOptDocumentByID(final String id) {
@@ -514,7 +514,7 @@ public class DBInstance {
             int currAttempt = log.getInteger("attempts");
 
             Calendar currTimeOutDurration = Calendar.getInstance();
-            currTimeOutDurration.setTime(log.getDate("expires at"));
+            currTimeOutDurration.setTime(log.getDate("Timeout until"));
 
             Calendar createdAt = Calendar.getInstance();
             createdAt.setTime(log.getDate("created at"));
@@ -523,13 +523,13 @@ public class DBInstance {
             {
                 currTimeOutDurration.add(Calendar.MINUTE, 15);
                 Date newTimeOutDurration = currTimeOutDurration.getTime();
-                log.put("expires at", newTimeOutDurration);
+                log.put("Timeout until", newTimeOutDurration);
                 log.put("attempts", currAttempt + 1);
                 loginAttemptCol.replaceOne(Filters.eq("email", email), log);
 
                 return TimeUnit.MILLISECONDS.toMinutes(Math.abs(currTimeOutDurration.getTimeInMillis() - createdAt.getTimeInMillis()));
             }
-            else if( currAttempt > 5)                                                                     // each subsequent failed login attempt doubles timeout duration
+            else if( currAttempt > 5 )                                                                     // each subsequent failed login attempt doubles timeout duration
             {
                 long diff = TimeUnit.MILLISECONDS.toSeconds(Math.abs(currTimeOutDurration.getTimeInMillis() - System.currentTimeMillis()));
                 if(diff < 86400)                                                                          // Check if timeout is smaller than 24 hours
@@ -547,9 +547,14 @@ public class DBInstance {
                         currTimeOutDurration.add(Calendar.HOUR, 24);
                     }
                 }
+                else    // if Timeout is greater than 24 hours it's set to 24 hours instead
+                {
+                    currTimeOutDurration = Calendar.getInstance();
+                    currTimeOutDurration.add(Calendar.HOUR, 24);
+                }
 
                 Date newTimeOutDurration = currTimeOutDurration.getTime();
-                log.put("expires at", newTimeOutDurration);
+                log.put("Timeout until", newTimeOutDurration);
                 log.put("attempts", currAttempt + 1);
                 loginAttemptCol.replaceOne(Filters.eq("email", email), log);
                 return TimeUnit.MILLISECONDS.toMinutes(Math.abs(currTimeOutDurration.getTimeInMillis() - System.currentTimeMillis()));
@@ -575,16 +580,22 @@ public class DBInstance {
         return currAttempt;
     }
 
+    public void removeLogHistory(String email)
+    {
+        loginAttemptCol.deleteOne(Filters.eq("email", email));
+    }
+
     private void logFirstFailedLogin(String email)
     {
         Calendar now = Calendar.getInstance();
         Date created = now.getTime();
-        now.add(Calendar.MINUTE, 30);       // Failed Logins are tracked for 30 Minutes if no timeout is triggerd before that
-        Date expiresAt = now.getTime();
+        now.add(Calendar.MINUTE, 60);       // Failed Logins are tracked for 60 Minutes if no timeout or successful login is triggered before that
+        Date TimeoutUntil = now.getTime();
 
-        Document newLog = new Document("email", email).append("attempts", 1).append("created at", created).append("expires at", expiresAt);  // TODO: Check that this does not delete on accident
+        Document newLog = new Document("email", email).append("attempts", 1).append("created at", created).append("Timeout until", TimeoutUntil);  // TODO: Check that this does not delete on accident
         loginAttemptCol.insertOne(newLog);
     }
+
 
 }
 

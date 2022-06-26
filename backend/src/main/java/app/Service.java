@@ -409,43 +409,44 @@ public class Service
 
 		if(!optUser.isPresent())
 		{
-			throw new WebApplicationException(Response.status(404).build());
+			throw new WebApplicationException(Response.status(401).build());
 		}
 
 		Document user = optUser.get();
 
+		long timeoutDur = INSTANCE.checkForTimeOut(email);
+		if(timeoutDur != 0)
+		{
+			throw new WebApplicationException(Response.status(403).entity(new Document("Timeout Duration in Minutes", timeoutDur)).build()); 	// Return amount of remaining timeout duration
+		}
+
 		if(!INSTANCE.comparePWHash(user.getString("pwHash"), INSTANCE.generatePWHash(password, Base64.decodeBase64(user.getString("salt")))))
 		{
-			long timeoutDur = INSTANCE.checkForTimeOut(email);
-			if(timeoutDur != 0)
-			{
-				throw new WebApplicationException(Response.status(403).entity(new Document("Timeout Duration in Minutes", timeoutDur)).build()); 	// Return amount of remaining timeout duration
-			}
 			int curAttempt = INSTANCE.addLoginAttempt(email);
 			System.out.println("Incorrect Password");
-			throw new WebApplicationException(Response.status(404).entity(new Document("attempt", curAttempt)).build());
+			throw new WebApplicationException(Response.status(401).entity(new Document("attempt", curAttempt)).build());
 		}
+
+		// Der ganze Abschnitt hier ist Schwachsinn oder?
 
 		// Moves the Keys exchanged between Server and Browser from UserCol to SessIDCol now that a SessID exists, so that the Keys will be deleted upon
 		// logout of the user (and 60 minutes passing)
-		String sessID = INSTANCE.generateAndSetSessID(user);
+/*		String sessID = INSTANCE.generateAndSetSessID(user);
 		Document sessUser = INSTANCE.getUserBySessionID(sessID).get();
 		sessUser.put("Public Key Client", user.getString("Public Key Client"));
 		sessUser.put("Private Key Server", user.getString("Private Key Server"));
-		INSTANCE.updateKeysInSessIDCol(sessID, user.getString("Public Key Client"), user.getString("Private Key Server"));		//TODO: TEST
+		INSTANCE.updateKeysInSessIDCol(sessID, user.getString("Public Key Client"), user.getString("Private Key Server"));
 
-		// TODO: Muss alles getestet werden sobald KeyExchange funktioniert
 		Document fieldsToDelete = new Document("Public Key Client", user.getString("Public Key Client")).append("Private Key Server", user.getString("Private Key Server"));
 		INSTANCE.removeFieldFromUserInUserCol(user.get("_id").toString(), fieldsToDelete);
 
+	 */
+		INSTANCE.removeLogHistory(email); // Clear failed login attempts upon successful login
+
+		String sessID = INSTANCE.generateAndSetSessID(user);
 		Document res = new Document("Session ID", user.getString("Session ID")).append("userName", user.getString("name")).append("role", user.getString("role"));
-		String unencryptedJSON = res.toJson();
 
-		// TODO: Encrypt JSON before sending back
-
-		String encryptedJSON = "Placeholder";
-
-		return Response.ok(unencryptedJSON).build();
+		return Response.ok(res).build();
 
 	}
 
