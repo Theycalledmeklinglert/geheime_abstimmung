@@ -44,10 +44,13 @@ export class PollResultComponent implements OnInit {
   ngOnInit() {
     this.poll = JSON.parse(localStorage.getItem("clickedPoll"));
     localStorage.removeItem("clickedPoll");
+
     this.backendService.loadAnswers(this.poll._id).subscribe(result => {
       console.log(result);
       this.encryptedAnswers = result["answers"];
     });
+
+
     this.enterCounter = 5;
     this.questionCount = 0;
   }

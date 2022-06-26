@@ -29,7 +29,7 @@
           <label *ngIf="wrongUsernameorPassword == false">Password</label>
           <label *ngIf="wrongUsernameorPassword" style="color:red">Password</label>
           <div class="loginFailed" *ngIf="wrongUsernameorPassword">
-            Password or Username is incorrect!
+            Password or Username is incorrect! {{getAttemptsOrTimeout()}}
           </div>
 
           <div class="loginFailed" *ngIf="serverproblems">

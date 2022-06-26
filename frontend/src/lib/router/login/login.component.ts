@@ -21,14 +21,17 @@ export class LoginComponent {
   userObject: SurveyLeader;
   helpbuttonpressed: boolean;
   correctUserdata: boolean = true;
+  showloadingstatus: boolean = false;
+  wrongUsernameorPassword: boolean = false;
+  timeout: boolean = false;
+  timeoutTime: string = "";
+  serverproblems: boolean = false;
+  atmepts: number = 5;
 
 
   constructor(private authService: AuthenticationService, private router: Router) {}
 
-  showloadingstatus: boolean = false;
 
-  wrongUsernameorPassword: boolean = false;
-  serverproblems: boolean = false;
 
   setUsername(event: any): void{
     this.userEmail = event.target.value;
@@ -59,8 +62,21 @@ export class LoginComponent {
         error: error => {
           console.log(error)
           this.showloadingstatus = false;
-          if(error.status == 404){
-            this.wrongUsernameorPassword = true;
+          if(error.status == 401 || error.status == 403 ){
+            if(error.status == 401){
+              this.wrongUsernameorPassword = true;
+              console.log("Attempt: "+error.error["attempt"])
+              this.timeout = false;
+              this.atmepts = 5 - error.error["attempt"]
+              if(this.atmepts == 0) this.timeout = true;
+            }else {
+              this.wrongUsernameorPassword = true;
+              console.log(error.status);
+              this.timeout =  true;
+              this.timeoutTime =  "Timout for "+error.error["Timeout Duration in Minutes"]+ " Minutes!";
+              console.log("TimeoutTime"+error.error["Timeout Duration in Minutes"])
+            }
+
           }else {
 
             this.serverError.emit(true);
@@ -82,6 +98,11 @@ export class LoginComponent {
 
   pressokaybutton():void{
     this.helpbuttonpressed = false;
+  }
+
+  getAttemptsOrTimeout(): string{
+    if(this.timeout)return this.timeoutTime;
+    return "Remaining ("+this.atmepts+"/5)";
   }
 
 
