@@ -1,6 +1,5 @@
 package main.java.app;
 
-import com.mongodb.BasicDBObject;
 import main.java.app.database.DBInstance;
 import org.bson.Document;
 
@@ -441,7 +440,7 @@ public class Service
 		INSTANCE.removeFieldFromUserInUserCol(user.get("_id").toString(), fieldsToDelete);
 
 	 */
-		INSTANCE.removeLogHistory(email); // Clear failed login attempts upon successful login
+		INSTANCE.removeFailedLoginHistory(email); 		// Clear failed login attempts upon successful login
 
 		String sessID = INSTANCE.generateAndSetSessID(user);
 		Document res = new Document("Session ID", user.getString("Session ID")).append("userName", user.getString("name")).append("role", user.getString("role"));
