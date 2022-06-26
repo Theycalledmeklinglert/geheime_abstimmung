@@ -73,7 +73,7 @@ export class LoginComponent {
               this.wrongUsernameorPassword = true;
               console.log(error.status);
               this.timeout =  true;
-              this.timeoutTime =  "Timout for "+error.error["Timeout Duration in Minutes"]+ " Minutes!";
+              this.timeoutTime =  "Timeout for "+error.error["Timeout Duration in Minutes"]+ " Minutes!";
               console.log("TimeoutTime"+error.error["Timeout Duration in Minutes"])
             }
 
@@ -81,11 +81,9 @@ export class LoginComponent {
             this.timeout == false;
             this.serverError.emit(true);
             this.serverproblems = true;
-          }
-
-        }
-
+          }}
       });
+
     }
     else {
       alert("Emailadress or Password is empty!");
