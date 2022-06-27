@@ -37,7 +37,7 @@ export class PollResultComponent implements OnInit {
   encryptedAnswers: EncryptedData[];
   poll: Poll;
 
-  constructor(private backendService: BackendService, private cryptService: EncryptionService) {
+  constructor(private backendService: BackendService, private cryptService: EncryptionService, private authService: AuthenticationService) {
   }
 
 
@@ -48,6 +48,8 @@ export class PollResultComponent implements OnInit {
     this.backendService.loadAnswers(this.poll._id).subscribe(result => {
       console.log(result);
       this.encryptedAnswers = result["answers"];
+      this.authService.updateSessionid(result["Session ID"]);
+      console.log(result["Session ID"])
     });
 
 

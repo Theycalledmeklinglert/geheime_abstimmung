@@ -16,35 +16,38 @@
       <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 40, 'max-width.ch': 60}">
         <mat-label>Poll Name</mat-label>
         <input matInput #inputText class="inputfield" type="text" [(ngModel)]="this.poll.name" required>
-      </mat-form-field> <br>
+      </mat-form-field>
+      <br>
     </div>
     <br/>
 
     <div id="expirationDateInput">
-      <mat-label>Expiration</mat-label><br/>
-      <input class="inputfield" type="datetime-local" id="timeinputfield" [(ngModel)]="this.poll.lifetime" required><br/>
+      <mat-label>Expiration</mat-label>
+      <br/>
+      <input class="inputfield" type="datetime-local" id="timeinputfield" [(ngModel)]="this.poll.lifetime"
+             required><br/>
     </div>
 
   </section>
 
-    <section id="questionList">
-      <h2>Questions:</h2>
-      <ul>
-        <li *ngFor="let question of poll.questions">
-          <div class="questiontitle" (click)="this.next = false; showQuestion(question)">
-            {{question.title}}
+  <section id="questionList">
+    <h2>Questions:</h2>
+    <ul>
+      <li *ngFor="let question of poll.questions">
+        <div class="questiontitle" (click)="this.next = false; showQuestion(question)">
+          {{question.title}}
 
-            <button id="deleteQuestion" mat-icon-button (click)="deleteQuestion(question)">
-              <mat-icon>delete</mat-icon>
-            </button>
+          <button id="deleteQuestion" mat-icon-button (click)="deleteQuestion(question)">
+            <mat-icon>delete</mat-icon>
+          </button>
 
-          </div>
-        </li>
-      </ul>
-      <button mat-icon-button id="addQuestion" (click)="addEmptyQuestion()">
-        <mat-icon>add</mat-icon>
-      </button>
-    </section>
+        </div>
+      </li>
+    </ul>
+    <button mat-icon-button id="addQuestion" (click)="addEmptyQuestion()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </section>
 
 
   <div *ngIf="!this.next" class="questionwindow">
@@ -59,49 +62,60 @@
 
 </div>
 <section id="emaillist">
-<div *ngIf="this.next" class="questionwindow">
-  <ul >
-    <label class="label" for="emailInput">Enter an Email:</label>
-    <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
-      <input matInput type="email" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempEmail">
-      <mat-label id="inputfield">Enter here...</mat-label>
-    </mat-form-field>
-    <li *ngFor="let email of this.poll.emails" class="emailstyle">
-      {{email}}
-      <button id="deleteEmail" mat-icon-button (click)="deleteEmail(email)">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </li>
-  </ul>
-  <button mat-icon-button (click)="addEmail()">
-    <mat-icon>add</mat-icon>
-  </button>
-</div>
+  <div *ngIf="this.next" class="questionwindow">
+    <ul>
+      <label class="label" for="emailInput">Enter an Email:</label>
+      <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
+        <input matInput type="email" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempEmail">
+        <mat-label id="inputfield">Enter here...</mat-label>
+      </mat-form-field>
+      <li *ngFor="let email of this.poll.emails" class="emailstyle">
+        {{email}}
+        <button id="deleteEmail" mat-icon-button (click)="deleteEmail(email)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </li>
+    </ul>
+    <button mat-icon-button (click)="addEmail()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
 </section>
-<div *ngIf="!this.next" class="nextButton">
-  <input type="image" src="../../../assets/next_btn.png" width="125%" height="125%" (click)="this.next = true">
-</div>
 
 <div *ngIf="this.next" class="nextButton">
-  <input type="image" src="../../../assets/submit_btn.png" width="125%" height="125%" (click)="submitPoll()">
+  <button mat-flat-button color="primary" (click)="submitPoll()">
+    <mat-icon>arrow_forward_ios</mat-icon>
+    SUBMIT
+  </button>
 </div>
-
+<div *ngIf="!this.next" class="nextButton">
+  <button mat-flat-button color="primary" (click)="this.next = true;">
+    <mat-icon>arrow_forward_ios</mat-icon>
+    NEXT
+  </button>
+</div>
 <div *ngIf="this.next" class="returnToMainButton">
-  <input type="image" src="../../assets/back_btn.png" width="125%" height="125%" (click)="this.next = false;"/>
+  <button mat-flat-button color="primary" (click)="this.next = false;">
+    <mat-icon>arrow_back_ios</mat-icon>
+    BACK
+  </button>
 </div>
 
 <div *ngIf="!this.next" class="returnToMainButton">
-  <input type="image" src="../../../assets/returnToMain_btn.png" routerLink="/main" width="125%" height="125%" (click)="this.deleteEverything()"/>
+  <button mat-flat-button color="primary" routerLink="/main" (click)="this.deleteEverything()">
+    <mat-icon>arrow_back_ios</mat-icon>
+    RETURN TO MAIN
+  </button>
 </div>
 
 <div class="helpwindow" *ngIf="notAllFilled">
-<br/>
+  <br/>
   <h1 mat-dialog-title>INFO</h1>
   <div mat-dialog-content>Please fill in all the necessary information!
   </div>
   <br/>
   <div mat-dialog-actions>
-    <button mat-flat-button color="primary" (click)="pressOkayButton()">OKAY </button>
+    <button mat-flat-button color="primary" (click)="pressOkayButton()">OKAY</button>
   </div>
 
 </div>
@@ -112,7 +126,7 @@
   </div>
   <br/>
   <div mat-dialog-actions>
-    <button mat-flat-button color="primary" routerLink="/main" (click)="deleteEverything()">OKAY </button>
+    <button mat-flat-button color="primary" routerLink="/main" (click)="deleteEverything()">OKAY</button>
   </div>
 </div>
 </body>
