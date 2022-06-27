@@ -85,27 +85,38 @@
 <div *ngIf="this.next" class="nextButton">
   <button mat-flat-button color="primary" (click)="submitPoll()">
     <mat-icon>arrow_forward_ios</mat-icon>
-    SUBMIT
+    &nbsp;&nbsp;&nbsp;&nbsp;SUBMIT&nbsp;&nbsp;&nbsp;&nbsp;
   </button>
 </div>
 <div *ngIf="!this.next" class="nextButton">
   <button mat-flat-button color="primary" (click)="this.next = true;">
     <mat-icon>arrow_forward_ios</mat-icon>
-    NEXT
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NEXT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </button>
 </div>
 <div *ngIf="this.next" class="returnToMainButton">
   <button mat-flat-button color="primary" (click)="this.next = false;">
     <mat-icon>arrow_back_ios</mat-icon>
-    BACK
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BACK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </button>
 </div>
 
 <div *ngIf="!this.next" class="returnToMainButton">
-  <button mat-flat-button color="primary" routerLink="/main" (click)="this.deleteEverything()">
+  <button mat-flat-button color="primary" (click)="this.back = true">
     <mat-icon>arrow_back_ios</mat-icon>
     RETURN TO MAIN
   </button>
+</div>
+
+<div class="sureBackToMain" *ngIf="this.back">
+  <div class="headline">Info</div>
+  <div mat-dialog-content><br/>Are you sure you want to go back to the main menu? <br/> All your changes will be deleted</div>
+  <div class="change_btn"mat-dialog-actions>
+    <button mat-flat-button color="primary" routerLink="/main" >Go Back </button>
+  </div>
+  <div  class="cancel_btn" mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="this.back = false">Cancel </button>
+  </div>
 </div>
 
 <div class="helpwindow" *ngIf="notAllFilled">
@@ -126,7 +137,7 @@
   </div>
   <br/>
   <div mat-dialog-actions>
-    <button mat-flat-button color="primary" routerLink="/main" (click)="deleteEverything()">OKAY</button>
+    <button mat-flat-button color="primary" routerLink="/main">OKAY</button>
   </div>
 </div>
 </body>

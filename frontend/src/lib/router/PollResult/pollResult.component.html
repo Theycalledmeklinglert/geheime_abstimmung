@@ -13,29 +13,6 @@
     Poll: "{{this.poll.name}}" <br/>
   </div>
 
-  <div *ngIf="!this.validated" id="decryptWindow">
-
-    <br/>
-
-    <div mat-dialog-content>Please fill in the private key for this poll:</div>
-
-    <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
-      <input matInput type="text" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempPrivKey">
-      <mat-label id="inputfield">Enter here...</mat-label>
-    </mat-form-field>
-
-    <br/>
-
-    <div mat-dialog-content>Remaining attempts: {{this.enterCounter}}</div>
-
-    <br/>
-
-    <div mat-dialog-actions>
-      <button mat-flat-button color="primary" (click)="this.getDecryptedAnswers()">Enter</button>
-
-    </div>
-  </div>
-
   <div *ngIf="this.validated" id="questiontitle">
     {{this.poll.questions[this.questionCount].title}}
   </div>
@@ -83,6 +60,28 @@
   </button>
 </div>
 
+<div *ngIf="showDecryptWindow" id="decryptWindow">
+
+  <br/>
+
+  <div mat-dialog-content>Please fill in the private key for this poll:</div>
+
+  <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
+    <input matInput type="text" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempPrivKey">
+    <mat-label id="inputfield">Enter here...</mat-label>
+  </mat-form-field>
+
+  <br/>
+
+  <div mat-dialog-content *ngIf="enterCounter > 1">Timeout was set for: {{this.enterCounter}} seconds</div>
+
+  <br/>
+
+  <div mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="this.getDecryptedAnswers()">Enter</button>
+
+  </div>
+</div>
 
 </body>
 </html>

@@ -8,7 +8,7 @@ import {EncryptionService} from "../../data-access/service/encryption.service";
 import {EncryptedData} from "../../data-access/models/encryptedData";
 import {Poll} from "../../data-access/models/Poll";
 import {Answer} from "../../data-access/models/answer";
-import {lastValueFrom} from "rxjs";
+import {delay, lastValueFrom} from "rxjs";
 import {error} from "@angular/compiler/src/util";
 
 export type ChartOptions = {
@@ -35,6 +35,7 @@ export class PollResultComponent implements OnInit {
   individual: boolean = false;
   questionCount;
   encryptedAnswers: EncryptedData[];
+  showDecryptWindow: boolean = true;
   poll: Poll;
 
   constructor(private backendService: BackendService, private cryptService: EncryptionService, private authService: AuthenticationService) {
@@ -53,7 +54,7 @@ export class PollResultComponent implements OnInit {
     });
 
 
-    this.enterCounter = 5;
+    this.enterCounter = 1;
     this.questionCount = 0;
   }
 
@@ -92,16 +93,22 @@ export class PollResultComponent implements OnInit {
   }
 
 
-  getDecryptedAnswers() {
+  async getDecryptedAnswers() {
     try {
       this.answers = this.encryptedAnswers.map(a => JSON.parse(this.cryptService.decrypt(this.tempPrivKey, a)));
+      if (this.answers[0] != undefined) {
+        this.validated = true;
+        this.showDecryptWindow = false;
+        this.showQuestionResult();
+      }
     } catch (e) {
       console.log(e);
+      this.enterCounter *= 2;
+      this.showDecryptWindow = false;
+      setTimeout(() => {
+        this.showDecryptWindow = true;
+      }, this.enterCounter * 1000);
     }
-    if (this.answers[0] != undefined) {
-      this.validated = true;
-      this.showQuestionResult();
-    } else this.enterCounter--;
   }
 
   getValues(): number[] {

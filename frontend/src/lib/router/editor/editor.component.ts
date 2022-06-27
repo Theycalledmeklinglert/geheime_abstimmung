@@ -21,7 +21,7 @@ export class EditorComponent implements OnInit{
   tempEmail?: string;
   notAllFilled: boolean = false;
   submitted: boolean = false;
-
+  back: boolean = false;
 
   addEmptyQuestion() {
     this.poll.questions.forEach(q => q.visible = false);
@@ -51,16 +51,6 @@ export class EditorComponent implements OnInit{
 
   deleteEmail(email: string){
     this.poll.emails = this.poll.emails.filter((e) => e != email);
-  }
-
-  deleteEverything(){
-    this.poll = {
-        name: "",
-        lifetime: "",
-        questions: [{id: 1, title: "New Question",type:"", visible: true}],
-        emails: []
-      };
-    this.submitted = false;
   }
 
     submitPoll(){

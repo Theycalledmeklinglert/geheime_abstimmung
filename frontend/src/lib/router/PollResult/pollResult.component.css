@@ -128,7 +128,8 @@
 #decryptWindow{
   text-align: center;
   position: fixed;
-  right: 40%;
+  right: 65%;
+  left: 35%;
   background-color: rgb(255, 255, 255);
   width: 30%;
   height: 30%;
