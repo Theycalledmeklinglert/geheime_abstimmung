@@ -15,7 +15,8 @@ const myRoutes: Routes = [
   {path:'main', component: MainmenuComponent, canActivate: [AuthGuard]},
   {path:'editor', component:EditorComponent, canActivate:[AuthGuard]},
   {path:'survey', component:SurveyComponent},
-  {path:'result', component:PollResultComponent, canActivate: [AuthGuard]}
+  {path:'result', component:PollResultComponent, canActivate: [AuthGuard]},
+  {path: '**', redirectTo:'/login'},
 ];
 
 @NgModule({

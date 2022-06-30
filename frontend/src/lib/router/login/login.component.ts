@@ -1,7 +1,8 @@
-import {Component, Output} from "@angular/core";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {SurveyLeader} from "../../data-access/models/surveyLeader";
-import {Router, RouterModule} from "@angular/router";
+import {Router} from "@angular/router";
 import {AuthenticationService} from "../../data-access/service/authentication.service";
+import {users} from "../../data-access/models/users";
 
 
 
@@ -11,19 +12,26 @@ import {AuthenticationService} from "../../data-access/service/authentication.se
   styleUrls: ['./login.component.css'],
 })
 
-export class LoginComponent{
+export class LoginComponent {
 
+  @Output()
+  serverError = new EventEmitter<boolean>();
   @Output()userEmail: string = "";
   password: string = "";
   userObject: SurveyLeader;
   helpbuttonpressed: boolean;
   correctUserdata: boolean = true;
-  constructor(private authService: AuthenticationService, private router: Router) {
-  }
-
   showloadingstatus: boolean = false;
-
   wrongUsernameorPassword: boolean = false;
+  timeout: boolean = false;
+  timeoutTime: string = "";
+  serverproblems: boolean = false;
+  atmepts: number = 5;
+
+
+  constructor(private authService: AuthenticationService, private router: Router) {}
+
+
 
   setUsername(event: any): void{
     this.userEmail = event.target.value;
@@ -32,32 +40,54 @@ export class LoginComponent{
     this.password = event.target.value;
   }
 
-  async submitlogin(): Promise<void>{
+  submitlogin(e:any){
+
     if(this.userEmail != "" && this.password != ""){
+      this.serverproblems= false;
       this.showloadingstatus = true;
-      console.log("login with"+ this.password+ ","+this.userEmail)
-      try {
-        let sucesslogin = await this.authService.getSessionid(this.userEmail.toLowerCase(),this.password);
-        if (sucesslogin){
+      e.preventDefault();
 
-          this.router.navigate(['/main']);
-          console.log("LoginComponent->"+"KEY: " + localStorage.getItem("sessionID"));
-          localStorage.setItem("userEmail",this.userEmail);
+      this.authService.getAuthUser(this.userEmail.toLowerCase(),this.password).subscribe({
+        next: response => {
+          console.log(response);
+          localStorage.setItem('sessionID', response['Session ID']);
+          localStorage.setItem("userEmail", this.userEmail);
           localStorage.setItem("userPassword", this.password);
-        }
+          localStorage.setItem("userName",response["userName"]);
+          localStorage.setItem("userRole",response["role"]);
+          console.log(localStorage.getItem("userRole"));
 
-      }catch (err){
-        console.log("ERROR invalid SessionKey!");
-        this.showloadingstatus = false;
-        this.wrongUsernameorPassword = true;
-      }
+          this.router.navigateByUrl('/main')
+        },
+        error: error => {
+          console.log(error)
+          this.showloadingstatus = false;
+          if(error.status == 401 || error.status == 403 ){
+            if(error.status == 401){
+              this.wrongUsernameorPassword = true;
+              console.log("Attempt: "+error.error["attempt"])
+              this.timeout = false;
+              this.atmepts = 5 - error.error["attempt"]
+              if(this.atmepts == 0) this.timeout = true;
+            }else {
+              this.wrongUsernameorPassword = true;
+              console.log(error.status);
+              this.timeout =  true;
+              this.timeoutTime =  "Timeout for "+error.error["Timeout Duration in Minutes"]+ " Minutes!";
+              console.log("TimeoutTime"+error.error["Timeout Duration in Minutes"])
+            }
 
+          }else {
+            this.timeout == false;
+            this.serverError.emit(true);
+            this.serverproblems = true;
+          }}
+      });
 
-    }else {
+    }
+    else {
       alert("Emailadress or Password is empty!");
     }
-
-
   }
 
   presshelpbutton():void{
@@ -67,6 +97,15 @@ export class LoginComponent{
   pressokaybutton():void{
     this.helpbuttonpressed = false;
   }
+
+  getAttemptsOrTimeout(): string{
+    if(this.timeout)return this.timeoutTime;
+    return "Remaining ("+this.atmepts+"/5)";
+  }
+
+
+
+
 
 
 }

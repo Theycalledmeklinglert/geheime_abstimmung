@@ -10,7 +10,7 @@
     <!-- Loginwindow -->
     <div class="loginfield" >
       <div id="loginwindow">
-        <div class="headline">Login to your account</div>
+        <div class="loginheadline">Login to your account</div>
         <div class="txt_field">
           <input type="text" required
                  [value]="this.userEmail"
@@ -28,8 +28,13 @@
           <span></span>
           <label *ngIf="wrongUsernameorPassword == false">Password</label>
           <label *ngIf="wrongUsernameorPassword" style="color:red">Password</label>
-          <div class="wronguserdata" *ngIf="wrongUsernameorPassword">
-            Password or Username is incorrect!
+          <div class="loginFailed" *ngIf="wrongUsernameorPassword">
+            Password or Username is incorrect! {{getAttemptsOrTimeout()}}
+          </div>
+
+          <div class="loginFailed" *ngIf="serverproblems">
+            <mat-icon id="serverproblemicon">report_problem</mat-icon>
+            Oh it seems there are Serverproblems!
           </div>
 
           <div class="helpbutton" (click)="presshelpbutton()"> Need help?</div>
@@ -37,7 +42,7 @@
         </div>
 
 
-        <input type="submit" value="Login"  (click)="submitlogin()">
+        <input type="submit" value="Login"  (click)="submitlogin($event)">
         <div class="loading" *ngIf="showloadingstatus">
           <mat-spinner [diameter]="40"></mat-spinner>
         </div>
@@ -58,7 +63,6 @@
       </div>
 
     </div>
-
 
 
   </div>

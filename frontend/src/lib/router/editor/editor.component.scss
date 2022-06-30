@@ -53,24 +53,22 @@
   text-align: center;
   position: absolute;
   right: 5%;
-  width: 7%;
-  height: 7%;
+  width: auto;
+  //width: 7%;
+  //height: 7%;
   bottom: 5%;
-
   align-items:flex-end;
-
 }
-
- .newQuestionButton{
+.returnToMainButton{
   text-align: center;
   position: absolute;
   right: 5%;
-  width: 7%;
-  height: 7%;
+  width: auto;
+  //width: 7%;
+  //height: 7%;
   bottom: 15%;
-
-  align-items:flex-end;
-
+  cursor: pointer;
+  align-items: flex-end;
 }
 
 .addButton {
@@ -122,15 +120,7 @@
   //border: 3px solid #ea7609;
   //border-radius: 40px 40px 40px 40px;
 }
-.returnToMainButton{
-  text-align: center;
-  position: absolute;
-  right: 5%;
-  width: 7%;
-  height: 7%;
-  bottom: 25%;
-  cursor: pointer;
-}
+
 .inputfield{
   font-size: 20px;
   margin-left: 10px;
@@ -170,4 +160,47 @@
 #emailInput{
   margin-top: 2vh;
 }
+.sureBackToMain{
+  text-align: center;
+  font-weight: bolder;
+  position: fixed;
+  right: 40%;
+  background-color: rgb(255, 255, 255);
+  width: 20%;
+  top: 40%;
+  height: 20%;
+  color: black;
+  border-right: 1px solid #2c2c2c;
+  border-left: 1px solid #2c2c2c;
+  border-bottom: 1px solid #2c2c2c;
+  box-shadow: 0 0 0.5em #000000;
+  border-radius: 10px 10px 10px 10px;
+}
 
+.sureBackToMain .cancel_btn{
+  position: absolute;
+  bottom: 5%;
+  left: 10%;
+  cursor: pointer;
+}
+
+.sureBackToMain .change_btn{
+  position: absolute;
+  bottom: 5%;
+  right: 10%;
+  cursor: pointer;
+}
+.headline{
+  height: 35px;
+  background:  #ff8200;
+  border-radius: 7px 7px 0px 0px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-weight: 600;
+  font-size: 25px;
+  color: white;
+  line-height: 32px;
+}
+
+.headline .headline_txt{
+  text-align: center;
+}

@@ -11,7 +11,7 @@ import {LoginComponent} from "../lib/router/login/login.component";
 import { SurveyComponent } from '../lib/router/survey/survey.component';
 import {EditorComponent} from "../lib/router/editor/editor.component";
 import {PollComponent} from "../lib/polllistmodule/poll/Poll.component";
-import {VoteConainterComponent} from "../lib/polllistmodule/pollcontainer/PollContainer.component";
+import {PollConainterComponent} from "../lib/polllistmodule/pollcontainer/PollContainer.component";
 import { SurveyQuestionComponent } from 'src/lib/survey-question/survey-question.component';
 
 //Angular-Material-Compontents
@@ -29,6 +29,9 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {PollResultComponent} from "../lib/router/PollResult/pollResult.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {UserComponent} from "../lib/userlistmodule/user/User.component";
+import {UserConainterComponent} from "../lib/userlistmodule/usercontainer/UserContainer.component";
 
 
 
@@ -42,33 +45,36 @@ import {MatDialogModule} from '@angular/material/dialog';
     SurveyComponent,
     SurveyQuestionComponent,
     PollComponent,
-    VoteConainterComponent,
-    PollResultComponent
+    PollConainterComponent,
+    PollResultComponent,
+    UserComponent,
+    UserConainterComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
 
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatRadioModule,
-    MatCheckboxModule,
-    BrowserAnimationsModule,
-    MatIconModule,
-    MatDatepickerModule,
-    MatMenuModule,
-    MatProgressSpinnerModule,
-    MatPaginatorModule,
-    MatDialogModule,
-    NgApexchartsModule
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatRadioModule,
+        MatCheckboxModule,
+        BrowserAnimationsModule,
+        MatIconModule,
+        MatDatepickerModule,
+        MatMenuModule,
+        MatProgressSpinnerModule,
+        MatPaginatorModule,
+        MatDialogModule,
+        NgApexchartsModule,
+        MatTooltipModule
 
-  ],
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

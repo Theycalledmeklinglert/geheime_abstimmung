@@ -8,7 +8,7 @@
 <div class="taskbar">
 
   <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="OPTIONS">
-    <mat-icon>menu</mat-icon>
+    <mat-icon id="menuicon">menu</mat-icon>
     OPTIONS
   </button>
   <mat-menu #menu="matMenu">
@@ -54,6 +54,9 @@
       </div>
 
     <voteContainer></voteContainer>
+    <button  id="addNewVote" mat-fab color="primary" matTooltip="Create New Poll" routerLink="/editor">
+      <mat-icon>add</mat-icon>
+    </button>
   </div>
 
 </div>
@@ -66,6 +69,7 @@
     <input type="text" required
            [value]="this.newadminadress"
            (change)="setUseradressofnewAdmin($event)"
+           matTooltip="Email of new Surveyleader"
     >
     <span></span>
     <label>Email</label>
@@ -75,10 +79,11 @@
     <input type="text" required
            [value]="this.newadminpassword"
            (change)="setpasswordofnewAdmin($event)"
+           matTooltip="min. 8 Characters"
     >
     <span></span>
     <label>Password</label>
-    <div class="invalidPasswordLength" *ngIf="invalidPasswordlengthfornewUser"> Invalid Password length min. 8 Characters</div>
+    <div class="invalidPasswordLength" *ngIf="invalidPasswordlengthfornewUser"> The Password field must be at least 8 Characters.</div>
   </div>
 
 
@@ -87,6 +92,7 @@
     <input type="text" required
            [value]="this.newadminusername"
            (change)="setUsernameofnewAdmin($event)"
+           matTooltip="Username of new Surveyleader"
     >
     <span></span>
 
@@ -97,8 +103,6 @@
     <mat-checkbox (change)="setadmin()" *ngIf="isSysAdmin">
       <div class="isadmin_txt">isAdmin?</div>
     </mat-checkbox>
-
-
 
   <div class="add" (click)="sendAddAdminrequest()">
     <button mat-flat-button color="primary" (click)="sendAddAdminrequest()"> Add </button>
@@ -113,37 +117,11 @@
 
 <div class="deleteAdmin" *ngIf="deleteAdmin">
   <div class="headline">Delete Surveyleader</div>
-
-  <div class="txt_field">
-    <input type="text" required
-           [value]="this.deleteadminadress"
-           (change)="setUsernameoftoDeleteAdmin($event)"
-    >
-    <span></span>
-    <label>Username</label>
-  </div>
-
-  <div class="delete" >
-    <button mat-flat-button color="primary" (click)="DeleteAdmin()">Delete </button>
-  </div>
+ <userContainer></userContainer>
   <div class="cancel">
     <button mat-flat-button color="primary" (click)="hideDeleteAdmin()">Cancel </button>
   </div>
 </div>
-
-<div class="sureDelete" *ngIf="sureDeleteAdmin">
-
-  <h1 mat-dialog-title>Info</h1>
-  <div mat-dialog-content>Are you sure you want to delete admin?</div>
-  <div class="delete_btn"mat-dialog-actions>
-    <button mat-flat-button color="primary" (click)="sendDeleteAdminrequest()">Delete </button>
-  </div>
-  <div  class="cancel_btn" mat-dialog-actions>
-    <button mat-flat-button color="primary" (click)="hidesureDeleteAdmin()">Cancel </button>
-  </div>
-
-</div>
-
 
 
 
@@ -155,13 +133,15 @@
   <div class="headline">Change Password</div>
 
   <div class="txt_field">
+    <div class="info_txt"> <mat-icon id="theicon" style="transform: rotate(180deg)" >error_outline</mat-icon> min. 8 Characters</div>
     <input type="text" required
            [value]="this.changedPassword"
            (change)="setnewPassword($event)"
+           matTooltip="min. 8 Characters"
     >
     <span></span>
     <label>New Password</label>
-    <div class="invalidPasswordLength" *ngIf="invalidPasswordlengthforCurrentUser"> Invalid Password length min. 8 Characters</div>
+    <div class="invalidPasswordLength" *ngIf="invalidPasswordlengthforCurrentUser"> The Password field must be at least 8 Characters.</div>
   </div>
 
   <div class="change" >
@@ -175,7 +155,7 @@
 
 
 <div class="sureChangePassword" *ngIf="sureChangePassword">
-  <h1 mat-dialog-title>Info</h1>
+  <div class="headline">Info</div>
   <div mat-dialog-content>Are you sure you want to change your Password?</div>
   <div class="change_btn"mat-dialog-actions>
     <button mat-flat-button color="primary" (click)="sendChangePasswordrequest()">Change </button>
@@ -198,6 +178,7 @@
     <input type="text" required
            [value]="this.changedUsername"
            (change)="setnewUsername($event)"
+           matTooltip="Your new Username"
     >
     <span></span>
     <label>New Username</label>
@@ -214,8 +195,7 @@
 
 
 <div class="sureChangeUsername" *ngIf="sureChangeUsername">
-
-  <h1 mat-dialog-title>Info</h1>
+  <div class="headline">Info</div>
   <div mat-dialog-content>Are you sure you want to change your Username?</div>
   <div class="change_btn"mat-dialog-actions>
     <button mat-flat-button color="primary" (click)="sendChangeUsernamerequest()">Change </button>
@@ -236,10 +216,6 @@
 
 
 
-
-<div class="newVoteButton">
-  <input type="image" src="../../assets/newVote_btn.png" width="125%" height="125%" routerLink="/editor"/>
-</div>
 
 </body>
 </html>

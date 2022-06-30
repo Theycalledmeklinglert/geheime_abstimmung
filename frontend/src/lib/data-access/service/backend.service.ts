@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Poll } from '../models/Poll';
-import { EncryptionService } from './encryption.service';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {Poll} from '../models/Poll';
+import {EncryptionService} from './encryption.service';
+import {EncryptedData} from "../models/encryptedData";
 
 
 @Injectable({
@@ -23,6 +24,12 @@ export class BackendService {
     return this.httpClient.get<JSON>(this.url + '/api/polls?sessionID='+ this.getSessionID());
   }
 
+  loadAllUseryBySysadmin(): Observable<JSON> {
+
+    return this.httpClient.get<JSON>(this.url + '/api/polls/users?sessionID='+ this.getSessionID());
+  }
+
+
   loadPollByUser(pollId: number): Observable<Poll> {
 
     return this.httpClient.get<Poll>( this.url + '/api/polls/ '+ pollId +'?sessionID='+ this.getSessionID() );
@@ -37,6 +44,10 @@ export class BackendService {
 
     return this.httpClient.delete<JSON>( this.url + '/api/polls?pollID='+ pollId +'&sessionID='+ this.getSessionID() );
 
+  }
+
+  authSessionId():Observable<any> {
+    return this.httpClient.get<any>(this.url + '/api/polls/session?sessionID=' +  this.getSessionID());
   }
 
 
@@ -71,23 +82,22 @@ export class BackendService {
   }
 
   updatePasswordorUsernameSurveyLeader(newUserData: JSON): Observable<JSON>{
-    return this.httpClient.put<JSON>(this.url + '/api/polls/users?sessionID='+ this.getSessionID(), newUserData);
+    return this.httpClient.put<any>(this.url + '/api/polls/users?sessionID='+ this.getSessionID(), newUserData);
   }
 
   loadPollByID(token:string, id:number):Observable<Poll> {
     return this.httpClient.get<Poll>(this.url + '/api/polls/answers/' + id + '?token=' + token);
   }
 
-  submitSurvey(answeredPoll: Poll, token: string, id:string){
-    console.log(JSON.stringify(answeredPoll))
+  submitSurvey(answers: EncryptedData, token: string, id:string){
+    console.log(JSON.stringify(answers));
     const testUrl = this.url + '/api/polls/answers/' + id + '?token=' + token;
-    console.log(testUrl)
-
-    //let encryptedData = this.encryptionService.encrypt(localStorage.getItem("publicKey"), answeredPoll)
-
-    return this.httpClient.post<Poll>(testUrl, answeredPoll)
+    console.log(testUrl);
+    return this.httpClient.post<void>(testUrl, answers);
   }
-
+  loadAnswers(pollID: number){
+    return this.httpClient.get<any>(this.url + "/api/polls/answers?sessionID=" + this.getSessionID() + "&pollID=" + pollID);
+  }
 
   setNewVote(vote: Poll): void{
   }

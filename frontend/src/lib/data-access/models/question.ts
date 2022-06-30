@@ -1,3 +1,5 @@
+import {EncryptedData} from "./encryptedData";
+import {Answer} from "./answer";
 
 export interface Question{
   id: number;
@@ -9,6 +11,7 @@ export interface Question{
   fixedAnswers?: string[];
   multipleChoiceAnswer?: boolean[]
   individualAnswer?: string;
+  encryptedAnswers?: Answer[];
 
   visible?:boolean;
 }

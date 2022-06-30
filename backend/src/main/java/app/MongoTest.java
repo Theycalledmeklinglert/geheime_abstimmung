@@ -5,10 +5,8 @@ import static main.java.app.database.DBInstance.getDBInstance;
 
 import com.mongodb.BasicDBObject;
 import main.java.app.database.DBInstance;
-import okhttp3.*;
 import org.bson.Document;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -74,13 +72,15 @@ public class MongoTest {
         userDoc = new Document().append("name", "Bond").append("password", "12345").append("role", "admin");
         INSTANCE.createUser(userDoc);
 
-        ArrayList<String> users = INSTANCE.getAllUserNames();
+        /* ArrayList<String> users = INSTANCE.getAllUsers();
 
         for(String userName : users)
             {
                 System.out.println(userName);
             }
 
+
+         */
         System.out.println();
         System.out.println();
 

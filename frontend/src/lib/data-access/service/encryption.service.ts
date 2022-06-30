@@ -17,7 +17,6 @@ export class EncryptionService {
   }
 
   decrypt(secretKey: string, data: EncryptedData) {
-
     let nonce = decodeBase64(data.nonce);
     let ephemPubKey = decodeBase64(data.ephemPubKey);
     let encrypted = decodeBase64(data.message);
@@ -37,6 +36,6 @@ export class EncryptionService {
       const ephemKeyPair = box.keyPair();
       const publicKey = decodeBase64(publicKeyString);
       const encrypted = box(messageUint8, nonce, publicKey, ephemKeyPair.secretKey);
-      return {nonce: encodeBase64(nonce), ephemPubKey: encodeBase64(ephemKeyPair.publicKey), message: encodeBase64(encrypted), publicKey: publicKeyString};
+      return {nonce: encodeBase64(nonce), ephemPubKey: encodeBase64(ephemKeyPair.publicKey), message: encodeBase64(encrypted)};
     }
 }

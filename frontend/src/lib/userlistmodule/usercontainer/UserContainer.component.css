@@ -1,26 +1,31 @@
 
-.voteContainer{
+.userContainer{
   bottom: 10px;
-  height: 1%;
+  /*height: 1%;
+
+   */
 }
 
-.containerHeader #lifetime{
+.userContainer .usercontainerHeader #name{
   top: 10%;
   position: absolute;
-  left: 49%;
-}
-.containerHeader #name{
-  top: 10%;
-  position: absolute;
-  left: 11%;
+  left: 15%;
+  font-size: 20px;
 }
 
-.voteContainer #body{
+.userContainer .usercontainerHeader #sysadmin{
+  top: 10%;
+  position: absolute;
+  left: 45%;
+  font-size: 20px;
+}
+
+.userContainer #body{
   position: relative;
   overflow-x: hidden;
-  height: 30%;
+  height: 35%;
   background-color: transparent;
-  top: 10vh;
+  top: 5vh;
   color: transparent;
 }
 
@@ -29,7 +34,7 @@
   align-items: center;
   position: relative;
   background-color: transparent;
-  height: 50vh;
+  height: 25vh;
 }
 
 
@@ -38,12 +43,12 @@
   background-color: transparent;
   display: inline-block;
   width: 100%;
-  margin-bottom: 10px;
+
 }
 
 
 
-.sureDeletePoll{
+.sureDeleteUser{
   text-align: center;
   position: fixed;
   right: 40%;
@@ -53,15 +58,14 @@
   background-color: rgb(255, 255, 255);
   height: 20%;
   color: black;
-  box-shadow: 0 0 0.5em #000000;
   border-right: 1px solid #2c2c2c;
   border-left: 1px solid #2c2c2c;
   border-bottom: 1px solid #2c2c2c;
+  box-shadow: 0 0 0.5em #000000;
   border-radius: 10px 10px 10px 10px;
 }
 
-
-.sureDeletePoll .headline{
+.sureDeleteUser .headline{
   height: 35px;
   background:  #ff8200;
   border-radius: 7px 7px 0px 0px;
@@ -71,17 +75,36 @@
   color: white;
 }
 
-.sureDeletePoll .cancel_btn{
+
+
+
+
+.sureDeleteUser .cancel_btn{
   position: absolute;
   bottom: 5%;
   left: 10%;
   cursor: pointer;
 }
 
-.sureDeletePoll .delete_btn{
+.sureDeleteUser .delete_btn{
   position: absolute;
   bottom: 5%;
   right: 10%;
   cursor: pointer;
+}
+
+
+#sucessdeletedicon {
+  position: fixed;
+  font-size: 100px;
+  top:50%;
+  left: 47%;
+  color: springgreen;
+}
+#faildeleteicon {
+  position: fixed;
+  font-size: 100px;
+  top:47%;
+  left: 50%;
 }
 

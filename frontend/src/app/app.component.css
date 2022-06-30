@@ -18,8 +18,8 @@
   height: 60px;
   display: flex;
   align-items: center;
-  background-color: #ff8200;
-  color: white;
+  background-color: #ffffff;
+  color: #ff8000;
   font-weight: 600;
 }
 
@@ -28,19 +28,47 @@
   font-size: 1.3ch;
 }
 
-.toolbar .username {
-  font-size: 0.9ch;
+.toolbar #fhwslogo{
+  cursor: default;
+}
+
+.toolbar #userfield {
+  cursor: pointer;
   position: fixed;
   right: 1%;
+  width: max-content;
+  height: 30px;
 }
-.toolbar .username .usericon {
-  position: fixed;
-  right: 10%;
-  top: 2.5%;
+#icon {
+  position: relative;
 }
-.toolbar .username .usericon h1{
+
+#userName{
+  margin-top: 1%;
+  margin-right: 7px;
+  position: relative;
+  font-size: large;
+  float:left;
+}
+
+.connectionLost{
   position: fixed;
-  display: flex;
-  right: 1%;
-  top: 2%;
+  top: 100px;
+  right: 0;
+  height: 60px;
+  width: 175px;
+  background-color: rgba(255, 0, 0, 0.65);
+  color: white;
+}
+.connectionLost #connectionLosticon{
+  position: fixed;
+  top: 115px;
+  right: 140px;
+}
+
+.connectionLost #connectionLost_txt{
+  position: fixed;
+  top: 120px;
+  right: 20px;
+  vertical-align: middle;
 }

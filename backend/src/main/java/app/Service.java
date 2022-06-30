@@ -1,6 +1,5 @@
 package main.java.app;
 
-import com.mongodb.BasicDBObject;
 import main.java.app.database.DBInstance;
 import org.bson.Document;
 
@@ -125,10 +124,9 @@ public class Service
 		}
 
 		Document user = optUser.get();
-		// TODO: Decrypt JSON
 
 		// "accessible by" muss Array sein
-		if(!json.contains("name")  || !json.contains("questions") || !json.contains("emails")) // || !json.contains("accessible by")
+		if(!json.contains("name")  || !json.contains("questions") || !json.contains("emails") || !json.contains("publicKey")) // || !json.contains("accessible by")
 		{
 			Document error = new Document("Session ID", user.getString("Session ID"));
 			return Response.status(422).entity(error.toJson()).build();
@@ -161,8 +159,6 @@ public class Service
 		// Distributor = sendEmails(emailsAndLinks) // Oder so
 		// TODO: Call corresponding method of the the distributor class to send the links per Email (has to take emailsAndTokens and answerLinks
 
-
-		// TODO: encrypt JSON
 		return Response.ok(new Document("Session ID", user.getString("Session ID")).toJson()).build();
 	}
 
@@ -198,14 +194,41 @@ public class Service
 		return Response.ok(newSessID).build();
 	}
 
+
+	@GET
+	@Path("/users")
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response getAllUsers(@DefaultValue("") @QueryParam("sessionID") final String sessID)
+	{
+
+		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
+
+		if(!optUser.isPresent())
+		{
+			throw new WebApplicationException(Response.status(401).build());  	// Session ID doesn't exist
+		}
+
+		Document user = optUser.get();
+
+		if(!user.getString("role").equals("admin"))
+		{
+			Document error = new Document("Session ID", user.getString("Session ID"));
+			return Response.status(403).entity(error.toJson()).build();
+		}
+
+		ArrayList<Document> users = INSTANCE.getAllUsers();
+		Document res = new Document("users", users).append("Session ID", user.getString("Session ID"));
+
+		return Response.ok(res).build();
+	}
+
+
 	@POST	// TODO: Email mit Zugangsdaten (UserName, PW, Email an Email Adresse wenn ein neuer User erstellt wird
 	@Path("/users")
 	@Consumes( MediaType.APPLICATION_JSON )
 	@Produces( MediaType.APPLICATION_JSON )
 	public Response createUser(final String json, @DefaultValue("") @QueryParam("sessionID") final String sessID)
 	{
-
-		// TODO: Decrypt JSON
 
 		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
 		Document newUser = Document.parse(json);
@@ -237,8 +260,6 @@ public class Service
 		}
 
 		newUser.append("Session ID", user.getString("Session ID")).append("_id", newUser.get("_id").toString());
-
-		// TODO: encrypt Response?
 
 		return Response.ok(newUser).build();
 	}
@@ -351,6 +372,25 @@ public class Service
 		return Response.ok(new Document().append("Session ID", newSessID).toJson()).build();
 	}
 
+	@GET
+	@Path("/session")
+	@Produces( MediaType.APPLICATION_JSON )
+	public Response authSessionID(@DefaultValue("") @QueryParam("sessionID") final String sessID)
+	{
+
+		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
+
+		if(!optUser.isPresent())
+		{
+			throw new WebApplicationException(Response.status(401).build());  	// Session ID doesn't exist
+		}
+
+		Document user = optUser.get();
+		Document userWithOutOtherParams = new Document("Session ID", user.getString("Session ID"));
+
+		return Response.ok(userWithOutOtherParams).build();
+	}
+
 
 	// Session ID of user lasts for 60 Minutes
 	@POST
@@ -360,9 +400,6 @@ public class Service
 	public Response getSessIDForUser(final String json)
 	{
 
-		// TODO: Decrypt JSON
-		// Wie checken ob JSON verschluesselt wurde?
-
 		Document doc = Document.parse(json);
 		String email = doc.getString("email");
 		String password = doc.getString("password");
@@ -371,39 +408,48 @@ public class Service
 
 		if(!optUser.isPresent())
 		{
-			throw new WebApplicationException(Response.status(404).build());
+			throw new WebApplicationException(Response.status(401).build());
 		}
 
 		Document user = optUser.get();
 
+		long timeoutDur = INSTANCE.checkForTimeOut(email);
+		if(timeoutDur != 0)
+		{
+			throw new WebApplicationException(Response.status(403).entity(new Document("Timeout Duration in Minutes", timeoutDur)).build()); 	// Return amount of remaining timeout duration
+		}
+
 		if(!INSTANCE.comparePWHash(user.getString("pwHash"), INSTANCE.generatePWHash(password, Base64.decodeBase64(user.getString("salt")))))
 		{
+			int curAttempt = INSTANCE.addLoginAttempt(email);
 			System.out.println("Incorrect Password");
-			throw new WebApplicationException(Response.status(404).build());
+			throw new WebApplicationException(Response.status(401).entity(new Document("attempt", curAttempt)).build());
 		}
+
+		// Der ganze Abschnitt hier ist Schwachsinn oder?
 
 		// Moves the Keys exchanged between Server and Browser from UserCol to SessIDCol now that a SessID exists, so that the Keys will be deleted upon
 		// logout of the user (and 60 minutes passing)
-		String sessID = INSTANCE.generateAndSetSessID(user);
+/*		String sessID = INSTANCE.generateAndSetSessID(user);
 		Document sessUser = INSTANCE.getUserBySessionID(sessID).get();
 		sessUser.put("Public Key Client", user.getString("Public Key Client"));
 		sessUser.put("Private Key Server", user.getString("Private Key Server"));
-		INSTANCE.updateKeysInSessIDCol(sessID, user.getString("Public Key Client"), user.getString("Private Key Server"));		//TODO: TEST
+		INSTANCE.updateKeysInSessIDCol(sessID, user.getString("Public Key Client"), user.getString("Private Key Server"));
 
-		// TODO: Muss alles getestet werden sobald KeyExchange funktioniert
 		Document fieldsToDelete = new Document("Public Key Client", user.getString("Public Key Client")).append("Private Key Server", user.getString("Private Key Server"));
 		INSTANCE.removeFieldFromUserInUserCol(user.get("_id").toString(), fieldsToDelete);
 
+	 */
+		INSTANCE.removeFailedLoginHistory(email); 		// Clear failed login attempts upon successful login
+
+		String sessID = INSTANCE.generateAndSetSessID(user);
 		Document res = new Document("Session ID", user.getString("Session ID")).append("userName", user.getString("name")).append("role", user.getString("role"));
-		String unencryptedJSON = res.toJson();
 
-		// TODO: Encrypt JSON before sending back
-
-		String encryptedJSON = "Placeholder";
-
-		return Response.ok(unencryptedJSON).build();
+		return Response.ok(res).build();
 
 	}
+
+
 
 	@GET
 	@Path ("/answers")
@@ -439,7 +485,7 @@ public class Service
 	@Produces( MediaType.APPLICATION_JSON )
 	public Response getSinglePollByID(@DefaultValue( "" ) @PathParam( "pollID" ) final String poll_id, @DefaultValue("") @QueryParam("token") final String token)
 	{
-		final Optional<Document> optPoll = INSTANCE.getPollAsOptDocumentByID(poll_id);
+		final Optional<Document> optPoll = INSTANCE.getPollAsOptDocumentByID(poll_id.substring(poll_id.indexOf("=")+1));	// removed "poll_id=" from the poll_id
 
 		if(!optPoll.isPresent())
 		{
@@ -447,15 +493,19 @@ public class Service
 		}
 
 		Document poll = optPoll.get();
-
 		ArrayList<String> tokens = (ArrayList<String>) poll.get("tokens");
+
+		System.out.println(poll.getString("name"));
 
 		if(!tokens.contains(token))
 		{
-			return Response.status(403).build();
+			return Response.status(404).build();
 		}
 
-		// TODO: Decrypt JSON
+		System.out.println(poll);
+		System.out.println();
+		System.out.println(poll.toJson());
+
 		return Response.ok(poll.toJson()).build();
 	}
 
@@ -465,23 +515,13 @@ public class Service
 	@Consumes( MediaType.APPLICATION_JSON )
 	public Response postAnswer(final String json,@DefaultValue("") @PathParam("pollID") final String pollID ,@DefaultValue("") @QueryParam("token") final String token)
 	{
-
 		// TODO: Decrypt JSON
 
-		/*
-		if(!json.contains("poll_id") || !json.contains("token"))
-		{
-			throw new WebApplicationException(Response.status(422).build());
-		}
-		*/
-
-
 		Document answer = Document.parse(json);
-		//String pollID = answer.getString("poll_id");
 
 		Optional<Document> poll = INSTANCE.getPollAsOptDocumentByID(pollID);
 
-		if(!poll.isPresent())
+		if(!poll.isPresent() || !json.contains("nonce") || !json.contains("ephemPubKey") || !json.contains("message"))
 		{
 			throw new WebApplicationException(Response.status(404).build());
 		}

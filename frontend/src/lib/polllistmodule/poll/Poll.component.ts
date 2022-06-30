@@ -24,6 +24,8 @@ export class PollComponent {
   voteisfinish: boolean = false;
   @Output()
   deletePollEvent = new EventEmitter<Poll>();
+  @Output()
+  showPollResultEvent = new EventEmitter<Poll>();
 
   constructor (private backendService: BackendService, private router: Router, private authService: AuthenticationService) {}
 
@@ -31,7 +33,7 @@ export class PollComponent {
   showVoteResult(): void {
     if(this.voteisfinish == true){
       this.router.navigate(['/result']);
-      localStorage.setItem("clickedPoll",this.voteObject._id.toString())
+      localStorage.setItem("clickedPoll", JSON.stringify(this.voteObject));
     }
   }
 

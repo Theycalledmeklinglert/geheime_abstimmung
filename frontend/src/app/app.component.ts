@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {LoginComponent} from "../lib/router/login/login.component";
 import {BackendService} from "../lib/data-access/service/backend.service";
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,12 +13,9 @@ export class AppComponent {
 
   currentuser: string = "";
   showUsericon : boolean = false;
-
+  connectionIsLost: boolean = false;
 
   constructor() {
-    localStorage.removeItem("userName");
-    localStorage.removeItem("sessionID");
-    localStorage.removeItem("backendpublickey");
   }
 
   getUsername(): string{
@@ -29,11 +27,7 @@ export class AppComponent {
   }
 
   isLoggedIn():void{
-    if(localStorage.getItem("userName") != null){
-    this.showUsericon = true;
-    }else if(localStorage.getItem("userName") == null){
-      this.showUsericon = false;
-    }
+    this.showUsericon = localStorage.getItem("userName") != null
   }
 
 

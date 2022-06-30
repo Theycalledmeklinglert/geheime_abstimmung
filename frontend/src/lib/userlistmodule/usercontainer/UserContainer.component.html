@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>$Title$</title>
+</head>
+
+<div class="userContainer">
+<div class="usercontainerHeader">
+  <div id = "name" title = "NAME"> Name</div>
+  <div id = "sysadmin" title = "SYSADMIN"> Sysadmin?</div>
+</div>
+
+<div id="body">
+  <ul>
+    <li *ngFor="let user of ucobject.users">
+      <user [userObject]="user" (deleteUserEvent)="this.deleteUser($event)"></user>
+    </li>
+  </ul>
+  <mat-icon id="sucessdeletedicon" style="color:rgba(0,253,0,0.48)" *ngIf="sucesssend"> cloud_done</mat-icon>
+  <mat-icon id="faildeleteicon" style="color:rgba(255,0,0,0.49)" *ngIf="failsend">warning</mat-icon>
+</div>
+
+
+  <div class="sureDeleteUser" *ngIf="sureDeleteUsers">
+
+    <div class="headline">Info</div>
+    <div mat-dialog-content>Are you sure you want to delete User?</div>
+    <div class="delete_btn"mat-dialog-actions>
+      <button mat-flat-button color="primary" (click)="yessDelete()">Delete </button>
+    </div>
+    <div  class="cancel_btn" mat-dialog-actions>
+      <button mat-flat-button color="primary" (click)="noSkipDelete()">Cancel </button>
+    </div>
+
+  </div>
+
+
+
+
+
+
+</div>
+
+
+
+</html>

@@ -6,29 +6,32 @@
 .loginfield #loginwindow {
   position: fixed;
   right: 35%;
-  background-color: rgba(239, 238, 238, 0.97);
+  background-color: rgba(255, 255, 255, 0.97);
   width: 30%;
   height: 70%;
   top: 20%;
-  border: 3px solid #ea7609;
-  border-radius: 15px 15px 15px 15px;
+  border-radius: 10px 10px 10px 10px;
 }
-.loginfield .headline{
+.loginfield .loginheadline{
   margin-top: 5%;
   text-align: center;
+  color: #ff8200;
+  font-weight: 700;
 }
 
  .helpwindow{
    text-align: center;
-  position: fixed;
-  right: 40%;
-  background-color: rgba(239, 238, 238, 1);
-  width: 20%;
-  height: 20%;
-  top: 40%;
-  color: black;
-  border: 3px solid #ff8200;
-  border-radius: 15px 15px 15px 15px;
+   position: fixed;
+   right: 40%;
+   background-color: rgba(255, 255, 255, 0.97);
+
+   box-shadow: 1px 1px 1px silver;
+   width: 20%;
+   height: 20%;
+   top: 40%;
+   color: black;
+   border-radius: 10px 10px 10px 10px;
+   border: 1px solid lightgray;
 }
 
 
@@ -121,16 +124,20 @@
   color: #2691d9;
 }
 
-.loginfield #loginwindow .txt_field .wronguserdata{
+.loginfield #loginwindow .txt_field .loginFailed{
 
   position: absolute;
   width: 100%;
-  top: 180%;
+  top: 255%;
   text-align: center;
-  color: #ff0000;
+  color: rgb(207,68,73);
   font-size: 16px;
   pointer-events: none;
+background-color: rgb(254,234,235);
+}
 
+.loginfield #loginwindow .txt_field .loginFailed #serverproblemicon{
+  vertical-align: middle;
 }
 
 .loginfield #loginwindow input[type="submit"]{
