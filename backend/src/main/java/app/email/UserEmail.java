@@ -1,24 +1,22 @@
 package main.java.app.email;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.*;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Properties;
+
+
+
 
 public class UserEmail {
 
     static String sender = "secret.vote.project@gmail.com";
-    static String host = "smtp.gmail.com";
+    //static String host = "smtp.gmail.com";
 
-    public String generateTextMessage(String username, String password){
+   /* public String generateTextFile(String username, String password){
 
         String fileName = "userdata.txt";
         String encoding = "UTF-8";
@@ -34,17 +32,29 @@ public class UserEmail {
         }
         return fileName;
 
-    }
+    }*/
+ // TODO: mit username und password verschicken
+    public String generateMessage(String link){
 
-    public String generateMessage(String surveyName){
+        String deutsch = "Hallo neuer Nutzer," + "\n" + "du wurdest soeben als ein neuer Nutzer der Poll Application festgelegt." +
+                "Deinen neuen Account kannst du unter folgendem link erreichen" + link + "\n" +
+                "Bitte ändere dein Passwort, wenn du dich zum ertsen mal in deinen Account einloggst. So ist dein Account" +
+                "sicherer vor unbefugten Einloggen in dein Account.";
 
-        String message = "Sie wurden eingeladen an der Umfrage: " + surveyName +" teilzunehmen" ;
+        String Platzhalter = "\n" + "--------------------------------------------------------------------------------";
+
+        String english = "Hello new User,"+ "\n" +"You were registered as a new User for the poll Application," +
+                " you can now log in into your new account" +
+                "with the following link" + link + "\n" + "Please change your password after logging in the first time, so that your " +
+                "account is safe.";
+
+        String message = deutsch + Platzhalter + english;
 
         return message;
     }
 
     public Session generateSession(){
-        Properties properties = new Properties();
+       /* Properties properties = new Properties();
 
         properties.put("mail.smtp.host", host);
         properties.put("mail.smtp.port", "465");
@@ -58,7 +68,11 @@ public class UserEmail {
             }
         });
 
-        session.setDebug(true);
+        session.setDebug(true);*/
+
+        Distributor sess = new Distributor();
+
+        Session session = sess.generateSession();
 
         return session;
     }
@@ -74,18 +88,19 @@ public class UserEmail {
                     Message.RecipientType.TO,
                     InternetAddress.parse(recipient)
             );
-            message.setSubject("This is the Subject Line!");
+            message.setSubject("User Anmeldung für Poll / User Registration of Poll");
             message.setText(generatedMessage);
 
-            BodyPart messageBodyPart = new MimeBodyPart();
+            /*BodyPart messageBodyPart = new MimeBodyPart();
             Multipart multipart = new MimeMultipart();
 
             messageBodyPart = new MimeBodyPart();
-            String filename = generateTextMessage("blablacaodg@gmail.com", "1234");
+
+            String filename = generateTextFile("testMail@gmail.com", "12345");
             DataSource source = new FileDataSource(filename);
             messageBodyPart.setDataHandler(new DataHandler(source));
             messageBodyPart.setFileName(filename);
-            multipart.addBodyPart(messageBodyPart);
+            multipart.addBodyPart(messageBodyPart);*/
 
             Transport.send(message);
 
@@ -96,9 +111,12 @@ public class UserEmail {
             e.printStackTrace();
         }
     }
+        //TODO Klasse anpassen du Suffkopf
+    //TODO english Version
+
 
     public void distribute(ArrayList<String> recipients){
-        recipients.forEach(n -> sendMessage(n, generateMessage("Fußball")));
+        recipients.forEach(n -> sendMessage(n, generateMessage(" am besten ein link")));
     }
 
     public static void main(String[] args) {

@@ -14,20 +14,19 @@ public class Distributor {
     static String sender = "secret.vote.project@gmail.com";
     static String host = "smtp.gmail.com";
 
-    public String generateLink(){
 
-        String link = "http://localhost:4200/survey?";
-        String pollID = "3540";
-        String token = "aaaccbb1";
 
-        String finalLink = link + "token=" + token + "&pollID=" + pollID;
+    public String generateMessage(String pollName, String link){
 
-        return finalLink;
-    }
+        String deutsch = "Sie wurden eingeladen an der Umfrage: " + pollName +" teilzunehmen"
+                + "\n" + "Der Link zur Teilnahme an der Umfrage ist: " + link;
 
-    public String generateMessage(String surveyName, String link){
+        String Platzhalter = "\n" + "--------------------------------------------------------------------------------";
 
-        String message = "Sie wurden eingeladen an der Umfrage: " + surveyName + " teilzunehmen" + "\n" + "\n" + "Link zur Umfrage: " + link;
+        String english = " You were invited to take part in the survey about: " + pollName + "\n"
+                + " The link for your participation for the survey is: " + link;
+
+        String message = deutsch + Platzhalter + english;
 
         return message;
     }
@@ -63,7 +62,7 @@ public class Distributor {
                     InternetAddress.parse(recipient)
             );
 
-            message.setSubject("This is the Subject Line!");
+            message.setSubject("Einladung zur Teilnahme an Umfrage / Invitation for participation in a poll");
             message.setText(outMessage);
             Transport.send(message);
 
@@ -75,8 +74,13 @@ public class Distributor {
         }
     }
 
-    public void distribute(ArrayList<String> recipients){
-        recipients.forEach(n -> sendMessage(n,generateMessage("Neues Sportzentrum", generateLink())));
+
+    // TODO Methode bekommt List mit String array mit Emails und dazugehörigem Link
+    //TODO english Version
+
+
+    public void distribute(ArrayList<String> recipients, String surveyName, String link){
+        recipients.forEach(n -> sendMessage(n,generateMessage(surveyName, link)));
     }
 
 
@@ -91,7 +95,7 @@ public class Distributor {
 
         Distributor test = new Distributor();
 
-        test.distribute(recipients);
+        test.distribute(recipients, "Placeholder", "am besten ein Link");
 
     }
 
