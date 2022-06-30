@@ -1,11 +1,12 @@
 <div id="head">
   <mat-form-field [ngStyle]="{'width.ch': titleInput.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
-  <input matInput #titleInput class="questiontitle" type="text" [(ngModel)]="this.question.title" required />
+    <input matInput #titleInput class="questiontitle" type="text" [(ngModel)]="this.question.title" required/>
     <mat-label class="inputfield">Enter your question here...</mat-label>
   </mat-form-field>
 </div>
 
-<mat-form-field appearance="fill" [ngStyle]="{'width.ch': descInput.value.length, 'min-width.ch': 20, 'max-width.ch': 25}">
+<mat-form-field appearance="fill"
+                [ngStyle]="{'width.ch': descInput.value.length, 'min-width.ch': 20, 'max-width.ch': 25}">
   <mat-label class="inputfield">Add a description:</mat-label>
   <textarea matInput id="textarena"
             #descInput
@@ -22,34 +23,39 @@
 <div id="body">
   <form id="questionSelect">
     <mat-radio-group aria-label="Select an option" required>
-      <mat-radio-button (click)="chooseYesNoAnswer()" value="1" [checked]="question.type == 'yesNoAnswer'">Yes/No  Answer</mat-radio-button>
-      <mat-radio-button (click)="chooseFixedAnswers()" value="2" [checked]="question.type == 'fixedAnswers'">Fixed Answers</mat-radio-button>
-      <mat-radio-button (click)="chooseIndividualAnswers()" value="3" [checked]="question.type == 'individualAnswer'">Individual Answers</mat-radio-button>
+      <mat-radio-button (click)="chooseYesNoAnswer()" value="1" [checked]="question.type == 'yesNoAnswer'">Yes/No
+        Answer
+      </mat-radio-button>
+      <mat-radio-button (click)="chooseFixedAnswers()" value="2" [checked]="question.type == 'fixedAnswers'">Fixed
+        Answers
+      </mat-radio-button>
+      <mat-radio-button (click)="chooseIndividualAnswers()" value="3" [checked]="question.type == 'individualAnswer'">
+        Individual Answers
+      </mat-radio-button>
     </mat-radio-group>
   </form>
 
   <div *ngIf="this.fixedAnswers" class="questionwindow">
-    <ul class="answerlist">
-      <li *ngFor="let answer of this.question.fixedAnswers" class="answerstyle">
+    <div id="customAnswer">
+      <mat-form-field>
+        <mat-label>Enter an answer:</mat-label>
+        <input matInput placeholder="Your Answer" [(ngModel)]="this.tempAnswer" (keyup.enter)="addAnswer()">
+      </mat-form-field>
+    </div>
+<section  id="answerlist">
+    <ul>
+      <li *ngFor="let answer of this.question.fixedAnswers">
         {{answer}}
         <button mat-icon-button (click)="deleteAnswer(answer)">
           <mat-icon>delete</mat-icon>
         </button>
       </li>
-
-      <div id="customAnswer">
-       <mat-form-field>
-          <mat-label>Enter an answer:</mat-label>
-          <input matInput placeholder="Your Answer" [(ngModel)]="this.tempAnswer">
-        </mat-form-field>
-      </div>
     </ul>
-
+</section>
     <button mat-icon-button (click)="addAnswer()">
       <mat-icon>add</mat-icon>
     </button>
   </div>
-
 
 
 </div>

@@ -42,12 +42,20 @@
     -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
     filter: brightness(1.2) grayscale(.5) opacity(.9);
 }
-.answerlist{
-  list-style: none;
-  align-items: center;
+#answerlist ul{
+  display: flow;
+  margin-top: 10px;
 }
-#customAnswer{
-margin-top: 2vh;
+
+#answerlist ul li{
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  background-color: white;
+  list-style: none;
+  align-items: flex-start;
+  width: 10vw;
+//max-height: 30px;
 }
 
 input[id=yesNo]:checked {

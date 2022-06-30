@@ -7,7 +7,7 @@
 <body>
 
 
-<div class="sidebar">
+<div class="sidebar" *ngIf="!triesToSubmit && !notAllFilled">
 
   <section id="head">
     <h1>Create new Poll:</h1>
@@ -50,7 +50,7 @@
   </section>
 
 
-  <div *ngIf="!this.next" class="questionwindow">
+  <div *ngIf="!this.next && !this.triesToSubmit && !notAllFilled" class="questionwindow">
 
     <ul class="questioneditor">
       <li *ngFor="let question of poll.questions">
@@ -62,11 +62,11 @@
 
 </div>
 <section id="emaillist">
-  <div *ngIf="this.next" class="questionwindow">
+  <div *ngIf="this.next && !this.triesToSubmit && !notAllFilled" class="questionwindow">
     <ul>
       <label class="label" for="emailInput">Enter an Email:</label>
       <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
-        <input matInput type="email" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempEmail">
+        <input matInput type="email" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempEmail" (keyup.enter)="addEmail()">
         <mat-label id="inputfield">Enter here...</mat-label>
       </mat-form-field>
       <li *ngFor="let email of this.poll.emails" class="emailstyle">
@@ -82,26 +82,26 @@
   </div>
 </section>
 
-<div *ngIf="this.next" class="nextButton">
-  <button mat-flat-button color="primary" (click)="submitPoll()">
+<div *ngIf="this.next && !this.triesToSubmit && !notAllFilled" class="nextButton">
+  <button mat-flat-button color="primary" (click)="pressSubmitButton()">
     <mat-icon>arrow_forward_ios</mat-icon>
     &nbsp;&nbsp;&nbsp;&nbsp;SUBMIT&nbsp;&nbsp;&nbsp;&nbsp;
   </button>
 </div>
-<div *ngIf="!this.next" class="nextButton">
+<div *ngIf="!this.next && !this.triesToSubmit && !notAllFilled" class="nextButton">
   <button mat-flat-button color="primary" (click)="this.next = true;">
     <mat-icon>arrow_forward_ios</mat-icon>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NEXT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </button>
 </div>
-<div *ngIf="this.next" class="returnToMainButton">
+<div *ngIf="this.next && !this.triesToSubmit && !notAllFilled" class="returnToMainButton">
   <button mat-flat-button color="primary" (click)="this.next = false;">
     <mat-icon>arrow_back_ios</mat-icon>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BACK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </button>
 </div>
 
-<div *ngIf="!this.next" class="returnToMainButton">
+<div *ngIf="!this.next && !this.triesToSubmit && !notAllFilled" class="returnToMainButton">
   <button mat-flat-button color="primary" (click)="this.back = true">
     <mat-icon>arrow_back_ios</mat-icon>
     RETURN TO MAIN
@@ -119,9 +119,8 @@
   </div>
 </div>
 
-<div class="helpwindow" *ngIf="notAllFilled">
-  <br/>
-  <h1 mat-dialog-title>INFO</h1>
+<div class="sureBackToMain" *ngIf="notAllFilled">
+  <div class="headline">Info</div>
   <div mat-dialog-content>Please fill in all the necessary information!
   </div>
   <br/>
@@ -130,16 +129,36 @@
   </div>
 
 </div>
-<div class="helpwindow" *ngIf="submitted">
-  <br/>
-  <h1 mat-dialog-title>INFO</h1>
-  <div mat-dialog-content>Return to Main Menu
+<div class="sureBackToMain" *ngIf="triesToSubmit">
+  <div class="headline">Info</div><br/>
+  <div mat-dialog-content>Submit Poll
   </div>
   <br/>
-  <div mat-dialog-actions>
-    <button mat-flat-button color="primary" routerLink="/main">OKAY</button>
+  <div mat-dialog-content><br/>Are your entries complete?</div>
+  <div class="change_btn"mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="this.submitPoll()">Yes </button>
+  </div>
+  <div  class="cancel_btn" mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="this.triesToSubmit = false">Cancel </button>
   </div>
 </div>
+<div class="sureBackToMain" *ngIf="submitted">
+  <div class="headline">Info</div>
+  <div mat-dialog-content>Poll submitted
+  </div>
+  <br/>
+  <div mat-dialog-content><br/>This is the private key to this poll:<br/><br/>
+    {{this.privateKey}}<br/><br/>
+    Please write it down or copy to a txt-file. Store it somewhere safe.<br/> You won't be able to access the results without it!<br/><br/>
+  </div>
+  <div class="change_btn"mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="this.copyPrivateKeyToClipboard()">COPY TO CLIPBOARD </button>
+  </div>
+  <div  class="cancel_btn" mat-dialog-actions>
+    <button mat-flat-button color="primary" routerLink="/main" (click)="this.privateKey = undefined">RETURN TO MAIN MENU</button>
+  </div>
+</div>
+<mat-icon id="successicon" style="color:rgba(0,253,0,0.48)" *ngIf="copied"> cloud_done</mat-icon>
 </body>
 </html>
 

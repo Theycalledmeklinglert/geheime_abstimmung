@@ -4,6 +4,7 @@ import {EncryptionService} from "../../data-access/service/encryption.service";
 import {Poll} from "../../data-access/models/Poll";
 import {BackendService} from "../../data-access/service/backend.service";
 import {AuthenticationService} from "../../data-access/service/authentication.service";
+import {ClipboardService} from "ngx-clipboard";
 
 @Component({
   selector: 'editor',
@@ -13,7 +14,7 @@ import {AuthenticationService} from "../../data-access/service/authentication.se
 
 export class EditorComponent implements OnInit{
 
-  constructor(private cryptService: EncryptionService, private backendService: BackendService, private authService: AuthenticationService){}
+  constructor(private cryptService: EncryptionService, private backendService: BackendService, private authService: AuthenticationService, private clipboardService: ClipboardService){}
   poll: Poll;
 
   listPos?: number;
@@ -22,6 +23,9 @@ export class EditorComponent implements OnInit{
   notAllFilled: boolean = false;
   submitted: boolean = false;
   back: boolean = false;
+  triesToSubmit: boolean = false;
+  privateKey: string;
+  copied: boolean = false;
 
   addEmptyQuestion() {
     this.poll.questions.forEach(q => q.visible = false);
@@ -53,32 +57,32 @@ export class EditorComponent implements OnInit{
     this.poll.emails = this.poll.emails.filter((e) => e != email);
   }
 
-    submitPoll(){
-
+  pressSubmitButton(){
     if(!this.isCompleteVote()){
       this.notAllFilled = true;
-      this.submitted = false;
       return;
     }
+    this.triesToSubmit = true;
+  }
+
+    submitPoll(){
 
       this.submitted =true;
       const keyPair = this.cryptService.generateKeyPair();
-      const priv = keyPair.privateKey;
+      this.privateKey = keyPair.privateKey;
       this.poll.publicKey = keyPair.publicKey;
-      let textFile =
-        +"\n \n This is the generated private key for this survey. Please save it somewhere inaccessible for others:\n \n"
-        + "\t\t"+priv+"\t\t"
-        +"\n\n You will need it for accessing the results of this survey. Please close this window, after you copied and saved the key.";
-      var data = new Blob([textFile], {type: 'text/plain'});
-      if (textFile !== null) {
-        window.URL.revokeObjectURL(textFile);
-      }
-      textFile = window.URL.createObjectURL(data);
-      window.open(textFile);
       this.backendService.createPoll(this.poll).subscribe(response => this.authService.updateSessionid(response["Session ID"]));
     }
     pressOkayButton(){
       this.notAllFilled = false;
+    }
+
+    async copyPrivateKeyToClipboard(){
+      this.clipboardService.copyFromContent(this.privateKey);
+      this.copied = true;
+      setTimeout(() => {
+        this.copied = false;
+      }, 2000);
     }
 
   ngOnInit(): void {

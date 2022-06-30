@@ -4,6 +4,7 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import {NgApexchartsModule} from "ng-apexcharts";
+import {ClipboardModule} from "@angular/cdk/clipboard";
 //Custom-Components
 import {QuestionComponent} from "../lib/question/question.component";
 import {MainmenuComponent} from "../lib/router/mainmenu/mainmenu.component";
@@ -53,7 +54,7 @@ import {UserConainterComponent} from "../lib/userlistmodule/usercontainer/UserCo
     imports: [
         BrowserModule,
         AppRoutingModule,
-
+        ClipboardModule,
         BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
