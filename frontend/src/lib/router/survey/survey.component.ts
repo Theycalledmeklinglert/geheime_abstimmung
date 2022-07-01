@@ -93,9 +93,8 @@ export class SurveyComponent implements OnInit{
 
 
   debug() {
-    console.log(JSON.stringify(this.poll))
-    console.log(this.params.token)
-    console.log(this.params.pollID)
+    console.log(JSON.stringify(this.surveyForm.value))
+
     console.log(this.collectAnswers());
     console.log(this.cryptService.encrypt(this.poll.publicKey, this.collectAnswers()));
 
