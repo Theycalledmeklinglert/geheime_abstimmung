@@ -485,7 +485,7 @@ public class DBInstance {
         for (int i = 0; i < size; i++) {
             String token = String.valueOf(System.currentTimeMillis()).substring(8, 13) + UUID.randomUUID().toString().substring(1, 10);
             tokens.add(token);
-            System.out.println("http://localhost:4200/survey?token=" + token + "&pollID=");
+        //    System.out.println("http://localhost:4200/survey?token=" + token + "&pollID=");
         }
 
         return tokens;
@@ -493,10 +493,11 @@ public class DBInstance {
 
     public long checkForTimeOut(String email) {
         Document log = loginAttemptCol.find(eq("email", email)).projection(Projections.fields()).first();
+        Calendar now = Calendar.getInstance();
 
-        if (log != null) {
+        if (log != null)
+        {
             int currAttempt = log.getInteger("attempts");
-            Calendar now = Calendar.getInstance();
             Calendar newTimeout = Calendar.getInstance();
 
             long diff = log.getDate("Timeout until").getTime() - now.getTimeInMillis();
@@ -506,53 +507,23 @@ public class DBInstance {
                 // if it hast already started. This causes issues because then this method will
                 // return 0 even if there is 1 minute of the Timeout left. Therefore 1 minute is added
                 // to the return value here.
-            }
-            diff = TimeUnit.MILLISECONDS.toMinutes(log.getDate("Timeout until").getTime() - log.getDate("created at").getTime());
-
-            /* else if (currAttempt == 5 && diff < 14)                                                                // check if this is the first Timeout
+            } else if (currAttempt == 5)                                                          // check if this is the first Timeout
             {
-                newTimeout.add(Calendar.MINUTE, 15);
+                newTimeout.add(Calendar.MINUTE, 2);
                 log.put("Timeout until", newTimeout.getTime());
                 log.put("created at", now.getTime());
                 log.put("attempts", 0);
                 loginAttemptCol.replaceOne(Filters.eq("email", email), log);
 
-                return 15;
-            } else if (diff >= 14)                                                            // each subsequent failed login attempt doubles timeout duration
+                return 2;
+            } else                                                                                     // if Timeout is already 24 hours it's set to now + 24 hours instead
             {
-                long timeoutLength = TimeUnit.MILLISECONDS.toSeconds(Math.abs(log.getDate("Timeout until").getTime() - log.getDate("created at").getTime()));
-                System.out.println("TimeoutLength: " + timeoutLength);
-                if (timeoutLength < 86400)                                                                 // Check if timeout is/was smaller than 24 hours
-                {
-                    long newTimeoutSuggestion = TimeUnit.SECONDS.toMinutes(timeoutLength) * 2;
-                    if (newTimeoutSuggestion < 1440)                                                       // if new Timeout is smaller than 24 hours
-                    {
-                        System.out.println("Smaller than 1440 " + newTimeoutSuggestion);
-
-                        newTimeout.add(Calendar.MINUTE, (int) newTimeoutSuggestion);                       // Double initial Timeout Duration from this point in time
-                    } else {
-                        System.out.println("Bigger than 1440 " + newTimeoutSuggestion);
-                        newTimeout.add(Calendar.HOUR, 24);
-                    }
-
-
-                } else                                                                                     // if Timeout is already 24 hours it's set to now + 24 hours instead
-                {
-                    newTimeout.add(Calendar.HOUR, 24);
-                }
-
-             */
-
-                log.put("created at", now.getTime());
-                log.put("Timeout until", newTimeout.getTime());
-                log.put("attempts", 0);                                                                    // reset attempts
-                loginAttemptCol.replaceOne(Filters.eq("email", email), log);
-                return TimeUnit.MILLISECONDS.toMinutes(Math.abs(now.getTimeInMillis() - System.currentTimeMillis()));
+                return 0;
             }
-        return 0;
         }
-    //    return 0;
-   // }
+        return 0;
+    }
+
 
     public int addLoginAttempt(String email) {
         Document log = loginAttemptCol.find(eq("email", email)).projection(Projections.fields()).first();
