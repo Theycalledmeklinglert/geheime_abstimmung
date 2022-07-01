@@ -1,29 +1,24 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>login</title>
-</head>
-<body> -->
 <div class="body">
 
     <!-- Loginwindow -->
     <div class="loginfield" >
       <div id="loginwindow">
         <div class="loginheadline">Login to your account</div>
-        <div class="txt_field">
-          <input type="text" required
-                 [value]="this.userEmail"
-                 (change)="setUsername($event)"
+        <div class="txt_field" >
+          <input  name="username"
+                  type="text" required
+                  [value]="this.userEmail"
+                  (change)="setUsername($event)"
           >
           <span></span>
           <label *ngIf="wrongUsernameorPassword == false">Email</label>
           <label *ngIf="wrongUsernameorPassword" style="color:red">Email</label>
         </div>
         <div class="txt_field">
-          <input type="password" required
-                 [value]="this.password"
-                 (change)="setPassword($event)"
+          <input  name="password"
+                  type="password" required
+                  [value]="this.password"
+                  (change)="setPassword($event)"
           >
           <span></span>
           <label *ngIf="wrongUsernameorPassword == false">Password</label>
@@ -42,7 +37,7 @@
         </div>
 
 
-        <input type="submit" value="Login"  (click)="submitlogin($event)">
+        <input type="submit" name="loginButton" value="Login"  (click)="submitlogin($event)">
         <div class="loading" *ngIf="showloadingstatus">
           <mat-spinner [diameter]="40"></mat-spinner>
         </div>
@@ -59,12 +54,13 @@
         <a href="https://itsc.fhws.de/helpdesk/">Helpdesk.ITSC@fhws.de</a>
       </div>
       <div mat-dialog-actions>
-        <button mat-flat-button color="primary" (click)="pressokaybutton()">OKAY </button>
+        <button mat-flat-button
+                color="primary"
+                (click)="pressokaybutton()"
+                >OKAY </button>
       </div>
 
     </div>
 
 
   </div>
-<!-- </body>
-</html> -->
