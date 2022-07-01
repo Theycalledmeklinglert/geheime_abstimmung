@@ -26,7 +26,7 @@ export class LoginComponent {
   timeout: boolean = false;
   timeoutTime: string = "";
   serverproblems: boolean = false;
-  atmepts: number = 5;
+  attempts: number = 5;
 
 
   constructor(private authService: AuthenticationService, private router: Router) {}
@@ -67,8 +67,8 @@ export class LoginComponent {
               this.wrongUsernameorPassword = true;
               console.log("Attempt: "+error.error["attempt"])
               this.timeout = false;
-              this.atmepts = 5 - error.error["attempt"]
-              if(this.atmepts == 0) this.timeout = true;
+              this.attempts = 5 - error.error["attempt"]
+              if(this.attempts == 0) this.timeout = true;
             }else {
               this.wrongUsernameorPassword = true;
               console.log(error.status);
@@ -98,9 +98,9 @@ export class LoginComponent {
     this.helpbuttonpressed = false;
   }
 
-  getAttemptsOrTimeout(): string{
+  getTimeout(): string{
     if(this.timeout)return this.timeoutTime;
-    return "Remaining ("+this.atmepts+"/5)";
+    return "";
   }
 
 
