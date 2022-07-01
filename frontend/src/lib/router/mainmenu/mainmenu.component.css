@@ -581,13 +581,3 @@
  .taskbar #menuicon :hover{
    color: #ff8200;
  }
-
-
-
-
- /*old Button
-
- <div class="newVoteButton">
-  <input type="image" src="../../assets/newVote_btn.png" width="125%" height="125%" routerLink="/editor"/>
-</div>
-  */
