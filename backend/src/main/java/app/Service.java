@@ -150,6 +150,7 @@ public class Service
 		for(String email : emails)
 		{
 			String answerLink = baseUri + "?pollID=" + poll.get("_id").toString() + "&token=" + tokens.get(counter);
+			System.out.println(answerLink);
 			emailsAndLinks.add(new String[] {emails.get(counter), answerLink});
 			counter++;
 		}

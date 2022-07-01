@@ -509,7 +509,7 @@ public class DBInstance {
             }
             diff = TimeUnit.MILLISECONDS.toMinutes(log.getDate("Timeout until").getTime() - log.getDate("created at").getTime());
 
-            if (currAttempt == 5 && diff < 14)                                                                // check if this is the first Timeout
+            /* else if (currAttempt == 5 && diff < 14)                                                                // check if this is the first Timeout
             {
                 newTimeout.add(Calendar.MINUTE, 15);
                 log.put("Timeout until", newTimeout.getTime());
@@ -534,10 +534,14 @@ public class DBInstance {
                         System.out.println("Bigger than 1440 " + newTimeoutSuggestion);
                         newTimeout.add(Calendar.HOUR, 24);
                     }
+
+
                 } else                                                                                     // if Timeout is already 24 hours it's set to now + 24 hours instead
                 {
                     newTimeout.add(Calendar.HOUR, 24);
                 }
+
+             */
 
                 log.put("created at", now.getTime());
                 log.put("Timeout until", newTimeout.getTime());
@@ -545,9 +549,10 @@ public class DBInstance {
                 loginAttemptCol.replaceOne(Filters.eq("email", email), log);
                 return TimeUnit.MILLISECONDS.toMinutes(Math.abs(now.getTimeInMillis() - System.currentTimeMillis()));
             }
-        }
         return 0;
-    }
+        }
+    //    return 0;
+   // }
 
     public int addLoginAttempt(String email) {
         Document log = loginAttemptCol.find(eq("email", email)).projection(Projections.fields()).first();
