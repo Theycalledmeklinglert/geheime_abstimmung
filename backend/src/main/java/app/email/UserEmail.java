@@ -33,6 +33,8 @@ public class UserEmail {
         return fileName;
 
     }*/
+
+
  // TODO: mit username und password verschicken
     public String generateMessage(String link){
 
@@ -70,7 +72,7 @@ public class UserEmail {
 
         session.setDebug(true);*/
 
-        Distributor sess = new Distributor();
+        GmailConnection sess = new GmailConnection();
 
         Session session = sess.generateSession();
 
