@@ -37,12 +37,12 @@
 
 </div>
 
-<div *ngIf="validated" id="arrows">
-  <button mat-flat-button (click)="questionCount = questionCount - 1; this.showQuestionResult();"
+<div *ngIf="validated">
+  <button mat-flat-button  id="arrowLeft" (click)="questionCount = questionCount - 1; this.showQuestionResult();"
           *ngIf="this.questionCount - 1 >= 0">
     <mat-icon>keyboard_arrow_left</mat-icon>
   </button>
-  <button mat-flat-button (click)="questionCount = questionCount + 1; this.showQuestionResult();"
+  <button mat-flat-button id="arrowRight" (click)="questionCount = questionCount + 1; this.showQuestionResult();"
           *ngIf="this.questionCount + 1 < this.poll.questions.length">
     <mat-icon>keyboard_arrow_right</mat-icon>
   </button>

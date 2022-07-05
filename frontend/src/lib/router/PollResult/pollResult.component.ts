@@ -63,10 +63,12 @@ export class PollResultComponent implements OnInit {
     this.individual = false;
     if (this.poll.questions[this.questionCount].type == 'yesNoAnswer' || this.poll.questions[this.questionCount].type == 'fixedAnswer') {
       let values = this.getValues();
-      let adjustedLabels =this.getAnswerTitles();
-      for(let i = 0; i < adjustedLabels.length; i++){
-        adjustedLabels[i] += ": "+values[i];
+      let adjustedLabels = this.getAnswerTitles();
+      for (let i = 0; i < adjustedLabels.length; i++) {
+        adjustedLabels[i] = adjustedLabels[i].replace(": "+values[i], "");
+        adjustedLabels[i] += ": " + values[i];
       }
+      console.log(values.length)
       this.chartOptions = {
         series: values,
         chart: {
@@ -95,8 +97,9 @@ export class PollResultComponent implements OnInit {
 
   async getDecryptedAnswers() {
     try {
+      this.tempPrivKey = this.tempPrivKey.trim();
       this.answers = this.encryptedAnswers.map(a => JSON.parse(this.cryptService.decrypt(this.tempPrivKey, a)));
-      if (this.answers[0] != undefined) {
+      if (this.answers) {
         this.validated = true;
         this.showDecryptWindow = false;
         this.showQuestionResult();
@@ -122,17 +125,16 @@ export class PollResultComponent implements OnInit {
       });
       result.push(yes);
       result.push(no);
-      return result;
     } else {
-      this.getAnswerTitles().forEach(q => {
-        let counter: number = 0;
-        localAnswers.forEach(a => {
-          if (a.answer == q) counter++
-        });
+      for(let i = 0; i < this.getAnswerTitles().length; i++){
+        let counter = 0;
+        for(let j = 0; j < localAnswers.length;j++){
+          if(localAnswers[j].answer[i] == true) counter++;
+        }
         result.push(counter);
-      });
-      return result;
+      }
     }
+    return result;
   }
 
   private getAnswersToThisQuestion() {
@@ -145,7 +147,7 @@ export class PollResultComponent implements OnInit {
 
   getAnswerTitles() {
     if (this.poll.questions[this.questionCount].type == 'yesNoAnswer') return ["Yes", "No"];
-    else return this.poll.questions[this.questionCount].fixedAnswers
+    else return this.poll.questions[this.questionCount].fixedAnswers;
     //   .sort((n1,n2) => {
     //   if (n1 > n2) {
     //     return 1;

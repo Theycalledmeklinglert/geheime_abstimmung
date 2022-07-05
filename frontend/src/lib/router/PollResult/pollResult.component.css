@@ -77,13 +77,18 @@
   height: 50vh;
   margin-bottom: 20px;
 }
-#arrows{
+#arrowLeft{
   position: fixed;
-  left: 50%;
+  left: 47%;
   right: 50%;
   top: 90%;
 }
-
+#arrowRight{
+  position: fixed;
+  left: 53%;
+  right: 50%;
+  top: 90%;
+}
 
 #individualList ul li {
   overflow: auto;
