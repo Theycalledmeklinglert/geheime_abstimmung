@@ -32,7 +32,7 @@ public class Distributor {
     }
 
     public Session generateSession(){
-        Properties properties = System.getProperties();
+        /*Properties properties = System.getProperties();
 
         properties.put("mail.smtp.host", host);
         properties.put("mail.smtp.port", "465");
@@ -48,7 +48,14 @@ public class Distributor {
 
         session.setDebug(true);
 
+        return session;*/
+
+        GmailConnection sess = new GmailConnection();
+
+        Session session = sess.generateSession();
+
         return session;
+
     }
 
     public void sendMessage(String recipient, String outMessage){
