@@ -30,6 +30,7 @@ export class SurveyQuestionComponent implements OnInit {
       this.parentForm.addControl(this.question.title, new FormControl(null, Validators.required));
     }
 
+    this.initMultiplechoiceArray();
   }
 
   fixedAnswerCheck(minRequired = 1): ValidatorFn {
@@ -52,12 +53,19 @@ export class SurveyQuestionComponent implements OnInit {
 
       return null;
     };
+  }
 
+  initMultiplechoiceArray(): void {
+    if(this.question.type == "fixedAnswer") {
+      this.question.multipleChoiceAnswer = new Array(this.question.fixedAnswers.length);
+      this.question.multipleChoiceAnswer.fill(false);
+    }
+    console.log(this.question.multipleChoiceAnswer)
   }
 
 
-  updateFixedAnswer(index: number, checkBox):void {
-    this.question.multipleChoiceAnswer[index] = checkBox.checked;
+  updateFixedAnswer(index: number, checked: boolean):void {
+    this.question.multipleChoiceAnswer[index] = checked;
   }
 
   updateCustomAnswer(event: any) {

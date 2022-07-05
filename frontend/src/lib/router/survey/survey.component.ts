@@ -57,6 +57,7 @@ export class SurveyComponent implements OnInit{
   submitSurvey():void {
     let answers: Answer[] = this.collectAnswers();
     let encrypted: EncryptedData = this.cryptService.encrypt(this.poll.publicKey, answers);
+
     this.backendService.submitSurvey(encrypted, this.params.token, this.params.pollID).subscribe({
       next: (response) => console.log(response),
       error: (error) => this.createErrorMessage(error),
@@ -74,9 +75,14 @@ export class SurveyComponent implements OnInit{
 
   collectAnswers(){
     let result: Answer[] = [];
+
     this.poll.questions.forEach(q => {
-      if(q.type == 'yesNoAnswer') result.push( {id: q.id, answer: q.yesNo});
-      else if (q.type == 'fixedAnswer') result.push({id: q.id, answer: q.fixedAnswers});
+      if(q.type == 'yesNoAnswer'){
+        result.push( {id: q.id, answer: q.yesNo});
+      }
+      else if(q.type == 'fixedAnswer'){
+         result.push({id: q.id, answer: q.multipleChoiceAnswer});
+      }
       else result.push( {id: q.id, answer: q.individualAnswer});
     })
     return result;
@@ -93,10 +99,10 @@ export class SurveyComponent implements OnInit{
 
 
   debug() {
-    console.log(JSON.stringify(this.surveyForm.value))
-
+    //console.log(JSON.stringify(this.surveyForm.value))
+    //console.log(this.poll.questions)
     console.log(this.collectAnswers());
-    console.log(this.cryptService.encrypt(this.poll.publicKey, this.collectAnswers()));
+    //console.log(this.cryptService.encrypt(this.poll.publicKey, this.collectAnswers()));
 
   }
 

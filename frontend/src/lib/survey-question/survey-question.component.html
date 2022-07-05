@@ -22,7 +22,7 @@
     <ul [formGroup]="this.subGroupFixed">
       <li *ngFor="let answer of this.question.fixedAnswers; let i = index">
         <div class="answer">
-          <mat-checkbox [formControlName]="answer" (onClick)="updateFixedAnswer(i, this)">
+          <mat-checkbox [formControlName]="answer" (change)="updateFixedAnswer(i, $event.checked)">
           {{answer}}
         </mat-checkbox>
         </div>
