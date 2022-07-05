@@ -32,7 +32,7 @@ export class EditorComponent implements OnInit{
     let question: Question = {id: 1, title: "",type:"", visible: true};
     this.listPos = this.poll.questions.push(question) - 1;
     question.id = (this.listPos == 0) ? 1 : this.poll.questions[this.listPos - 1].id + 1;
-
+    this.next = false;
   }
 
   deleteQuestion(question: Question){
@@ -105,5 +105,12 @@ export class EditorComponent implements OnInit{
       if (this.poll.emails.length == 0) result = false;
       return result;
 
+    }
+
+    async retrieveEmails(){
+      await this.backendService.loadAlreadyUsedEmails().subscribe(result => {
+        if(result["E-Mails"]) this.poll.emails = result["E-Mails"];
+        if(result["Session ID"]) this.authService.updateSessionid(result["Session ID"]);
+      });
     }
 }
