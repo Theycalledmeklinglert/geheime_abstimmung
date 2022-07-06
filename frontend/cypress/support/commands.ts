@@ -41,3 +41,34 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+
+Cypress.Commands.add("login", (username:string, password:string) => {
+  cy.get('input[name="username"]').type(username)
+  .get('input[name="password"]').type(password)
+  .get('input[name="loginButton"]').click()
+  .url().should('include','main');
+})
+
+Cypress.Commands.add('createNewQuestion', (title:string, type:string, customAnswers?:string[]) => {
+let customCommand = cy.get('input[name="questionTitleInput"]').type(title);
+              cy.get('textarea[name="questionDescriptionInput"]').type('Created in Cypress');
+
+switch(type) {
+default: throw new Error("Question Type is invalid")
+case "individualAnswer": customCommand=customCommand.get('mat-radio-button[value="3"]').click(); break;
+case "yesNoAnswer": customCommand=customCommand.get('mat-radio-button[value="1"]').click(); break;
+case "fixedAnswers":
+customCommand=customCommand.get('mat-radio-button[value="2"]').click();
+customAnswers.forEach( answer => {
+customCommand =  customCommand.get('input[name="customAnswerInput"]')
+                              .type(answer)
+                              .type('{enter}');
+});
+break;
+}
+
+return customCommand;
+
+});
+

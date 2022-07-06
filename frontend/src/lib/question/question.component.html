@@ -1,6 +1,12 @@
 <div id="head">
   <mat-form-field [ngStyle]="{'width.ch': titleInput.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
-    <input matInput #titleInput class="questiontitle" type="text" [(ngModel)]="this.question.title" required/>
+    <input  matInput
+            #titleInput
+            name="questionTitleInput"
+            class="questiontitle"
+            type="text"
+            [(ngModel)]="this.question.title"
+            required/>
     <mat-label class="inputfield">Enter your question here...</mat-label>
   </mat-form-field>
 </div>
@@ -8,7 +14,9 @@
 <mat-form-field appearance="fill"
                 [ngStyle]="{'width.ch': descInput.value.length, 'min-width.ch': 20, 'max-width.ch': 25}">
   <mat-label class="inputfield">Add a description:</mat-label>
-  <textarea matInput id="textarena"
+  <textarea matInput
+            id="textarena"
+            name="questionDescriptionInput"
             #descInput
             [(ngModel)]="this.question.description"
             cdkTextareaAutosize
@@ -39,7 +47,11 @@
     <div id="customAnswer">
       <mat-form-field>
         <mat-label>Enter an answer:</mat-label>
-        <input matInput placeholder="Your Answer" [(ngModel)]="this.tempAnswer" (keyup.enter)="addAnswer()">
+        <input  matInput
+                name="customAnswerInput"
+                placeholder="Your Answer"
+                [(ngModel)]="this.tempAnswer"
+                (keyup.enter)="addAnswer()">
       </mat-form-field>
     </div>
 <section  id="answerlist">

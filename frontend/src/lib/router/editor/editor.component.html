@@ -15,7 +15,13 @@
     <div id="surveyNameInput">
       <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 40, 'max-width.ch': 60}">
         <mat-label>Poll Name</mat-label>
-        <input matInput #inputText class="inputfield" type="text" [(ngModel)]="this.poll.name" required>
+        <input  matInput
+                #inputText
+                name="pollNameInput"
+                class="inputfield"
+                type="text"
+                [(ngModel)]="this.poll.name"
+                required>
       </mat-form-field>
       <br>
     </div>
@@ -24,8 +30,13 @@
     <div id="expirationDateInput">
       <mat-label>Expiration</mat-label>
       <br/>
-      <input class="inputfield" type="datetime-local" id="timeinputfield" [(ngModel)]="this.poll.lifetime"
-             required><br/>
+      <input
+        name="dateInput"
+        class="inputfield"
+        type="datetime-local"
+        id="timeinputfield"
+        [(ngModel)]="this.poll.lifetime"
+        required><br/>
     </div>
 
   </section>
