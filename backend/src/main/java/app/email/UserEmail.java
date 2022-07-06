@@ -6,7 +6,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.ArrayList;
+
 
 
 
@@ -14,6 +14,8 @@ import java.util.ArrayList;
 public class UserEmail {
 
     static String sender = "secret.vote.project@gmail.com";
+
+
     //static String host = "smtp.gmail.com";
 
    /* public String generateTextFile(String username, String password){
@@ -35,27 +37,47 @@ public class UserEmail {
     }*/
 
 
- // TODO: mit username und password verschicken
-    public String generateMessage(String link){
 
-        String deutsch = "Hallo neuer Nutzer," + "\n" + "du wurdest soeben als ein neuer Nutzer der Poll Application festgelegt." +
-                "Deinen neuen Account kannst du unter folgendem link erreichen" + link + "\n" +
+    public String generateMessage(String username, String password){
+
+        String deutsch = "Hallo neuer Nutzer," + "\n" +
+                "du wurdest soeben als ein neuer Nutzer der Poll Application festgelegt." +
+                "Deinen neuen Account kannst du unter folgendem link erreichen" + "http://localhost:4200/" + "\n" +
+                "Deine ZugangsDaten sind: " +"\n" + "\n"+
+
+                "Username: " + username + "\n"+
+                "Passwort " + password+ "\n" +"\n"+
+
                 "Bitte ändere dein Passwort, wenn du dich zum ertsen mal in deinen Account einloggst. So ist dein Account" +
                 "sicherer vor unbefugten Einloggen in dein Account.";
 
-        String Platzhalter = "\n" + "--------------------------------------------------------------------------------";
+        String Platzhalter = "\n"+ "\n"
 
-        String english = "Hello new User,"+ "\n" +"You were registered as a new User for the poll Application," +
+                + "--------------------------------------------------------------------------------" +
+
+                "\n" + "\n";
+
+        String english = "Hello new User,"+ "\n" +
+                "You were registered as a new User for the poll Application," +
                 " you can now log in into your new account" +
-                "with the following link" + link + "\n" + "Please change your password after logging in the first time, so that your " +
+                "with the following link" + "http://localhost:4200/" + "\n" +
+                "For the first login your username and password are: "+ "\n"+ "\n"+
+
+                "Username: " + username + "\n"+
+                "Password: " + password+ "\n" +"\n"+
+
+                "Please change your password after logging in the first time, so that your " +
                 "account is safe.";
 
         String message = deutsch + Platzhalter + english;
 
         return message;
+
     }
 
     public Session generateSession(){
+
+
        /* Properties properties = new Properties();
 
         properties.put("mail.smtp.host", host);
@@ -113,23 +135,33 @@ public class UserEmail {
             e.printStackTrace();
         }
     }
-        //TODO Klasse anpassen du Suffkopf
-    //TODO english Version
 
 
-    public void distribute(ArrayList<String> recipients){
-        recipients.forEach(n -> sendMessage(n, generateMessage(" am besten ein link")));
+
+
+    public void sendUserEmail(String recipient, String username, String password){
+
+        sendMessage(recipient, generateMessage(username, password));
+
     }
 
     public static void main(String[] args) {
-        ArrayList<String> recipients = new ArrayList<>();
+        /*ArrayList<String> recipients = new ArrayList<>();
 
         recipients.add("tim.braunger@gmx.de");
         recipients.add("blablacaodg@gmail.com");
 
+         */
+
+        String recipient = "tim.braunger@gmx.de";
+
+        String username = "tim.braunger@gmx.de";
+
+        String password = "Project420";
+
         UserEmail test = new UserEmail();
 
-        test.distribute(recipients);
+        test.sendUserEmail(recipient, username, password);
 
     }
 

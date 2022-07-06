@@ -21,7 +21,8 @@ public class Distributor {
         String deutsch = "Sie wurden eingeladen an der Umfrage: " + pollName +" teilzunehmen"
                 + "\n" + "Der Link zur Teilnahme an der Umfrage ist: " + link;
 
-        String Platzhalter = "\n" + "--------------------------------------------------------------------------------";
+        String Platzhalter = "\n" + "--------------------------------------------------------------------------------"
+                +"\n";
 
         String english = " You were invited to take part in the survey about: " + pollName + "\n"
                 + " The link for your participation for the survey is: " + link;
