@@ -9,9 +9,9 @@
 </section>
 
 
-<div id="body" [formGroup]="this.parentForm">
+<form id="body" [formGroup]="this.parentForm">
 
-  <section class="yesNoAnswer" *ngIf="this.question.type=='yesNoAnswer' ">
+  <section class="yesNoAnswer" *ngIf="this.question.type=='yesNoAnswer'">
     <mat-radio-group [formControlName]="this.question.title">
       <mat-radio-button [value]="true" (change)="this.question.yesNo=true">yes</mat-radio-button>
       <mat-radio-button [value]="false" (change)="this.question.yesNo=false">no</mat-radio-button>
@@ -30,16 +30,17 @@
     </ul>
   </section>
 
-  <section class="customAnswer" *ngIf="this.question.type=='individualAnswer' ">
-    <mat-form-field>
+  <section class="customAnswer" *ngIf="this.question.type=='individualAnswer'">
+    <mat-form-field appearance="fill" id="cA">
       <input
-      matInput placeholder="Your Answer"
-      (change)="updateCustomAnswer($event)"
-      [formControlName]="this.question.title"
+        name="customAnswer"
+        matInput
+        placeholder="Your Answer"
+        (change)="updateCustomAnswer($event)"
+        [formControlName]="this.question.title"
       >
     </mat-form-field>
   </section>
 
-
-</div>
+</form>
 

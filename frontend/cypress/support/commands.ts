@@ -48,27 +48,28 @@ Cypress.Commands.add("login", (username:string, password:string) => {
   .get('input[name="password"]').type(password)
   .get('input[name="loginButton"]').click()
   .url().should('include','main');
-})
+});
 
 Cypress.Commands.add('createNewQuestion', (title:string, type:string, customAnswers?:string[]) => {
-let customCommand = cy.get('input[name="questionTitleInput"]').type(title);
-              cy.get('textarea[name="questionDescriptionInput"]').type('Created in Cypress');
+  cy.get('input[name="questionTitleInput"]').type(title);
+  cy.get('textarea[name="questionDescriptionInput"]').type('Created in Cypress');
 
-switch(type) {
-default: throw new Error("Question Type is invalid")
-case "individualAnswer": customCommand=customCommand.get('mat-radio-button[value="3"]').click(); break;
-case "yesNoAnswer": customCommand=customCommand.get('mat-radio-button[value="1"]').click(); break;
-case "fixedAnswers":
-customCommand=customCommand.get('mat-radio-button[value="2"]').click();
-customAnswers.forEach( answer => {
-customCommand =  customCommand.get('input[name="customAnswerInput"]')
-                              .type(answer)
-                              .type('{enter}');
+  switch(type) {
+    default: throw new Error("Question Type is invalid")
+    case "individualAnswer": cy.get('mat-radio-button[value="3"]').click(); break;
+    case "yesNoAnswer": cy.get('mat-radio-button[value="1"]').click(); break;
+    case "fixedAnswers":
+      cy.get('mat-radio-button[value="2"]').click();
+      customAnswers.forEach( answer => {
+        cy.get('input[name="customAnswerInput"]').type(answer).type('{enter}');
+      });
+    break;
+  }
 });
-break;
-}
 
-return customCommand;
-
+Cypress.Commands.add('addEmails', (emails:string[]) => {
+  emails.forEach(email => {
+    cy.get('input[name="emailInput"]').type(email).type('{enter}');
+  })
 });
 

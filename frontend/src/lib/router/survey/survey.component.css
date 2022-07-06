@@ -6,23 +6,24 @@
 }
 
 #head{
-  background: #ff8200;
+  font-size: 2.4em;
+  font-weight: 500;
+  background: white;
   width: fit-content;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 20px;
   display: block;
   margin-top: 10vh;
   margin-left: auto;
   margin-right: auto;
 
-  color:white;
-  border-radius: 40px 40px 40px 40px;
+  color:orange;
+  border-radius: 10px 10px 10px 10px;
 }
 
 #body{
 
     display: block;
-    width: 80%;
+    width: 60%;
     display: block;
     background-color: #eee;
     margin-left: auto;
@@ -30,9 +31,9 @@
     background-color: white;
     height: auto;
     margin-top: 5vh;
-    border: 3px solid #ff8200;
-    border-radius: 40px 40px 40px 40px;
 
+    border-radius: 10px 10px 10px 10px;
+    border: 1px solid lightgray;
 }
 
 #body ul{
@@ -52,9 +53,9 @@
   display: block;
 
   height: auto;
-  border: 3px solid #ff8200;
-  border-radius: 20px 20px 20px 20px;
-
+  border-radius: 10px 10px 10px 10px;
+  border: 1px solid lightgray;
+  
 
   text-align: center;
   font-size: 30px;
@@ -91,5 +92,5 @@
 #debug {
   position: fixed;
   bottom: 1%;
-  right: 1%;
+  left: 1%;
 }

@@ -77,7 +77,14 @@
     <ul>
       <label class="label" for="emailInput">Enter an Email:</label>
       <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
-        <input matInput type="email" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempEmail" (keyup.enter)="addEmail()">
+        <input  name="emailInput"
+                matInput
+                type="email"
+                #inputText
+                class="inputfield"
+                id="emailInput"
+                [(ngModel)]="this.tempEmail"
+                (keyup.enter)="addEmail()">
         <mat-label id="inputfield">Enter here...</mat-label>
       </mat-form-field>
       <li *ngFor="let email of this.poll.emails" class="emailstyle">
@@ -94,7 +101,7 @@
 </section>
 
 <div *ngIf="this.next && !this.triesToSubmit && !notAllFilled && !back" class="nextButton">
-  <button mat-flat-button color="primary" (click)="pressSubmitButton()">
+  <button mat-flat-button color="primary" name="trySubmitPoll" (click)="pressSubmitButton()">
     <mat-icon>arrow_forward_ios</mat-icon>
     &nbsp;&nbsp;&nbsp;&nbsp;SUBMIT&nbsp;&nbsp;&nbsp;&nbsp;
   </button>
@@ -106,7 +113,7 @@
   </button>
 </div>
 <div *ngIf="!this.next && !this.triesToSubmit && !notAllFilled && !back" class="nextButton">
-  <button mat-flat-button color="primary" (click)="this.next = true;">
+  <button mat-flat-button color="primary" name ="nextToEmails" (click)="this.next = true;">
     <mat-icon>arrow_forward_ios</mat-icon>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NEXT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </button>
@@ -153,7 +160,7 @@
   <br/>
   <div mat-dialog-content><br/>Are your entries complete?</div>
   <div class="change_btn"mat-dialog-actions>
-    <button mat-flat-button color="primary" (click)="this.submitPoll()">Yes </button>
+    <button mat-flat-button color="primary" name="submitPoll" (click)="this.submitPoll()">Yes </button>
   </div>
   <div  class="cancel_btn" mat-dialog-actions>
     <button mat-flat-button color="primary" (click)="this.triesToSubmit = false">Cancel </button>
