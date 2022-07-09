@@ -44,6 +44,7 @@ export class MainmenuComponent{
   newadminusername: string= "";
   newadminrole: string= "default";
   invalidPasswordlengthfornewUser: boolean = false;
+  invalidemailfornewUser: boolean = false;
 
   //test
   username: string= "defaultname";
@@ -128,7 +129,7 @@ export class MainmenuComponent{
   }
 
   sendAddAdminrequest(): void{
-    if(this.newadminpassword != ""&& this.newadminadress !=""&&this.newadminusername!="" && this.invalidPasswordlengthfornewUser == false) {
+    if(this.newadminpassword != ""&& this.newadminadress !=""&&this.newadminusername!="" && this.invalidPasswordlengthfornewUser == false && this.invalidemailfornewUser == false) {
 
       let userData = '{"password":"' + this.newadminpassword + '", "email" :"' + this.newadminadress.toLowerCase() + '", "name" :"' + this.newadminusername + '", "role" :"' + this.newadminrole + '"}';
       const userDataJSON: JSON = JSON.parse(userData);
@@ -248,6 +249,12 @@ export class MainmenuComponent{
 
   setUseradressofnewAdmin(event: any): void{
     this.newadminadress = event.target.value;
+    if (!event.target.value.includes("@") ||!event.target.value.includes(".") ){
+      console.log("is an Email !!!!")
+      this.invalidemailfornewUser = true;
+    }else {
+      this.invalidemailfornewUser = false;
+    }
   }
 
   setpasswordofnewAdmin(event: any): void{
