@@ -33,6 +33,9 @@ public class Distributor {
     }
 
     public Session generateSession(){
+
+
+
         /*Properties properties = System.getProperties();
 
         properties.put("mail.smtp.host", host);
@@ -83,12 +86,12 @@ public class Distributor {
     }
 
 
-    // TODO Methode bekommt List mit String array mit Emails und dazugehörigem Link
-    //TODO english Version
 
 
-    public void distribute(ArrayList<String> recipients, String surveyName, String link){
-        recipients.forEach(n -> sendMessage(n,generateMessage(surveyName, link)));
+
+
+    public void distribute(ArrayList<String[]> recipients, String surveyName){
+        recipients.forEach(n -> sendMessage(n[1],generateMessage(surveyName, n[2])));
     }
 
 
@@ -96,14 +99,20 @@ public class Distributor {
 
     public static void main(String[] args) {
 
-        ArrayList<String> recipients = new ArrayList<>();
+        ArrayList<String[]> recipients = new ArrayList<>();
 
-        recipients.add("tim.braunger@gmx.de");
-        recipients.add("blablacaodg@gmail.com");
+        recipients.add(new String[]
+                {"tim.braunger@gmx.de", "http://localhost:4200/"}
+        );
+
+
+        recipients.add(new String[]
+                {"blablacaodg@gmail.com","http://localhost:4200/"}
+        );
 
         Distributor test = new Distributor();
 
-        test.distribute(recipients, "Placeholder", "am besten ein Link");
+        test.distribute(recipients, "Placeholder");
 
     }
 
