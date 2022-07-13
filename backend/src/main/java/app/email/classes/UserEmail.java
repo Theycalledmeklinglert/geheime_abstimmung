@@ -39,7 +39,8 @@ public class UserEmail {
 
     public String generateMessage(String username, String password){
 
-        String deutsch = "Hallo neuer Nutzer," + "\n" +
+        String deutsch = "Hallo neuer Nutzer," + "\n" + "\n" +
+
                 "du wurdest soeben als ein neuer Nutzer der Poll Application festgelegt. " +
                 "Deinen neuen Account kannst du unter folgendem link erreichen: " + "http://localhost:4200/" + "\n" + "\n" +
 
@@ -57,7 +58,8 @@ public class UserEmail {
 
                 "\n" + "\n";
 
-        String english = "Hello new User,"+ "\n" +
+        String english = "Hello new User,"+ "\n" + "\n" +
+
                 "You were registered as a new User for the Poll Application," +
                 " you can now log in into your new account " +
                 "with the following link: " + "http://localhost:4200/" + "\n" + "\n" +
@@ -139,12 +141,12 @@ public class UserEmail {
 
 
 
-
     public void sendUserEmail(String recipient, String username, String password){
 
         sendMessage(recipient, generateMessage(username, password));
 
     }
+
 
     public static void main(String[] args) {
 
