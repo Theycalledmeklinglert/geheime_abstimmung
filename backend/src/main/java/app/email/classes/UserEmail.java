@@ -46,10 +46,10 @@ public class UserEmail {
 
                 "Deine Zugangsdaten sind: " +"\n" + "\n"+
 
-                "Username: " + username + "\n"+
+                "E-Mail: " + username + "\n"+
                 "Passwort: " + password+ "\n" +"\n"+
 
-                "Bitte ändere dein Passwort, wenn du dich zum ertsen mal in deinen Account einloggst. So ist dein Account " +
+                "Bitte ändere dein Passwort, wenn du dich zum ersten mal in deinen Account einloggst. So ist dein Account " +
                 "sicherer vor einem unbefugten Einloggen in dein Account.";
 
         String Platzhalter = "\n"+ "\n"
