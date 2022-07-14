@@ -49,32 +49,26 @@ export class LoginComponent {
 
       this.authService.getAuthUser(this.userEmail.toLowerCase(),this.password).subscribe({
         next: response => {
-          console.log(response);
           localStorage.setItem('sessionID', response['Session ID']);
           localStorage.setItem("userEmail", this.userEmail);
           localStorage.setItem("userPassword", this.password);
           localStorage.setItem("userName",response["userName"]);
           localStorage.setItem("userRole",response["role"]);
-          console.log(localStorage.getItem("userRole"));
 
           this.router.navigateByUrl('/main')
         },
         error: error => {
-          console.log(error)
           this.showloadingstatus = false;
           if(error.status == 401 || error.status == 403 ){
             if(error.status == 401){
               this.wrongUsernameorPassword = true;
-              console.log("Attempt: "+error.error["attempt"])
               this.timeout = false;
               this.attempts = 5 - error.error["attempt"]
               if(this.attempts == 0) this.timeout = true;
             }else {
               this.wrongUsernameorPassword = true;
-              console.log(error.status);
               this.timeout =  true;
               this.timeoutTime =  "Timeout for "+error.error["Timeout Duration in Minutes"]+ " Minutes!";
-              console.log("TimeoutTime"+error.error["Timeout Duration in Minutes"])
             }
 
           }else {

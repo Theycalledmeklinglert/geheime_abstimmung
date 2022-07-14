@@ -27,12 +27,10 @@ export class UserConainterComponent implements OnInit{
 
   ngOnInit(): void{
     this.ucobject = {name:"testcontainer", users:[] };
-    console.log("UserContainer->"+"OLDKEY: "+localStorage.getItem("sessionID"));
     this.backendService.loadAllUseryBySysadmin().subscribe((response) =>{
       this.ucobject.users = response["users"];
-      console.log(this.ucobject.users[0].name);
       this.authService.updateSessionid(response["Session ID"]);
-      console.log("UserContainer->"+"NEWKEY: "+localStorage.getItem("sessionID"));
+
     });
   }
 
@@ -45,12 +43,10 @@ export class UserConainterComponent implements OnInit{
   realydelete(user: users){
     this.sureDeleteUsers = true;
     this.tempUsers = user;
-    console.log("Are you Sure to Delete?")
   }
 
   yessDelete(){
     this.ucobject.users = this.ucobject.users.filter(v => v != this.tempUsers);
-    console.log("delete this Poll!");
 
 
     let userData = '{"name" :"'+localStorage.getItem("userName")+ '", "role" :"'+localStorage.getItem("userRole")+'"}';
@@ -58,12 +54,10 @@ export class UserConainterComponent implements OnInit{
     try {
       this.backendService.deleteUser(this.tempUsers.name).subscribe((response) =>{
         this.authService.updateSessionid(response["Session ID"]);
-        console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
         this.sureDeleteUsers = false;
         this.sucesssend = true;
         setTimeout(() => { this.sucesssend = false;}, 1500);
       }, error => {
-        console.log("Error while Send new SessionID: "+error.error["Session ID"]);
         this.authService.updateSessionid(error.error["Session ID"]);
         this.failsend = true;
         this.sureDeleteUsers = false;
