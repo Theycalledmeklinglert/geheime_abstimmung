@@ -1,4 +1,4 @@
-package main.java.app.email;
+package main.java.app.email.classes;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -6,7 +6,6 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
 
 
 
@@ -40,16 +39,17 @@ public class UserEmail {
 
     public String generateMessage(String username, String password){
 
-        String deutsch = "Hallo neuer Nutzer," + "\n" +
+        String deutsch = "Hallo neuer Nutzer," + "\n" + "\n" +
+
                 "du wurdest soeben als ein neuer Nutzer der Poll Application festgelegt. " +
                 "Deinen neuen Account kannst du unter folgendem link erreichen: " + "http://localhost:4200/" + "\n" + "\n" +
 
                 "Deine Zugangsdaten sind: " +"\n" + "\n"+
 
-                "Username: " + username + "\n"+
+                "E-Mail: " + username + "\n"+
                 "Passwort: " + password+ "\n" +"\n"+
 
-                "Bitte ändere dein Passwort, wenn du dich zum ertsen mal in deinen Account einloggst. So ist dein Account " +
+                "Bitte ändere dein Passwort, wenn du dich zum ersten mal in deinen Account einloggst. So ist dein Account " +
                 "sicherer vor einem unbefugten Einloggen in dein Account.";
 
         String Platzhalter = "\n"+ "\n"
@@ -58,7 +58,8 @@ public class UserEmail {
 
                 "\n" + "\n";
 
-        String english = "Hello new User,"+ "\n" +
+        String english = "Hello new User,"+ "\n" + "\n" +
+
                 "You were registered as a new User for the Poll Application," +
                 " you can now log in into your new account " +
                 "with the following link: " + "http://localhost:4200/" + "\n" + "\n" +
@@ -140,12 +141,12 @@ public class UserEmail {
 
 
 
-
     public void sendUserEmail(String recipient, String username, String password){
 
         sendMessage(recipient, generateMessage(username, password));
 
     }
+
 
     public static void main(String[] args) {
 

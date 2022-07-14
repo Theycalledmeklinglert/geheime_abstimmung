@@ -133,21 +133,15 @@ export class MainmenuComponent{
 
       let userData = '{"password":"' + this.newadminpassword + '", "email" :"' + this.newadminadress.toLowerCase() + '", "name" :"' + this.newadminusername + '", "role" :"' + this.newadminrole + '"}';
       const userDataJSON: JSON = JSON.parse(userData);
-      console.log("Add Admin" + userDataJSON);
 
       this.backendService.addnewSurveLeader(userDataJSON).subscribe({
         next:(response) => {
-          console.log("returnt key from Backend: " + response["Session ID"]);
           this.authService.updateSessionid(response["Session ID"]);
-          console.log("AddAdmin->" + "NEWKEY: " + localStorage.getItem("sessionID"));
 
           this.sucesssend = true;
           setTimeout(() => {this.sucesssend = false;}, 1300);
         },
         error: error => {
-          error.status == 422 ? console.log("Error 422") : console.log("Not Error 422")
-          console.log("Error while Send new SessionID: " + error.error["Session ID"]);
-
           this.authService.updateSessionid(error.error["Session ID"]);
           this.failsend = true;
 
@@ -172,15 +166,11 @@ export class MainmenuComponent{
     this.backendService.deleteUser(this.deleteadminadress).subscribe({
       next:(response) =>{
         this.authService.updateSessionid(response["Session ID"]);
-        console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
-
         this.sureDeleteAdmin = false;
         this.sucesssend = true;
         setTimeout(() => { this.sucesssend = false;}, 1300);
       },
       error: error => {
-        console.log("Error while Send new SessionID: "+error.error["Session ID"]);
-
         this.authService.updateSessionid(error.error["Session ID"]);
         this.failsend = true;
 
@@ -193,21 +183,17 @@ export class MainmenuComponent{
 
   sendChangePasswordrequest(): void{
     let userData = '{"password":"'+this.changedPassword+'", "name" :"'+localStorage.getItem("userName")+'", "email" :"'+localStorage.getItem("userEmail")+'"}';
-    console.log("Paswordchange send:"+ userData);
     const passwordandUsername: JSON = JSON.parse(userData);
 
     this.backendService.updatePasswordorUsernameSurveyLeader(passwordandUsername).subscribe({
       next:(response) =>{
         this.authService.updateSessionid(response["Session ID"]);
-        console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
         this.sureChangePassword = false;
         this.sucesssend = true;
 
         setTimeout(() => { this.sucesssend = false;}, 1300);
         },
       error: error => {
-        console.log("Error while Send new SessionID: "+error.error["Session ID"]);
-
         this.authService.updateSessionid(error.error["Session ID"]);
         this.failsend = true;
 
@@ -219,7 +205,6 @@ export class MainmenuComponent{
 
   sendChangeUsernamerequest(): void{
     let userData = '{"password":"'+localStorage.getItem("userPassword")+'", "name" :"'+this.changedUsername+'", "email" :"'+localStorage.getItem("userEmail")+'"}';
-    console.log("Usernamechange send:"+ userData);
     const passwordandUsername: JSON = JSON.parse(userData);
 
 
@@ -228,7 +213,6 @@ export class MainmenuComponent{
         this.authService.updateSessionid(response["Session ID"]);
 
         localStorage.setItem("userName", this.changedUsername);
-        console.log("Delerequest->"+"NEWKEY: "+localStorage.getItem("sessionID"));
 
         this.sureChangeUsername = false;
         this.sucesssend = true;
@@ -236,8 +220,6 @@ export class MainmenuComponent{
         setTimeout(() => { this.sucesssend = false;}, 1300);
       },
       error: error => {
-        console.log("Error while Send new SessionID: "+error.error["Session ID"]);
-
         this.authService.updateSessionid(error.error["Session ID"]);
         this.failsend = true;
 
@@ -250,7 +232,6 @@ export class MainmenuComponent{
   setUseradressofnewAdmin(event: any): void{
     this.newadminadress = event.target.value;
     if (!event.target.value.includes("@") ||!event.target.value.includes(".") ){
-      console.log("is an Email !!!!")
       this.invalidemailfornewUser = true;
     }else {
       this.invalidemailfornewUser = false;
@@ -286,10 +267,8 @@ export class MainmenuComponent{
   setadmin():void{
     if(this.newadminrole == "default"){
       this.newadminrole = "admin";
-      console.log("set admin");
     }else {
       this.newadminrole = "default";
-      console.log("set normal")
     }
   }
 

@@ -1,13 +1,15 @@
-package main.java.app.email;
+package main.java.app.email.classes;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.*;
+
+
+
 
 public class Distributor {
 
@@ -91,7 +93,7 @@ public class Distributor {
 
 
     public void distribute(ArrayList<String[]> recipients, String surveyName){
-        recipients.forEach(n -> sendMessage(n[1],generateMessage(surveyName, n[2])));
+        recipients.forEach(n -> sendMessage(n[0],generateMessage(surveyName, n[1])));
     }
 
 

@@ -1,8 +1,10 @@
-package main.java.app.email;
+package main.java.app.email.classes;
 
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import java.util.Properties;
+
+
 
 public class GmailConnection {
 
