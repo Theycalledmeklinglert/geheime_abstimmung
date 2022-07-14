@@ -1,6 +1,8 @@
 package main.java.app;
 
 import main.java.app.database.DBInstance;
+import main.java.app.email.classes.Distributor;
+import main.java.app.email.classes.UserEmail;
 import org.bson.Document;
 
 import javax.ws.rs.*;
@@ -150,20 +152,18 @@ public class Service
 		for(String email : emails)
 		{
 			String answerLink = baseUri + "?pollID=" + poll.get("_id").toString() + "&token=" + tokens.get(counter);
-			System.out.println(answerLink);
+		//	System.out.println(answerLink);
 			emailsAndLinks.add(new String[] {emails.get(counter), answerLink});
 			counter++;
 		}
 
-		INSTANCE.removeEmailsFromPoll(poll);
+		Distributor distributor = new Distributor();
+		distributor.distribute(emailsAndLinks, poll.getString("name"));
 
-		// Distributor = sendEmails(emailsAndLinks) // Oder so
-		// TODO: Call corresponding method of the the distributor class to send the links per Email (has to take emailsAndTokens and answerLinks
+		INSTANCE.removeEmailsFromPoll(poll);
 
 		return Response.ok(new Document("Session ID", user.getString("Session ID")).toJson()).build();
 	}
-
-	// TODO: Check if PollToBeDeleted is accessible by user
 
 	@DELETE
 	@Produces( MediaType.APPLICATION_JSON )
@@ -259,6 +259,10 @@ public class Service
 			Document error = new Document("Session ID", user.getString("Session ID"));
 			return Response.status(500).entity(error.toJson()).build();
 		}
+
+		UserEmail userEmail = new UserEmail();
+		userEmail.sendUserEmail(user.getString("email"), user.getString("email"), user.getString("password"));		// sends the login data to the email account of the
+																																// newly created user
 
 		newUser.append("Session ID", user.getString("Session ID")).append("_id", newUser.get("_id").toString());
 
@@ -451,7 +455,6 @@ public class Service
 	}
 
 
-
 	@GET
 	@Path ("/answers")
 	@Produces( MediaType.APPLICATION_JSON )
@@ -475,8 +478,6 @@ public class Service
 
 		Document answers = optAnswers.get();
 		answers.append("Session ID", user.getString("Session ID"));
-
-		// TODO: encrypt JSON
 
 		return Response.ok( answers ).build( );
 	}
@@ -516,8 +517,6 @@ public class Service
 	@Consumes( MediaType.APPLICATION_JSON )
 	public Response postAnswer(final String json,@DefaultValue("") @PathParam("pollID") final String pollID ,@DefaultValue("") @QueryParam("token") final String token)
 	{
-		// TODO: Decrypt JSON
-
 		Document answer = Document.parse(json);
 
 		Optional<Document> poll = INSTANCE.getPollAsOptDocumentByID(pollID);
@@ -530,8 +529,6 @@ public class Service
 		{
 			throw new WebApplicationException(Response.status(404).build());
 		}
-
-		// TODO: encrypt JSON
 
 		return Response.ok().build();
 	}
@@ -562,6 +559,8 @@ public class Service
 		return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();
 	}
 
+	/*
+
 	// Diese Methode ist überflüssig oder? Da die Fragen schon im FrontEnd in den Poll embedded werden
 	@POST
 	@Path("/questions")
@@ -577,9 +576,8 @@ public class Service
 		}
 
 		Document user = optUser.get();
-		// TODO: Decrypt JSON
 
-		if(!json.contains("title") || !json.contains("description") || !json.contains("type") || !json.contains("poll ID"))	//TODO: Evtl. abaendern --> FrontEnd
+		if(!json.contains("title") || !json.contains("description") || !json.contains("type") || !json.contains("poll ID"))
 		{
 			Document error = new Document("Session ID", user.getString("Session ID"));
 			return Response.status(422).entity(error.toJson()).build();
@@ -593,11 +591,10 @@ public class Service
 			return Response.status(404).entity(error.toJson()).build();
 		}
 
-		// TODO: encrypt JSON
 
 		return Response.ok(new Document().append("Session ID", user.getString("Session ID"))).build();
 	}
-
+*/
 
 	@GET
 	@Path("/emails")
@@ -613,8 +610,6 @@ public class Service
 
 		ArrayList<String> emails = INSTANCE.getAllEmails();
 		Document result = new Document().append("E-Mails", emails).append("Session ID", optUser.get().getString("Session ID"));
-
-		// TODO: encrypt JSON
 
 		return Response.ok( result.toJson() ).build( );
 	}
