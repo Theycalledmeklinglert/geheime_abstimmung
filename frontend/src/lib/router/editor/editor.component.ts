@@ -18,7 +18,7 @@ export class EditorComponent implements OnInit{
   poll: Poll;
 
   listPos?: number;
-  next: boolean = false;
+
   tempEmail?: string;
   notAllFilled: boolean = false;
   submitted: boolean = false;
@@ -33,7 +33,6 @@ export class EditorComponent implements OnInit{
     let question: Question = {id: 1, title: "",type:"", visible: true};
     this.listPos = this.poll.questions.push(question) - 1;
     question.id = (this.listPos == 0) ? 1 : this.poll.questions[this.listPos - 1].id + 1;
-    this.next = false;
   }
 
   deleteQuestion(question: Question){

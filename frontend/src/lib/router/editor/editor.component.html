@@ -1,6 +1,5 @@
-<div id="tab" *ngIf="!this.next && !this.triesToSubmit && !notAllFilled && !back">
+<div id="tab" *ngIf="!this.triesToSubmit && !notAllFilled && !back">
 <mat-tab-group  mat-align-tabs="center" dynamicHeight [(selectedIndex)]="this.tabIndex">
-
   <mat-tab label="Create Poll">
     <div id="grid" >
 
@@ -43,8 +42,7 @@
           <ul>
             <li *ngFor="let question of poll.questions" class="listitem">
 
-
-              <div class="listDivElement" (click)="this.next = false; showQuestion(question)">
+              <div class="listDivElement" (click)="showQuestion(question)">
                 {{question.title}}
               </div>
 
@@ -109,7 +107,7 @@
 
       <div class="emailButton">
         <button mat-flat-button color="primary" (click)="retrieveEmails()">
-          <mat-icon>arrow_forward_ios</mat-icon>
+          <mat-icon>email</mat-icon>
           &nbsp;&nbsp;&nbsp;&nbsp;RETRIEVE EMAILS&nbsp;&nbsp;&nbsp;&nbsp;
         </button>
       </div>
@@ -126,13 +124,13 @@
 </mat-tab-group>
 </div>
 
-<div *ngIf="!this.next && !this.triesToSubmit && !notAllFilled && !back" class="returnToMainButton">
+<div *ngIf="!this.triesToSubmit && !notAllFilled && !back" class="returnToMainButton">
   <button mat-flat-button color="primary" (click)="this.back = true" style="z-index:10;">
     <mat-icon>arrow_back_ios</mat-icon>
     RETURN TO MAIN
   </button>
 </div>
-<div *ngIf="!this.next && !this.triesToSubmit && !notAllFilled && !back" class="nextButton">
+<div *ngIf="!this.triesToSubmit && !notAllFilled && !back" class="nextButton">
   <button mat-flat-button color="primary" *ngIf="this.tabIndex===0" name ="nextToEmails" (click)="this.tabIndex=1" style="z-index:10;">
     <mat-icon>navigate_next</mat-icon>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NEXT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -154,7 +152,7 @@
   </div>
 </div>
 
-<div class="sureBackToMain" *ngIf="notAllFilled">
+<div class="sureBackToMain" *ngIf="this.notAllFilled">
   <div class="headline">Info</div>
   <div mat-dialog-content>Please fill in all the necessary information!
   </div>
@@ -194,5 +192,3 @@
   </div>
 </div>
 <mat-icon id="successicon" style="color:rgba(0,253,0,0.48)" *ngIf="copied"> cloud_done</mat-icon>
-
-
