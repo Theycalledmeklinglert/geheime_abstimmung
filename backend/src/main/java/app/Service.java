@@ -261,8 +261,9 @@ public class Service
 		}
 
 		UserEmail userEmail = new UserEmail();
-		userEmail.sendUserEmail(user.getString("email"), user.getString("email"), user.getString("password"));		// sends the login data to the email account of the
+		userEmail.sendUserEmail(newUser.getString("email"), newUser.getString("email"), newUser.getString("password"));		// sends the login data to the email account of the
 																																// newly created user
+		System.out.println(newUser.getString("email") + newUser.getString("password"));
 
 		newUser.append("Session ID", user.getString("Session ID")).append("_id", newUser.get("_id").toString());
 
@@ -282,8 +283,6 @@ public class Service
 		{
 			throw new WebApplicationException(Response.status(401).build()); // Session ID doesn't exist. User has to login on website again
 		}
-
-		// TODO: Decrypt JSON
 
 		Document user = optUser.get();
 		Document newUser = Document.parse(json);
