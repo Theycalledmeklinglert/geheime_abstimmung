@@ -38,11 +38,20 @@ export class PollComponent {
   }
 
   showVoteName(): String{
+    if(this.voteObject.name.length >= 18){
+     let temp = this.voteObject.name.substr(0,17);
+     temp = temp + "..";
+      return temp;
+    }
     return this.voteObject.name;
   }
 
 
   showVoteLifetime(): string{
+    if(this.voteObject.lifetime == null){
+      return "reading Error";
+    }
+
     const thelifetime = new Date(this.voteObject.lifetime);
     var today = new Date();
 
@@ -67,8 +76,6 @@ export class PollComponent {
     return result;
   }
 
-  stopthisVote(): void{
-  }
 
   deletethisVote(): void{
     this.deletePollEvent.emit(this.voteObject);

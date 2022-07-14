@@ -138,6 +138,16 @@
   transition: .4s;
 }
 
+.adminGenerator .txt_field .invalidemail{
+  color: red;
+  font-size: 15px;
+  position: absolute;
+  top: 130%;
+  left: 5px;
+  pointer-events: none;
+  transition: .4s;
+}
+
 
 .adminGenerator .txt_field span::before{
   content: "";

@@ -52,7 +52,6 @@ export class BackendService {
   }
 
 
-  //temp any!!!!!!!!!!!!!!!!!!!
   loadAlreadyUsedEmails(): Observable<any> {
     return this.httpClient.get<any>(this.url + '/api/polls/emails?sessionID=' + this.getSessionID());
   }

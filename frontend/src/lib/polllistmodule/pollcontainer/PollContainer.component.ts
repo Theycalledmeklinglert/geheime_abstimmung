@@ -38,15 +38,12 @@ export class PollConainterComponent implements OnInit{
   realydelete(poll: Poll){
     this.sureDeletePoll = true;
     this.tempPoll = poll;
-    console.log("Are you Sure to Delete?")
   }
   yessDelete(){
     this.vlcObject.polls = this.vlcObject.polls.filter(v => v != this.tempPoll);
-    console.log("delete this Poll!");
 
     this.backendService.deletePollByID(this.tempPoll._id).subscribe((response) =>{
       this.authService.updateSessionid(response["Session ID"]);
-      console.log("Delete Response: "+localStorage.getItem("sessionID"));
       this.sureDeletePoll = false;
       }
     );
