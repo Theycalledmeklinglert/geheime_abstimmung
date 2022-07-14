@@ -14,6 +14,8 @@ import {EditorComponent} from "../lib/router/editor/editor.component";
 import {PollComponent} from "../lib/polllistmodule/poll/Poll.component";
 import {PollConainterComponent} from "../lib/polllistmodule/pollcontainer/PollContainer.component";
 import { SurveyQuestionComponent } from 'src/lib/survey-question/survey-question.component';
+import {UserComponent} from "../lib/userlistmodule/user/User.component";
+import {UserConainterComponent} from "../lib/userlistmodule/usercontainer/UserContainer.component";
 
 //Angular-Material-Compontents
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -31,8 +33,9 @@ import {PollResultComponent} from "../lib/router/PollResult/pollResult.component
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {UserComponent} from "../lib/userlistmodule/user/User.component";
-import {UserConainterComponent} from "../lib/userlistmodule/usercontainer/UserContainer.component";
+import {MatDividerModule} from '@angular/material/divider';
+import {MatTabsModule} from '@angular/material/tabs';
+
 
 
 
@@ -73,7 +76,10 @@ import {UserConainterComponent} from "../lib/userlistmodule/usercontainer/UserCo
         MatPaginatorModule,
         MatDialogModule,
         NgApexchartsModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatDividerModule,
+        MatTabsModule
+
 
     ],
   providers: [],

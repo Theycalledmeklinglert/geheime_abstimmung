@@ -26,6 +26,7 @@ export class EditorComponent implements OnInit{
   triesToSubmit: boolean = false;
   privateKey: string;
   copied: boolean = false;
+  tabIndex: number = 0;
 
   addEmptyQuestion() {
     this.poll.questions.forEach(q => q.visible = false);

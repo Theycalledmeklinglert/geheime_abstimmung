@@ -1,21 +1,26 @@
+*{
+  font-size: medium;
+}
+
+
 #head {
   background-color: transparent;
-  text-align: center;
-  margin-top: 10px;
+  font-size: medium;
+  padding-top: 0.55em;
   margin-right: 10px;
 }
 
+mat-form-field {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+  margin-bottom: 1.5em;
+}
+
+
 .questiontitle{
-  background-color: transparent;
   font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  margin-top: 10px;
-  margin-right: 10px;
-  margin-bottom: 2vh;
-  cursor: pointer;
-  height: auto;
-  border-color: transparent;
+  font-weight: 400;
 }
 
 .mat-radio-button {
@@ -32,7 +37,11 @@
 }
 
 #questionSelect{
-  margin-bottom: 2vh;
+  margin-bottom: 3em;
+}
+
+.inputfield{
+  text-align: center;
 }
 
 .answerTypeButton{
@@ -42,20 +51,26 @@
     -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
     filter: brightness(1.2) grayscale(.5) opacity(.9);
 }
-#answerlist ul{
-  display: flow;
-  margin-top: 10px;
-}
+
 
 #answerlist ul li{
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 10px;
+  padding: 0 5px 0 10px;
+  text-align: left;
+  margin: 10px auto 0 auto;
   background-color: white;
+  border: 1px solid lightskyblue;
   list-style: none;
-  align-items: flex-start;
-  width: 10vw;
-//max-height: 30px;
+  width: 30em;
+  display: grid;
+  grid-template-columns: auto max-content;
+  overflow: hidden;
+}
+
+#answertext {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
 }
 
 input[id=yesNo]:checked {
@@ -65,9 +80,11 @@ input[id=yesNo]:checked {
   -moz-filter: none;
   filter: none;
 }
-#textarena{
-  font-size: 15px;
+
+#description {
+  margin-bottom: 1.2em;
 }
+
 .inputfield{
   font-size: 15px;
 }

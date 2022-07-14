@@ -8,12 +8,13 @@
 <div id="body">
 
   <form [formGroup]="surveyForm" >
-    <ul>
-      <li *ngFor="let question of this.poll.questions">
+    <ul *ngFor="let question of this.poll.questions">
+      <li>
         <surveyQuestion
           [question]="question"
           [parentForm]="surveyForm"
         ></surveyQuestion>
+        <mat-divider></mat-divider>
       </li>
     </ul>
   </form>

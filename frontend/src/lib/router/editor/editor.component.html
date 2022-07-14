@@ -1,134 +1,145 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
-<head>
-  <meta charset="UTF-8">
-  <title>main</title>
-</head>
-<body>
+<div id="tab" *ngIf="!this.next && !this.triesToSubmit && !notAllFilled && !back">
+<mat-tab-group  mat-align-tabs="center" dynamicHeight [(selectedIndex)]="this.tabIndex">
+
+  <mat-tab label="Create Poll">
+    <div id="grid" >
+
+      <section></section>
+
+      <section class="sidebar" >
+        <section id="head">
+          <h1>Create new Poll:</h1>
+
+          <div id="surveyNameInput">
+            <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 40, 'max-width.ch': 60}">
+              <mat-label>Poll Name</mat-label>
+              <input  matInput
+                      #inputText
+                      name="pollNameInput"
+                      class="inputfield"
+                      type="text"
+                      [(ngModel)]="this.poll.name"
+                      required>
+            </mat-form-field>
+            <br>
+          </div>
+          <br/>
+
+          <div id="expirationDateInput">
+            <mat-label>Expiration</mat-label>
+            <br/>
+            <input
+              name="dateInput"
+              class="inputfield"
+              type="datetime-local"
+              id="timeinputfield"
+              [(ngModel)]="this.poll.lifetime"
+              required><br/>
+          </div>
+        </section>
+
+        <section id="questionList">
+          <h2>Questions:</h2>
+          <ul>
+            <li *ngFor="let question of poll.questions" class="listitem">
 
 
-<div class="sidebar" *ngIf="!triesToSubmit && !notAllFilled && !back">
+              <div class="listDivElement" (click)="this.next = false; showQuestion(question)">
+                {{question.title}}
+              </div>
 
-  <section id="head">
-    <h1>Create new Poll:</h1>
-
-    <div id="surveyNameInput">
-      <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 40, 'max-width.ch': 60}">
-        <mat-label>Poll Name</mat-label>
-        <input  matInput
-                #inputText
-                name="pollNameInput"
-                class="inputfield"
-                type="text"
-                [(ngModel)]="this.poll.name"
-                required>
-      </mat-form-field>
-      <br>
-    </div>
-    <br/>
-
-    <div id="expirationDateInput">
-      <mat-label>Expiration</mat-label>
-      <br/>
-      <input
-        name="dateInput"
-        class="inputfield"
-        type="datetime-local"
-        id="timeinputfield"
-        [(ngModel)]="this.poll.lifetime"
-        required><br/>
-    </div>
-
-  </section>
-
-  <section id="questionList">
-    <h2>Questions:</h2>
-    <ul>
-      <li *ngFor="let question of poll.questions">
-        <div class="questiontitle" (click)="this.next = false; showQuestion(question)">
-          {{question.title}}
-
-          <button id="deleteQuestion" mat-icon-button (click)="deleteQuestion(question)">
-            <mat-icon>delete</mat-icon>
+              <button id="deleteQuestion" mat-icon-button (click)="deleteQuestion(question)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+            </li>
+          </ul>
+          <button mat-icon-button id="addQuestion" (click)="addEmptyQuestion()">
+            <mat-icon>add</mat-icon>
           </button>
+        </section>
+      </section>
+
+      <section></section>
+
+      <section>
+        <div class="questionwindow">
+          <h1 id="qe">Edit Question:</h1>
+          <ul class="questioneditor">
+            <li *ngFor="let question of poll.questions" >
+              <question *ngIf="question.visible" [question]="question"></question>
+            </li>
+          </ul>
 
         </div>
-      </li>
-    </ul>
-    <button mat-icon-button id="addQuestion" (click)="addEmptyQuestion()">
-      <mat-icon>add</mat-icon>
-    </button>
-  </section>
+      </section>
 
+      <section></section>
 
-  <div *ngIf="!this.next && !this.triesToSubmit && !notAllFilled && !back" class="questionwindow">
+    </div>
+  </mat-tab>
 
-    <ul class="questioneditor">
-      <li *ngFor="let question of poll.questions">
-        <question *ngIf="question.visible" [question]="question"></question>
-      </li>
-    </ul>
-
-  </div>
-
-</div>
-<section id="emaillist">
-  <div *ngIf="this.next && !this.triesToSubmit && !notAllFilled && !back" class="questionwindow">
-    <ul>
-      <label class="label" for="emailInput">Enter an Email:</label>
-      <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
-        <input  name="emailInput"
-                matInput
-                type="email"
-                #inputText
-                class="inputfield"
-                id="emailInput"
-                [(ngModel)]="this.tempEmail"
-                (keyup.enter)="addEmail()">
-        <mat-label id="inputfield">Enter here...</mat-label>
-      </mat-form-field>
-      <li *ngFor="let email of this.poll.emails" class="emailstyle">
-        {{email}}
-        <button id="deleteEmail" mat-icon-button (click)="deleteEmail(email)">
-          <mat-icon>delete</mat-icon>
+  <mat-tab label="Emails">
+    <section id="emaillist">
+      <div class="questionwindow">
+        <h1>Enter an Email:</h1>
+        <mat-form-field [ngStyle]="{'min-width.ch': 20, 'max-width.ch': 30}">
+          <input  name="emailInput"
+                  matInput
+                  type="email"
+                  #inputText
+                  class="inputfield"
+                  id="emailInput"
+                  [(ngModel)]="this.tempEmail"
+                  (keyup.enter)="addEmail()">
+          <mat-label id="inputfield">Enter here...</mat-label>
+        </mat-form-field>
+        <button mat-icon-button (click)="addEmail()" >
+          <mat-icon>add</mat-icon>
         </button>
-      </li>
-    </ul>
-    <button mat-icon-button (click)="addEmail()">
-      <mat-icon>add</mat-icon>
-    </button>
-  </div>
-</section>
+        <ul>
+          <li *ngFor="let email of this.poll.emails" class="listitem">
+            <div class="listDivElement">
+                        {{email}}</div>
+            <button id="deleteEmail" mat-icon-button (click)="deleteEmail(email)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </li>
+        </ul>
+      </div>
 
-<div *ngIf="this.next && !this.triesToSubmit && !notAllFilled && !back" class="nextButton">
-  <button mat-flat-button color="primary" name="trySubmitPoll" (click)="pressSubmitButton()">
-    <mat-icon>arrow_forward_ios</mat-icon>
-    &nbsp;&nbsp;&nbsp;&nbsp;SUBMIT&nbsp;&nbsp;&nbsp;&nbsp;
-  </button>
-</div>
-<div *ngIf="this.next && !this.triesToSubmit && !notAllFilled && !back" class="emailButton">
-  <button mat-flat-button color="primary" (click)="retrieveEmails()">
-    <mat-icon>arrow_forward_ios</mat-icon>
-    &nbsp;&nbsp;&nbsp;&nbsp;RETRIEVE EMAILS&nbsp;&nbsp;&nbsp;&nbsp;
-  </button>
-</div>
-<div *ngIf="!this.next && !this.triesToSubmit && !notAllFilled && !back" class="nextButton">
-  <button mat-flat-button color="primary" name ="nextToEmails" (click)="this.next = true;">
-    <mat-icon>arrow_forward_ios</mat-icon>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NEXT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  </button>
-</div>
-<div *ngIf="this.next && !this.triesToSubmit && !notAllFilled && !back" class="returnToMainButton">
-  <button mat-flat-button color="primary" (click)="this.next = false;">
-    <mat-icon>arrow_back_ios</mat-icon>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BACK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  </button>
+      <div class="emailButton">
+        <button mat-flat-button color="primary" (click)="retrieveEmails()">
+          <mat-icon>arrow_forward_ios</mat-icon>
+          &nbsp;&nbsp;&nbsp;&nbsp;RETRIEVE EMAILS&nbsp;&nbsp;&nbsp;&nbsp;
+        </button>
+      </div>
+
+      <div id="submitButton">
+        <button mat-flat-button color="primary" name="trySubmitPoll" (click)="pressSubmitButton()">
+          <mat-icon>send</mat-icon>
+          &nbsp;&nbsp;&nbsp;&nbsp;SUBMIT&nbsp;&nbsp;&nbsp;&nbsp;
+        </button>
+      </div>
+
+    </section>
+  </mat-tab>
+</mat-tab-group>
 </div>
 
 <div *ngIf="!this.next && !this.triesToSubmit && !notAllFilled && !back" class="returnToMainButton">
-  <button mat-flat-button color="primary" (click)="this.back = true">
+  <button mat-flat-button color="primary" (click)="this.back = true" style="z-index:10;">
     <mat-icon>arrow_back_ios</mat-icon>
     RETURN TO MAIN
+  </button>
+</div>
+<div *ngIf="!this.next && !this.triesToSubmit && !notAllFilled && !back" class="nextButton">
+  <button mat-flat-button color="primary" *ngIf="this.tabIndex===0" name ="nextToEmails" (click)="this.tabIndex=1" style="z-index:10;">
+    <mat-icon>navigate_next</mat-icon>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NEXT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </button>
+  <button  *ngIf="this.tabIndex==1" mat-flat-button color="primary" name ="nextToEmails" (click)="this.tabIndex=0" style="z-index:10;">
+    <mat-icon>navigate_before</mat-icon>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </button>
 </div>
 
@@ -183,6 +194,5 @@
   </div>
 </div>
 <mat-icon id="successicon" style="color:rgba(0,253,0,0.48)" *ngIf="copied"> cloud_done</mat-icon>
-</body>
-</html>
+
 

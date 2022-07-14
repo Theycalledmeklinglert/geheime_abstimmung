@@ -1,65 +1,90 @@
+#tab{
+  margin: auto;
+  margin-top: 60px;;
+}
+
+
+#grid {
+  position: relative;
+  margin-top: 5vh;
+  display: grid;
+  grid-template-columns: 14% 30% 2% 40% 14%;
+  width: 100%;
+  height: 100vh;
+}
+
 .questionwindow  {
   text-align: center;
   font-size: 40px;
-  position: fixed;
-  left:35%;
-  background-color: rgba(239, 238, 238, 1);
-  width: 50%;
+  position: relative;
+
   height: 80%;
-  top: 15%;
-  border: 3px solid #2691d9;
-  border-radius: 40px 40px 40px 40px;
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 10px 10px 10px 10px;
   align-items: flex-end;
   overflow-y: auto;
 }
 .sidebar{
   text-align: center;
-  position: absolute;
-  left:2%;
-  background-color: rgba(239, 238, 238, 1);
-  width: 30%;
+  position: relative;
+  background-color:white;
   height: 80%;
-  top: 15%;
-  border: 3px solid #ea7609;
-  border-radius: 40px 40px 40px 40px;
+
+  border: 1px solid lightgrey;
+  border-radius: 10px 10px 10px 10px;
   align-items: center;
-  overflow-y: auto;
+  overflow-x: hidden;
+
 }
 
 #head{
-  margin-top: 1vh;
   margin-bottom: 4vh;
   position: relative;
 }
 
-#questionList{
-  position: relative;
-  overflow-y: scroll;
 
+ul {
+  padding: 0;
 }
 
-#questionList ul li {
+h1{
+  margin: 30px 0 50px;
+  font-weight: 500;
+}
 
-  margin-left: 37.45px;
-  //margin-right: auto;
-  margin-bottom: 10px;
+
+.listDivElement {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  font-size: medium;
+}
+
+.listitem {
+  padding: 5px;
+  text-align: center;
+  margin: 10px auto 0 auto;
   background-color: white;
+  border: 1px solid orange;
   list-style: none;
-  width: 20vw;
+  width: 70%;
+  display: grid;
+
+  grid-template-columns: auto max-content;
 }
 
-
-.nextButton {
+.emailButton {
   text-align: center;
   position: absolute;
   right: 2%;
   width: auto;
-  //width: 7%;
-  //height: 7%;
-  bottom: 5%;
+  bottom: 30%;
   align-items:flex-end;
 }
-.emailButton {
+
+#submitButton {
   text-align: center;
   position: absolute;
   right: 2%;
@@ -74,7 +99,7 @@
   position: absolute;
   right: 2%;
   width: auto;
-  bottom: 15%;
+  bottom: 10%;
   cursor: pointer;
   align-items: flex-end;
 }
@@ -94,23 +119,25 @@
   position: center;
   margin: 10px;
 }
-.questiontitle{
-  cursor: pointer;
-  word-wrap: break-word;
-  font-weight: bold;
 
-}
 
 .questioneditor{
-  background-color: rgba(239, 238, 238, 1);
+
   list-style: none;
 }
-#emaillist ul{
-  display: flow;
 
+#emaillist{
+  position: relative;
+  width: 1000px;
+  height: 100vh;
+  margin: 5vh auto 0 auto;
 }
 
 
+#emaillist ul{
+
+  overflow-x: hidden;
+}
 
 #emaillist ul li{
   margin-left: auto;
@@ -118,13 +145,23 @@
   margin-bottom: 10px;
   background-color: white;
   list-style: none;
-  align-items: flex-start;
   width: 30vw;
 }
 
 .emailstyle{
   font-size: 20px;
-  overflow: scroll;
+
+}
+
+.nextButton {
+  text-align: center;
+  position: absolute;
+  right: 2%;
+  width: auto;
+  //width: 7%;
+  //height: 7%;
+  bottom: 5%;
+  align-items:flex-end;
 }
 
 .inputfield{
@@ -136,21 +173,7 @@
 #inputfield{
   font-size: 20px;
 }
-#body ul{
-  align-items: center;
-  position: relative;
-  background-color: transparent;
-  height: 50vh;
-}
 
-
-#body ul li {
-  overflow: auto;
-  background-color: transparent;
-  display: inline-block;
-  width: 100%;
-
-}
 .helpwindow{
   text-align: center;
   position: fixed;
@@ -164,9 +187,7 @@
   border: 3px solid #ff8200;
   border-radius: 15px 15px 15px 15px;
 }
-#emailInput{
-  margin-top: 2vh;
-}
+
 .sureBackToMain{
   text-align: center;
   font-weight: bolder;
