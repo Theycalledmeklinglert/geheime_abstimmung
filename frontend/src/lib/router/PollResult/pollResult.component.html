@@ -67,7 +67,7 @@
   <div mat-dialog-content>Please fill in the private key for this poll:</div>
 
   <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 20, 'max-width.ch': 30}">
-    <input matInput type="text" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempPrivKey">
+    <input matInput type="text" #inputText class="inputfield" id="emailInput" [(ngModel)]="this.tempPrivKey" (keyup.enter)="this.getDecryptedAnswers()">
     <mat-label id="inputfield">Enter here...</mat-label>
   </mat-form-field>
 

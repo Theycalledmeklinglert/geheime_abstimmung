@@ -170,7 +170,6 @@
 .sureBackToMain{
   text-align: center;
   font-weight: bolder;
-  z-index: 1;
   transition: opacity 0.3s ease;
   position: fixed;
   right: 40%;
@@ -220,5 +219,4 @@
   top:50%;
   left: 50%;
   color: springgreen;
-  z-index: 1.1;
 }
