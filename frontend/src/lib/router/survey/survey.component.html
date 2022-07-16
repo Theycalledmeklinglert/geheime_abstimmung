@@ -1,29 +1,31 @@
 <mat-spinner id="spinner" *ngIf="!this.loaded"></mat-spinner>
 
-<div *ngIf="this.errorMessage == undefined && !this.submited && this.loaded">
-<div id="head">
-  {{this.poll.name}}
-</div>
 
-<div id="body">
+<div id="poll">
+  <div *ngIf="this.errorMessage == undefined && !this.submited && this.loaded">
+    <div id="headline">
+      {{this.poll.name}}
+    </div>
 
-  <form [formGroup]="surveyForm" >
-    <ul *ngFor="let question of this.poll.questions">
-      <li>
-        <surveyQuestion
-          [question]="question"
-          [parentForm]="surveyForm"
-        ></surveyQuestion>
-        <mat-divider></mat-divider>
-      </li>
-    </ul>
-  </form>
-</div>
+    <div id="formBody">
+      <form [formGroup]="pollForm" >
+        <ul *ngFor="let question of this.poll.questions">
+          <li>
+            <surveyQuestion
+              [question]="question"
+              [parentForm]="pollForm"
+            ></surveyQuestion>
+            <mat-divider></mat-divider>
+          </li>
+        </ul>
+      </form>
+    </div>
 
-  <div id="submitButton">
-    <button mat-flat-button color="primary" [disabled]="this.surveyForm.disable && this.surveyForm.invalid" (click)="openDialog()" >Submit</button>
+    <div id="submitButton">
+        <button mat-flat-button color="primary" [disabled]="this.pollForm.disable && this.pollForm.invalid" (click)="openDialog()">Submit</button>
+    </div>
   </div>
-
+</div>
 
   <ng-template #callAPIDialog>
   <mat-dialog-content class="mat-typography">
@@ -35,7 +37,6 @@
   </mat-dialog-actions>
 </ng-template>
 
-</div>
 
 <div class="altView" *ngIf="this.submited">
   Poll submitted<br>
@@ -48,4 +49,3 @@
   <p>{{this.errorMessage}}</p>
 </div>
 
-<button mat-flat-button color="primary" id="debug" (click)="debug()">Debug</button>

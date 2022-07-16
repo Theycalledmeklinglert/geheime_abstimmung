@@ -60,7 +60,6 @@ export class SurveyQuestionComponent implements OnInit {
       this.question.multipleChoiceAnswer = new Array(this.question.fixedAnswers.length);
       this.question.multipleChoiceAnswer.fill(false);
     }
-    console.log(this.question.multipleChoiceAnswer)
   }
 
 

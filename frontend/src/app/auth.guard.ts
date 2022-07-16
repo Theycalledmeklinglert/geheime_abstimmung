@@ -19,12 +19,10 @@ export class AuthGuard implements CanActivate {
 
       return this.authService.getAuthStatus().pipe(map(
         resonse => {
-          console.log("Success");
           localStorage.setItem('sessionID', resonse["Session ID"]);
           return true;
         }),
         catchError(e => {
-          console.log("Fail");
           localStorage.clear();
           this.router.navigate(['/login']);
           return of(false);

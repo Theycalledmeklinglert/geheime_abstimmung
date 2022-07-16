@@ -14,7 +14,7 @@ import {Answer} from "../../data-access/models/answer";
 })
 export class SurveyComponent implements OnInit{
   poll:Poll;
-  surveyForm: FormGroup;
+  pollForm: FormGroup;
   params: any;
   submited:boolean = false;
   loaded:boolean = false;
@@ -31,7 +31,7 @@ export class SurveyComponent implements OnInit{
 
       if(this.params.token == undefined || this.params.pollID == undefined) {
         this.errorMessage = "Invalid URL";
-        this.loaded=true;
+        this.loaded = true;
       }
       else {
         this.backendService.loadPollByID(this.params.token, this.params.pollID)
@@ -50,8 +50,7 @@ export class SurveyComponent implements OnInit{
             },
           });
       }
-   //this.loadTestQuestions(); //Platzhalter zum testen bis Backendanbindung funktioniert
-    this.surveyForm = new FormGroup({});
+    this.pollForm = new FormGroup({});
   }
 
   submitSurvey():void {
@@ -59,9 +58,8 @@ export class SurveyComponent implements OnInit{
     let encrypted: EncryptedData = this.cryptService.encrypt(this.poll.publicKey, answers);
 
     this.backendService.submitSurvey(encrypted, this.params.token, this.params.pollID).subscribe({
-      next: (response) => console.log(response),
-      error: (error) => this.createErrorMessage(error),
-      complete: () => this.submited = true
+      next: (response) => this.submited = true,
+      error: (error) => this.createErrorMessage(error)
     });
   }
 
@@ -87,23 +85,4 @@ export class SurveyComponent implements OnInit{
     })
     return result;
   }
-
-  //Debug Methods
-
-  loadTestQuestions():void {
-    this.poll= {name:"Testumfrage", lifetime:"1650250688", questions:[], publicKey: "12345"};
-    this.poll.questions.push({title:"FrageText1", id:1, type:"yesNoAnswer"});
-    this.poll.questions.push({title:"FrageText2", id:2, type:"fixedAnswer", fixedAnswers:["AntwortText1", "AntwortText2","AntwortText3"]});
-    this.poll.questions.push({title:"FrageText3", id:3, type:"individualAnswer", description:"Testbeschreibung für Testfrage 3"});
-  }
-
-
-  debug() {
-    //console.log(JSON.stringify(this.surveyForm.value))
-    //console.log(this.poll.questions)
-    console.log(this.collectAnswers());
-    //console.log(this.cryptService.encrypt(this.poll.publicKey, this.collectAnswers()));
-
-  }
-
 }

@@ -20,15 +20,15 @@
 #body ul{
   list-style-type: none;
   margin-bottom: 3vh;
+  overflow: auto hidden;
+  padding-left: 4%;
 }
 
-.yesNoAnswer{
-  position: relative;
-}
 
 .description h3{
   font-size: 1.1em;
 }
+
 
 .description {
   min-width: 150px;
