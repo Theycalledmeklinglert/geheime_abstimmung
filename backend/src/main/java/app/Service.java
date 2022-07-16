@@ -127,8 +127,7 @@ public class Service
 
 		Document user = optUser.get();
 
-		// "accessible by" muss Array sein
-		if(!json.contains("name")  || !json.contains("questions") || !json.contains("emails") || !json.contains("publicKey")) // || !json.contains("accessible by")
+		if(!json.contains("name")  || !json.contains("questions") || !json.contains("emails") || !json.contains("publicKey"))
 		{
 			Document error = new Document("Session ID", user.getString("Session ID"));
 			return Response.status(422).entity(error.toJson()).build();
@@ -138,7 +137,8 @@ public class Service
 		poll.put("created by", user.getString("name"));
 
 		ArrayList<String> emails = (ArrayList<String>) poll.get("emails");
-		INSTANCE.saveLastUsedEmails(emails);
+
+		INSTANCE.saveLastUsedEmails(emails, user.getString("email"));
 
 		ArrayList<String> tokens = INSTANCE.generateTokensOfPoll(emails.size());
 		poll.append("tokens", tokens);
@@ -607,12 +607,17 @@ public class Service
 			throw new WebApplicationException(Response.status(401).build());
 		}
 
-		ArrayList<String> emails = INSTANCE.getAllEmails();
-		Document result = new Document().append("E-Mails", emails).append("Session ID", optUser.get().getString("Session ID"));
+		Document user = optUser.get();
+		ArrayList<String> emails = INSTANCE.getLastUsedEmailsOfUser(user.getString("email"));
+		Document result = new Document().append("E-Mails", emails).append("Session ID", user.getString("Session ID"));
 
 		return Response.ok( result.toJson() ).build( );
 	}
 
+	// Ueberschreiben der Emails bei Erstellung neuer Umfrage
+	// mappen auf User
+
+/*
 	@POST
 	@Path("/emails")
 	@Produces( MediaType.APPLICATION_JSON )
@@ -634,10 +639,12 @@ public class Service
 		}
 
 		Document emails = Document.parse(json);
-		INSTANCE.saveLastUsedEmails( (ArrayList<String>) emails.get("emails"));
+		INSTANCE.saveLastUsedEmails( (ArrayList<String>) emails.get("emails"), user.getString("email"));
 
 		return Response.ok(new Document("Session ID", user.getString("Session ID"))).build();
 
 	}
+
+ */
 
 }

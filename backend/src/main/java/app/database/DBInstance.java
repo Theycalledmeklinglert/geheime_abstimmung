@@ -347,30 +347,19 @@ public class DBInstance {
         answerCol.deleteMany(doc);
     }
 
-    public void saveLastUsedEmails(List<String> emails) {
-        ArrayList<String> oldEmails = getAllEmails();
-        deleteAllEmails();
-
-        emails.stream().filter(e -> !oldEmails.contains(e)).forEach(e -> oldEmails.add(e));
-
-        Document newEmails = new Document("E-Mails", oldEmails);
+    public void saveLastUsedEmails(List<String> emails, String userEmail) {
+        deleteLastUsedEmailsOfUser(userEmail);
+        Document newEmails = new Document("E-Mails", emails).append("created by", userEmail);
         emailCol.insertOne(newEmails);
     }
 
-    public void deleteAllEmails() {
-        emailCol.deleteMany(new Document());
+    public void deleteLastUsedEmailsOfUser(String userEmail) {
+        emailCol.deleteMany(Filters.eq("created by", userEmail));
     }
 
-    public ArrayList<String> getAllEmails() {
-        Optional<Document> optDoc = Optional.ofNullable(emailCol.find().first());
-
-        if (optDoc.isPresent()) {
-            Document doc = optDoc.get();
-            ArrayList<String> emails = (ArrayList<String>) doc.get("E-Mails");
-            return emails;
-        } else {
-            return new ArrayList<String>();
-        }
+    public ArrayList<String> getLastUsedEmailsOfUser(String userEmail) {
+       Document doc = emailCol.find(Filters.eq("created by", userEmail)).projection(Projections.fields()).first();
+       return (ArrayList<String>) doc.get("E-Mails");
     }
 
     public boolean createQuestion(Document question) {
