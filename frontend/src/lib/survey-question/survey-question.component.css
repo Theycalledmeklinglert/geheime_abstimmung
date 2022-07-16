@@ -1,20 +1,15 @@
-*{
-  text-align: left;
-
-}
-
-.mat-radio-button ~ .mat-radio-button {
-  margin-left: 16px;
-}
-
-#head h2{
+h2{
   padding-top: 2.5vh;
   font-size: 1.7em;
 }
+
+h3{
+  font-size: 1.1em;
+}
+
 #body {
   font-size: 1.4em;
   padding-bottom: 2.3vh;
-
 }
 
 #body ul{
@@ -24,22 +19,16 @@
   padding-left: 4%;
 }
 
-
-.description h3{
-  font-size: 1.1em;
-}
-
-
 .description {
   min-width: 150px;
   max-width: 500px;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding: 0 5px 2em 5px;
   font-size: 1em;
-  margin-bottom: 2em;
-
 }
 
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px;
+}
 
 .customAnswer{
   min-width: 150px;
@@ -48,7 +37,5 @@
 }
 
 .customAnswer #cA {
-    width: 100%;
+  width: 100%;
 }
-
-

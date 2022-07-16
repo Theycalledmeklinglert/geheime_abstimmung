@@ -50,7 +50,6 @@ export class SurveyQuestionComponent implements OnInit {
           fixedAnswerCheck: true,
         };
       }
-
       return null;
     };
   }

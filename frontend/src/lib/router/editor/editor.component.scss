@@ -1,8 +1,6 @@
 #tab{
-  margin: auto;
-  margin-top: 60px;;
+  margin-top: 60px;
 }
-
 
 #grid {
   position: relative;
@@ -10,7 +8,7 @@
   display: grid;
   grid-template-columns: 14% 30% 2% 40% 14%;
   width: 100%;
-  height: 100vh;
+  height: 82vh;
 }
 
 .questionwindow  {
@@ -18,7 +16,7 @@
   font-size: 40px;
   position: relative;
 
-  height: 80%;
+  height: 97%;
   background-color: white;
   border: 1px solid lightgray;
   border-radius: 10px 10px 10px 10px;
@@ -29,7 +27,7 @@
   text-align: center;
   position: relative;
   background-color:white;
-  height: 80%;
+  height: 97%;
 
   border: 1px solid lightgrey;
   border-radius: 10px 10px 10px 10px;
@@ -80,7 +78,7 @@ h1{
   position: absolute;
   right: 2%;
   width: auto;
-  bottom: 30%;
+  bottom: 12%;
   align-items:flex-end;
 }
 
@@ -89,7 +87,7 @@ h1{
   position: absolute;
   right: 2%;
   width: auto;
-  bottom: 25%;
+  bottom: 5%;
   align-items:flex-end;
 }
 
@@ -129,7 +127,7 @@ h1{
 #emaillist{
   position: relative;
   width: 1200px;
-  height: 100vh;
+  height: 82vh;
   margin: 5vh auto 0 auto;
 }
 

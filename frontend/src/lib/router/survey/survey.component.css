@@ -1,15 +1,7 @@
-*{
-  text-align: center;
-  align-items: center;
-  position: relative;
-  padding: 0;
-}
-
 #poll {
-  justify-content: center;
   width: 60%;
   margin: auto;
-
+  height: fit-content;
 }
 
 #headline{
@@ -19,16 +11,12 @@
   background: white;
   width: fit-content;
   padding: 20px;
-  display: block;
   margin: 10vh auto 0 auto;
-
-
   color: #FF8000;
   border-radius: 10px 10px 10px 10px;
 }
 
 #formBody{
-  position: relative;
   width: 100%;
   font-size: 1em;
   background-color: white;
@@ -39,8 +27,8 @@
 }
 
 #formBody li{
+  padding: 0;
   list-style-type: none;
-
   min-width: 150px;
   max-width: 80%;
   width: 100%;
@@ -50,18 +38,16 @@
 }
 
 #submitButton{
-  margin: 1vh auto 10vh auto;
+  text-align: center;
+  margin: 2vh 0 0 0 ;
 }
 
 .altView {
   padding: 10px;
-  background-color: #eee;
-  display: block;
-
+  background-color: white;
   height: auto;
   border-radius: 10px 10px 10px 10px;
   border: 1px solid lightgray;
-
 
   text-align: center;
   font-size: 30px;
@@ -82,8 +68,6 @@
 
 
 .altView #submittedIcon {
-  margin-top: 6%;
-  margin-bottom: 1%;
   margin: 6% 0 1% 0;
 }
 
