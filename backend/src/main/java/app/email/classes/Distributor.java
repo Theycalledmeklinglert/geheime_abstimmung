@@ -21,13 +21,13 @@ public class Distributor {
     public String generateMessage(String pollName, String link){
 
         String deutsch = "Sie wurden eingeladen an der Umfrage: " + pollName +" teilzunehmen"
-                + "\n" + "Der Link zur Teilnahme an der Umfrage ist: " + link;
+                + "\n" + "Der Link zur Teilnahme an der Umfrage ist: " + link + "\n";
 
         String Platzhalter = "\n" + "--------------------------------------------------------------------------------"
                 +"\n";
 
         String english = " You were invited to take part in the survey about: " + pollName + "\n"
-                + " The link for your participation for the survey is: " + link;
+                + " The link for your participation for the survey is: " + link + "\n";
 
         String message = deutsch + Platzhalter + english;
 
