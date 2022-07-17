@@ -1,22 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
 <div class="user">
   <div id = "name" title = "USER NAME">{{showVoteName()}}</div>
+
   <div id = "issysadmin" title = "issysadmin">
     <mat-icon *ngIf="isSysadmin()">check_circle</mat-icon>
     <mat-icon id="nosysadmin" *ngIf="isSysadmin() == false">offline_bolt</mat-icon>
   </div>
+
   <div id="delete" title="DELETE VOTE" (click)="deletethisUser()" >
     <input type="image" src="../../../assets/deleteButton.png" width="20%" height="20%">
   </div>
-
 </div>
-
-
-</body>
-</html>

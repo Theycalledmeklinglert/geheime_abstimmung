@@ -7,19 +7,19 @@
 <body>
 <div class="taskbar">
 
-  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="OPTIONS">
+  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="OPTIONS" title="Options">
     <mat-icon id="menuicon">menu</mat-icon>
     OPTIONS
   </button>
   <mat-menu #menu="matMenu">
 
-    <button mat-menu-item (click)="showAddAdmin()" >
+    <button mat-menu-item (click)="showAddAdmin()" title="Add Surveyleader">
       <mat-icon>perm_identity</mat-icon>
       <span>Add Surveyleader</span>
     </button>
 
     <div class="onlyforSysadmin" *ngIf="isSysAdmin" >
-    <button mat-menu-item (click)="showDeleteAdmin()" >
+    <button mat-menu-item (click)="showDeleteAdmin()" title="Delete Surveyleader">
       <mat-icon>delete_forever</mat-icon>
       <span>Delete Surveyleader</span>
     </button>
@@ -106,7 +106,7 @@
     </mat-checkbox>
 
   <div class="add" (click)="sendAddAdminrequest()">
-    <button mat-flat-button color="primary" (click)="sendAddAdminrequest()"> Add </button>
+    <button mat-flat-button color="primary" (click)="sendAddAdminrequest()" name="addLeader"> Add </button>
   </div>
   <div class="cancel">
     <button mat-flat-button color="primary" (click)="hideAddAdmin()">Cancel </button>

@@ -78,6 +78,7 @@
   height: 55%;
   top: 25%;
   border-radius: 10px 10px 10px 10px;
+  overflow-y: auto;
 }
 
 .adminGenerator .txt_field{
