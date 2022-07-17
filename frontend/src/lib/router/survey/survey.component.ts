@@ -29,28 +29,28 @@ export class SurveyComponent implements OnInit{
     this.params = new Proxy(new URLSearchParams(window.location.search), {
       get: (searchParams, prop:string) => searchParams.get(prop) });
 
-      if(this.params.token == undefined || this.params.pollID == undefined) {
-        this.errorMessage = "Invalid URL";
-        this.loaded = true;
-      }
-      else {
-        this.backendService.loadPollByID(this.params.token, this.params.pollID)
-          .subscribe({
-            next: (response: Poll) => {
-              this.poll = response;
-              this.loaded = true;
-            },
-            error: (error) => {
-              switch (error.status) {
-                default: this.createErrorMessage(error); break;
-                case 404: this.errorMessage = "Poll Not Found (404)"; break;
-                case 403: this.errorMessage = "Invalid Token (403)"; break;
-              }
-              this.loaded = true;
-            },
-          });
-      }
-    this.pollForm = new FormGroup({});
+    if(this.params.token == undefined || this.params.pollID == undefined) {
+      this.errorMessage = "Invalid URL";
+      this.loaded = true;
+    }
+    else {
+      this.backendService.loadPollByID(this.params.token, this.params.pollID)
+        .subscribe({
+          next: (response: Poll) => {
+            this.poll = response;
+            this.loaded = true;
+            this.pollForm = new FormGroup({});
+          },
+          error: (error) => {
+            switch (error.status) {
+              default: this.createErrorMessage(error); break;
+              case 404: this.errorMessage = "Poll Not Found (404)"; break;
+              case 403: this.errorMessage = "Invalid Token (403)"; break;
+            }
+            this.loaded = true;
+          },
+        });
+    }
   }
 
   submitSurvey():void {
@@ -79,7 +79,7 @@ export class SurveyComponent implements OnInit{
         result.push( {id: q.id, answer: q.yesNo});
       }
       else if(q.type == 'fixedAnswer'){
-         result.push({id: q.id, answer: q.multipleChoiceAnswer});
+        result.push( {id: q.id, answer: q.multipleChoiceAnswer} );
       }
       else result.push( {id: q.id, answer: q.individualAnswer});
     })

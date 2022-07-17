@@ -2,12 +2,10 @@
   <h2>{{this.question.title}}</h2>
 </div>
 
-
 <section class="description" *ngIf="descriptionProvided()">
   <h3><u>Description:</u></h3>
   {{this.question.description}}
 </section>
-
 
 <form id="body" [formGroup]="this.parentForm">
 

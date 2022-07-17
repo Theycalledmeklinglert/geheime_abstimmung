@@ -61,7 +61,6 @@ export class SurveyQuestionComponent implements OnInit {
     }
   }
 
-
   updateFixedAnswer(index: number, checked: boolean):void {
     this.question.multipleChoiceAnswer[index] = checked;
   }
