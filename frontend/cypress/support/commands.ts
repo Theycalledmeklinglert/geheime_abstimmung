@@ -73,3 +73,10 @@ Cypress.Commands.add('addEmails', (emails:string[]) => {
   })
 });
 
+/* FOR DEBUGGING
+ .then($button => {
+    $button.css('border', '1px solid magenta')
+  })
+cy.screenshot('press this button')
+*/
+

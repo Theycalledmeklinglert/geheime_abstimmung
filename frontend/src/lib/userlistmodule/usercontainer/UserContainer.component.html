@@ -5,7 +5,7 @@
 </div>
 
 <div id="body">
-  <ul>
+  <ul name="userlist">
     <li *ngFor="let user of ucobject.users">
       <user [userObject]="user" (deleteUserEvent)="this.deleteUser($event)"></user>
     </li>

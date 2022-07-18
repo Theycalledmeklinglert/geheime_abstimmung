@@ -35,11 +35,11 @@
   position: relative;
   background-color: transparent;
   height: 25vh;
+  overflow: auto;
 }
 
 
 #body ul li {
-  overflow: auto;
   background-color: transparent;
   display: inline-block;
   width: 100%;
