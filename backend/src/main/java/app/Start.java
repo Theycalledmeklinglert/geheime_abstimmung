@@ -18,7 +18,6 @@ public class Start {
     public static void main(final String[] args) throws Exception {
 
         final Tomcat tomcat = new Tomcat();
-        tomcat.setPort(8080);
         Connector httpsConnector = new Connector();
         httpsConnector.setPort(8080);
         httpsConnector.setSecure(true);
