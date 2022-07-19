@@ -10,7 +10,7 @@ describe('Create a new Surveyleader', () => {
     cy.get('input[matTooltip="min. 8 Characters"]').type("testPassword4Cy:");
     cy.get('input[matTooltip="Username of new Surveyleader"]').type("Cypress Test Leader");
 
-    cy.get('button[name="addleader"]').click();
+    cy.get('.add').click();
 
   });
 });
