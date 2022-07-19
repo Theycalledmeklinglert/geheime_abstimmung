@@ -9,8 +9,6 @@ import {EncryptedData} from "../models/encryptedData";
 })
 export class EncryptionService {
 
-  constructor() { }
-
   generateKeyPair = () => {
     let pair = box.keyPair();
     return {publicKey: encodeBase64(pair.publicKey), privateKey: encodeBase64(pair.secretKey)}
@@ -28,14 +26,18 @@ export class EncryptionService {
       secretKeyJS
     );
     return encodeUTF8(decryptedFromJS);
-    }
+  }
 
-    encrypt(publicKeyString: string, ciphertext: any): EncryptedData{
-      const nonce = randomBytes(box.nonceLength);
-      const messageUint8 = decodeUTF8(JSON.stringify(ciphertext));
-      const ephemKeyPair = box.keyPair();
-      const publicKey = decodeBase64(publicKeyString);
-      const encrypted = box(messageUint8, nonce, publicKey, ephemKeyPair.secretKey);
-      return {nonce: encodeBase64(nonce), ephemPubKey: encodeBase64(ephemKeyPair.publicKey), message: encodeBase64(encrypted)};
-    }
+  encrypt(publicKeyString: string, ciphertext: any): EncryptedData {
+    const nonce = randomBytes(box.nonceLength);
+    const messageUint8 = decodeUTF8(JSON.stringify(ciphertext));
+    const ephemKeyPair = box.keyPair();
+    const publicKey = decodeBase64(publicKeyString);
+    const encrypted = box(messageUint8, nonce, publicKey, ephemKeyPair.secretKey);
+    return {
+      nonce: encodeBase64(nonce),
+      ephemPubKey: encodeBase64(ephemKeyPair.publicKey),
+      message: encodeBase64(encrypted)
+    };
+  }
 }
