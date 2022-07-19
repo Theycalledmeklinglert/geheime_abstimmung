@@ -1,127 +1,127 @@
 <div id="tab" *ngIf="!this.triesToSubmit && !notAllFilled && !back">
-<mat-tab-group  mat-align-tabs="center" dynamicHeight [(selectedIndex)]="this.tabIndex">
-  <mat-tab label="Create Poll">
-    <div id="grid" >
+  <mat-tab-group mat-align-tabs="center" dynamicHeight [(selectedIndex)]="this.tabIndex">
+    <mat-tab label="Create Poll">
+      <div id="grid">
 
-      <section></section>
+        <section></section>
 
-      <section class="sidebar" >
-        <section id="head">
-          <h1>Create new Poll:</h1>
+        <section class="sidebar">
+          <section id="head">
+            <h1>Create new Poll:</h1>
 
-          <div id="surveyNameInput">
-            <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 40, 'max-width.ch': 60}">
-              <mat-label>Poll Name</mat-label>
-              <input  matInput
-                      #inputText
-                      name="pollNameInput"
-                      class="inputfield"
-                      type="text"
-                      [(ngModel)]="this.poll.name"
-                      required>
-            </mat-form-field>
-            <br>
-          </div>
-          <br/>
-
-          <div id="expirationDateInput">
-            <mat-label>Expiration</mat-label>
+            <div id="surveyNameInput">
+              <mat-form-field [ngStyle]="{'width.ch': inputText.value.length, 'min-width.ch': 40, 'max-width.ch': 60}">
+                <mat-label>Poll Name</mat-label>
+                <input matInput
+                       #inputText
+                       name="pollNameInput"
+                       class="inputfield"
+                       type="text"
+                       [(ngModel)]="this.poll.name"
+                       required>
+              </mat-form-field>
+              <br>
+            </div>
             <br/>
-            <input
-              name="dateInput"
-              class="inputfield"
-              type="datetime-local"
-              id="timeinputfield"
-              [(ngModel)]="this.poll.lifetime"
-              required><br/>
-          </div>
-        </section>
 
-        <section id="questionList">
-          <h2>Questions:</h2>
-          <ul>
-            <li *ngFor="let question of poll.questions" class="listitem">
+            <div id="expirationDateInput">
+              <mat-label>Expiration</mat-label>
+              <br/>
+              <input
+                name="dateInput"
+                class="inputfield"
+                type="datetime-local"
+                id="timeinputfield"
+                [(ngModel)]="this.poll.lifetime"
+                required><br/>
+            </div>
+          </section>
 
-              <div class="listDivElement" (click)="showQuestion(question)">
-                {{question.title}}
-              </div>
+          <section id="questionList">
+            <h2>Questions:</h2>
+            <ul>
+              <li *ngFor="let question of poll.questions" class="listitem">
 
-              <button id="deleteQuestion" mat-icon-button (click)="deleteQuestion(question)">
+                <div class="listDivElement" (click)="showQuestion(question)">
+                  {{question.title}}
+                </div>
+
+                <button id="deleteQuestion" mat-icon-button (click)="deleteQuestion(question)">
                   <mat-icon>delete</mat-icon>
                 </button>
-            </li>
-          </ul>
-          <button mat-icon-button id="addQuestion" (click)="addEmptyQuestion()">
+              </li>
+            </ul>
+            <button mat-icon-button id="addQuestion" (click)="addEmptyQuestion()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </section>
+        </section>
+
+        <section></section>
+
+        <section>
+          <div class="questionwindow">
+            <h1 id="qe">Edit Question:</h1>
+            <ul class="questioneditor">
+              <li *ngFor="let question of poll.questions">
+                <question *ngIf="question.visible" [question]="question"></question>
+              </li>
+            </ul>
+
+          </div>
+        </section>
+
+        <section></section>
+
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Emails">
+      <section id="emaillist">
+        <div class="questionwindow">
+          <h1>Enter an Email:</h1>
+          <mat-form-field [ngStyle]="{'min-width.ch': 20, 'max-width.ch': 30}">
+            <input name="emailInput"
+                   matInput
+                   type="email"
+                   #inputText
+                   class="inputfield"
+                   id="emailInput"
+                   [(ngModel)]="this.tempEmail"
+                   (keyup.enter)="addEmail()">
+            <mat-label id="inputfield">Enter here...</mat-label>
+          </mat-form-field>
+          <button mat-icon-button (click)="addEmail()">
             <mat-icon>add</mat-icon>
           </button>
-        </section>
-      </section>
-
-      <section></section>
-
-      <section>
-        <div class="questionwindow">
-          <h1 id="qe">Edit Question:</h1>
-          <ul class="questioneditor">
-            <li *ngFor="let question of poll.questions" >
-              <question *ngIf="question.visible" [question]="question"></question>
+          <ul>
+            <li *ngFor="let email of this.poll.emails" class="listitem">
+              <div class="listDivElement">
+                {{email}}</div>
+              <button id="deleteEmail" mat-icon-button (click)="deleteEmail(email)">
+                <mat-icon>delete</mat-icon>
+              </button>
             </li>
           </ul>
-
         </div>
+
+        <div class="emailButton">
+          <button mat-flat-button color="primary" (click)="retrieveEmails()">
+            <mat-icon>email</mat-icon>
+            &nbsp;&nbsp;&nbsp;&nbsp;RETRIEVE EMAILS&nbsp;&nbsp;&nbsp;&nbsp;
+          </button>
+        </div>
+
+        <div id="submitButton">
+          <button mat-flat-button color="primary" name="trySubmitPoll" (click)="pressSubmitButton()">
+            <mat-icon>send</mat-icon>
+            &nbsp;&nbsp;&nbsp;&nbsp;SUBMIT&nbsp;&nbsp;&nbsp;&nbsp;
+          </button>
+        </div>
+
       </section>
-
-      <section></section>
-
-    </div>
-  </mat-tab>
-
-  <mat-tab label="Emails">
-    <section id="emaillist">
-      <div class="questionwindow">
-        <h1>Enter an Email:</h1>
-        <mat-form-field [ngStyle]="{'min-width.ch': 20, 'max-width.ch': 30}">
-          <input  name="emailInput"
-                  matInput
-                  type="email"
-                  #inputText
-                  class="inputfield"
-                  id="emailInput"
-                  [(ngModel)]="this.tempEmail"
-                  (keyup.enter)="addEmail()">
-          <mat-label id="inputfield">Enter here...</mat-label>
-        </mat-form-field>
-        <button mat-icon-button (click)="addEmail()" >
-          <mat-icon>add</mat-icon>
-        </button>
-        <ul>
-          <li *ngFor="let email of this.poll.emails" class="listitem">
-            <div class="listDivElement">
-                        {{email}}</div>
-            <button id="deleteEmail" mat-icon-button (click)="deleteEmail(email)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </li>
-        </ul>
-      </div>
-
-      <div class="emailButton">
-        <button mat-flat-button color="primary" (click)="retrieveEmails()">
-          <mat-icon>email</mat-icon>
-          &nbsp;&nbsp;&nbsp;&nbsp;RETRIEVE EMAILS&nbsp;&nbsp;&nbsp;&nbsp;
-        </button>
-      </div>
-
-      <div id="submitButton">
-        <button mat-flat-button color="primary" name="trySubmitPoll" (click)="pressSubmitButton()">
-          <mat-icon>send</mat-icon>
-          &nbsp;&nbsp;&nbsp;&nbsp;SUBMIT&nbsp;&nbsp;&nbsp;&nbsp;
-        </button>
-      </div>
-
-    </section>
-  </mat-tab>
-</mat-tab-group>
+    </mat-tab>
+  </mat-tab-group>
 </div>
 
 <div *ngIf="!this.triesToSubmit && !notAllFilled && !back" class="returnToMainButton">
@@ -131,11 +131,13 @@
   </button>
 </div>
 <div *ngIf="!this.triesToSubmit && !notAllFilled && !back" class="nextButton">
-  <button mat-flat-button color="primary" *ngIf="this.tabIndex===0" name ="nextToEmails" (click)="this.tabIndex=1" style="z-index:10;">
+  <button mat-flat-button color="primary" *ngIf="this.tabIndex===0" name="nextToEmails" (click)="this.tabIndex=1"
+          style="z-index:10;">
     <mat-icon>navigate_next</mat-icon>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NEXT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </button>
-  <button  *ngIf="this.tabIndex==1" mat-flat-button color="primary" name ="nextToEmails" (click)="this.tabIndex=0" style="z-index:10;">
+  <button *ngIf="this.tabIndex==1" mat-flat-button color="primary" name="nextToEmails" (click)="this.tabIndex=0"
+          style="z-index:10;">
     <mat-icon>navigate_before</mat-icon>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   </button>
@@ -143,12 +145,13 @@
 
 <div class="sureBackToMain" *ngIf="this.back">
   <div class="headline">Info</div>
-  <div mat-dialog-content><br/>Are you sure you want to go back to the main menu? <br/> All your changes will be deleted</div>
-  <div class="change_btn"mat-dialog-actions>
-    <button mat-flat-button color="primary" routerLink="/main" >Go Back </button>
+  <div mat-dialog-content><br/>Are you sure you want to go back to the main menu? <br/> All your changes will be deleted
   </div>
-  <div  class="cancel_btn" mat-dialog-actions>
-    <button mat-flat-button color="primary" (click)="this.back = false">Cancel </button>
+  <div class="change_btn" mat-dialog-actions>
+    <button mat-flat-button color="primary" routerLink="/main">Go Back</button>
+  </div>
+  <div class="cancel_btn" mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="this.back = false">Cancel</button>
   </div>
 </div>
 
@@ -163,16 +166,17 @@
 
 </div>
 <div class="sureBackToMain" *ngIf="triesToSubmit">
-  <div class="headline">Info</div><br/>
+  <div class="headline">Info</div>
+  <br/>
   <div mat-dialog-content>Submit Poll
   </div>
   <br/>
   <div mat-dialog-content><br/>Are your entries complete?</div>
-  <div class="change_btn"mat-dialog-actions>
-    <button mat-flat-button color="primary" name="submitPoll" (click)="this.submitPoll()">Yes </button>
+  <div class="change_btn" mat-dialog-actions>
+    <button mat-flat-button color="primary" name="submitPoll" (click)="this.submitPoll()">Yes</button>
   </div>
-  <div  class="cancel_btn" mat-dialog-actions>
-    <button mat-flat-button color="primary" (click)="this.triesToSubmit = false">Cancel </button>
+  <div class="cancel_btn" mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="this.triesToSubmit = false">Cancel</button>
   </div>
 </div>
 <div class="sureBackToMain" *ngIf="submitted">
@@ -182,13 +186,16 @@
   <br/>
   <div mat-dialog-content><br/>This is the private key to this poll:<br/><br/>
     <span style="font-size: larger; font-weight: bolder">{{this.privateKey}}</span><br/><br/>
-    Please write it down or copy to a txt-file. Store it somewhere safe.<br/> You won't be able to access the results without it!<br/><br/>
+    Please write it down or copy to a txt-file. Store it somewhere safe.<br/> You won't be able to access the results
+    without it!<br/><br/>
   </div>
-  <div class="change_btn"mat-dialog-actions>
-    <button mat-flat-button color="primary" (click)="this.copyPrivateKeyToClipboard()">COPY TO CLIPBOARD </button>
+  <div class="change_btn" mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="this.copyPrivateKeyToClipboard()">COPY TO CLIPBOARD</button>
   </div>
-  <div  class="cancel_btn" mat-dialog-actions>
-    <button mat-flat-button color="primary" routerLink="/main" (click)="this.privateKey = undefined">RETURN TO MAIN MENU</button>
+  <div class="cancel_btn" mat-dialog-actions>
+    <button mat-flat-button color="primary" routerLink="/main" (click)="this.privateKey = undefined">RETURN TO MAIN
+      MENU
+    </button>
   </div>
 </div>
 <mat-icon id="successicon" style="color:rgba(0,253,0,0.48)" *ngIf="copied"> cloud_done</mat-icon>
