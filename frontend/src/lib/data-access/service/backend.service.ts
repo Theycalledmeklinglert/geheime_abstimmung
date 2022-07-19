@@ -21,55 +21,35 @@ export class BackendService {
   }
 
   loadAllPollsByUser(): Observable<JSON> {
-
     return this.httpClient.get<JSON>(this.url + '/api/polls?sessionID=' + this.getSessionID());
   }
 
   loadAllUseryBySysadmin(): Observable<JSON> {
-
     return this.httpClient.get<JSON>(this.url + '/api/polls/users?sessionID=' + this.getSessionID());
-  }
-
-
-  loadPollByUser(pollId: number): Observable<Poll> {
-
-    return this.httpClient.get<Poll>(this.url + '/api/polls/ ' + pollId + '?sessionID=' + this.getSessionID());
   }
 
   createPoll(poll: Poll): Observable<Poll> {
     return this.httpClient.post<Poll>(this.url + '/api/polls?sessionID=' + this.getSessionID(), poll)
   }
 
-
   deletePollByID(pollId: number): Observable<JSON> {
-
     return this.httpClient.delete<JSON>(this.url + '/api/polls?pollID=' + pollId + '&sessionID=' + this.getSessionID());
-
   }
 
   authSessionId(): Observable<any> {
     return this.httpClient.get<any>(this.url + '/api/polls/session?sessionID=' + this.getSessionID());
   }
 
-
   loadAlreadyUsedEmails(): Observable<any> {
     return this.httpClient.get<any>(this.url + '/api/polls/emails?sessionID=' + this.getSessionID());
   }
 
-  keyExchange(keyandemail: JSON): Observable<any> {
-    return this.httpClient.post(this.url + '/api/polls/connect', keyandemail);
-  }
-
   loadSessionID(myUserData: JSON): Observable<any> {
-
     return this.httpClient.post<any>(this.url + '/api/polls/session', myUserData);
   }
 
-
   deleteUser(userName: string): Observable<JSON> {
-
     return this.httpClient.delete<JSON>(this.url + '/api/polls/users?userName=' + userName + '&sessionID=' + this.getSessionID());
-
   }
 
   addnewSurveLeader(newUserData: JSON): Observable<JSON> {
@@ -89,18 +69,11 @@ export class BackendService {
   }
 
   submitSurvey(answers: EncryptedData, token: string, id: string) {
-    console.log(JSON.stringify(answers));
     const testUrl = this.url + '/api/polls/answers/' + id + '?token=' + token;
-    console.log(testUrl);
     return this.httpClient.post<void>(testUrl, answers);
   }
 
   loadAnswers(pollID: number) {
     return this.httpClient.get<any>(this.url + "/api/polls/answers?sessionID=" + this.getSessionID() + "&pollID=" + pollID);
   }
-
-  setNewVote(vote: Poll): void {
-  }
-
-
 }

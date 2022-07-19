@@ -47,13 +47,9 @@ export class PollResultComponent implements OnInit {
     localStorage.removeItem("clickedPoll");
 
     this.backendService.loadAnswers(this.poll._id).subscribe(result => {
-      console.log(result);
       this.encryptedAnswers = result["answers"];
       this.authService.updateSessionid(result["Session ID"]);
-      console.log(result["Session ID"])
     });
-
-
     this.enterCounter = 1;
     this.questionCount = 0;
   }
@@ -65,10 +61,9 @@ export class PollResultComponent implements OnInit {
       let values = this.getValues();
       let adjustedLabels = this.getAnswerTitles();
       for (let i = 0; i < adjustedLabels.length; i++) {
-        adjustedLabels[i] = adjustedLabels[i].replace(": "+values[i], "");
+        adjustedLabels[i] = adjustedLabels[i].replace(": " + values[i], "");
         adjustedLabels[i] += ": " + values[i];
       }
-      console.log(values.length)
       this.chartOptions = {
         series: values,
         chart: {
@@ -105,7 +100,6 @@ export class PollResultComponent implements OnInit {
         this.showQuestionResult();
       }
     } catch (e) {
-      console.log(e);
       this.enterCounter *= 2;
       this.showDecryptWindow = false;
       setTimeout(() => {
@@ -126,10 +120,10 @@ export class PollResultComponent implements OnInit {
       result.push(yes);
       result.push(no);
     } else {
-      for(let i = 0; i < this.getAnswerTitles().length; i++){
+      for (let i = 0; i < this.getAnswerTitles().length; i++) {
         let counter = 0;
-        for(let j = 0; j < localAnswers.length;j++){
-          if(localAnswers[j].answer[i] == true) counter++;
+        for (let j = 0; j < localAnswers.length; j++) {
+          if (localAnswers[j].answer[i] == true) counter++;
         }
         result.push(counter);
       }
@@ -148,17 +142,6 @@ export class PollResultComponent implements OnInit {
   getAnswerTitles() {
     if (this.poll.questions[this.questionCount].type == 'yesNoAnswer') return ["Yes", "No"];
     else return this.poll.questions[this.questionCount].fixedAnswers;
-    //   .sort((n1,n2) => {
-    //   if (n1 > n2) {
-    //     return 1;
-    //   }
-    //
-    //   if (n1 < n2) {
-    //     return -1;
-    //   }
-    //
-    //   return 0;
-    // });
   }
 
   getIndividualAnswers(): string[] {

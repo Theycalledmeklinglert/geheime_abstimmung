@@ -77,16 +77,4 @@ public class Cryptography {
                     '}';
         }
     }
-
-    public static void main(String[] args) {
-        final EncryptedData data = new EncryptedData("B3/TONhH8u0eiTpO1NA0CTA43/dEMTaE",
-                "5LUyNZkgEviAO6qx3tFkrxdbt29sjbRlXxm/ZosZG3s=",
-                "5G8ZJZ+E/mOmJ1YZFlq72cNOH6btw02Yn6JTAx/shmh+FtKc+4FAwWIHP9bi0ueyC4cGa" +
-                        "+pfCk/1WdAJNJCsrDb5ao5bsppXvu4wrMu1dMuo5CrLITtI03FtLWeNjhu9tui1A63XwgJ01Nn" +
-                        "52zA7B4llDMu5eSwmQIBQAjxzlKwUNniDwGVwepaiuk9M0QlRnfCGdcMlYWOHtzJaK+NJ2Oe/BX" +
-                        "7+t9SAgypcAt/FKE1og19PifKFdyCjIkq785g8bX89Qwn8zrAM/H6W5iw/9ciwrKl1WG7t94ccrZ" +
-                        "GKYXJNPYWJHZW44ZmzVideboDUaTOPtA==");
-        final String decrypted = decrypt("uS/W2ViCSGguZhHOuKvp/GACKxoieeNbXS2OjaFY4Ho=", data);
-        System.out.println(decrypted);
-    }
 }

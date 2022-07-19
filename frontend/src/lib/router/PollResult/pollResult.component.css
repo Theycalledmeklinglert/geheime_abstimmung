@@ -1,28 +1,26 @@
-
-.printIcon{
+.printIcon {
   position: fixed;
   top: 20%;
   right: 20%;
-
 }
 
-.printIcon .pinterIcon{
+.printIcon .pinterIcon {
   font-size: 50px;
   cursor: pointer;
   margin-top: 50px;
 }
 
-.printIcon .pinterIcon:hover{
- color:#ff8200 ;
+.printIcon .pinterIcon:hover {
+  color: #ff8200;
   cursor: pointer;
 }
+
 #chart {
   max-width: 40%;
   margin: 50px 50px 20px 450px;
 }
 
-
-.resultwindow  {
+.resultwindow {
   text-align: center;
   font-size: 40px;
   position: fixed;
@@ -35,8 +33,7 @@
   top: 15%;
 }
 
-
-.headline{
+.headline {
   height: 60px;
   background: #2691d9;
   border-radius: 10px 10px 0px 0px;
@@ -48,12 +45,14 @@
   justify-content: center;
   align-items: center;
 }
-#pollname{
+
+#pollname {
   font-size: 20px;
   font-weight: 400;
   margin: 10px;
 }
-#questiontitle{
+
+#questiontitle {
   position: relative;
   font-weight: bolder;
   font-size: 30px;
@@ -67,23 +66,25 @@
   width: 7%;
   height: 7%;
   bottom: 2%;
-
-  align-items:flex-end;
+  align-items: flex-end;
 }
-#individualList ul{
+
+#individualList ul {
   align-items: center;
   position: relative;
   background-color: transparent;
   height: 50vh;
   margin-bottom: 20px;
 }
-#arrowLeft{
+
+#arrowLeft {
   position: fixed;
   left: 47%;
   right: 50%;
   top: 90%;
 }
-#arrowRight{
+
+#arrowRight {
   position: fixed;
   left: 53%;
   right: 50%;
@@ -97,7 +98,8 @@
   width: 100%;
   margin-bottom: 10px;
 }
-#answer{
+
+#answer {
   position: relative;
   left: 5%;
   width: 85%;
@@ -111,7 +113,7 @@
   transition: box-shadow 0.1s;
 }
 
-.resultwindow #body{
+.resultwindow #body {
   position: relative;
   overflow-x: hidden;
   height: 30%;
@@ -121,8 +123,7 @@
 }
 
 
-.resultwindow .Info{
-
+.resultwindow .Info {
   position: fixed;
   top: 50%;
   font-size: 16px;
@@ -130,7 +131,7 @@
 }
 
 
-#decryptWindow{
+#decryptWindow {
   text-align: center;
   position: fixed;
   right: 65%;
