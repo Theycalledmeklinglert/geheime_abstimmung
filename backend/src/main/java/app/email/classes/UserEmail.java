@@ -42,7 +42,7 @@ public class UserEmail {
         String deutsch = "Hallo neuer Nutzer," + "\n" + "\n" +
 
                 "du wurdest soeben als ein neuer Nutzer der Poll Application festgelegt. " +
-                "Deinen neuen Account kannst du unter folgendem link erreichen: " + "http://localhost:4200/" + "\n" + "\n" +
+                "Deinen neuen Account kannst du unter folgendem link erreichen: " + "https://localhost:4200/" + "\n" + "\n" +
 
                 "Deine Zugangsdaten sind: " +"\n" + "\n"+
 
@@ -62,7 +62,7 @@ public class UserEmail {
 
                 "You were registered as a new User for the Poll Application," +
                 " you can now log in into your new account " +
-                "with the following link: " + "http://localhost:4200/" + "\n" + "\n" +
+                "with the following link: " + "https://localhost:4200/" + "\n" + "\n" +
 
                 "For the first login your username and password are: "+ "\n"+ "\n"+
 
