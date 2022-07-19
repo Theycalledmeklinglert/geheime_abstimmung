@@ -46,8 +46,8 @@ public class DBInstance {
     }
 
     private DBInstance() {
-        client = MongoClients.create("mongodb://localhost:27017");
-       // client = MongoClients.create("mongodb+srv://sampleUser:GeheimeAbstimmung@cluster0.eobux.mongodb.net/TestDB?retryWrites=true&w=majority");
+       // client = MongoClients.create("mongodb://localhost:27017");
+        client = MongoClients.create("mongodb+srv://sampleUser:GeheimeAbstimmung@cluster0.eobux.mongodb.net/TestDB?retryWrites=true&w=majority");
         db = client.getDatabase("DB");
         pollCol = db.getCollection("Polls");
         userCol = db.getCollection("Users");
