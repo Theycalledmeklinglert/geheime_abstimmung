@@ -60,6 +60,7 @@ Cypress.Commands.add('createNewQuestion', (title:string, type:string, customAnsw
     case "yesNoAnswer": cy.get('mat-radio-button[value="1"]').click(); break;
     case "fixedAnswers":
       cy.get('mat-radio-button[value="2"]').click();
+      
       customAnswers.forEach( answer => {
         cy.get('input[name="customAnswerInput"]').type(answer).type('{enter}');
       });
@@ -88,11 +89,3 @@ Cypress.Commands.add('createTempAdmin', () => {
   cy.wait(1500);
 
 });
-
-/* FOR DEBUGGING
- .then($button => {
-    $button.css('border', '1px solid magenta')
-  })
-cy.screenshot('press this button')
-*/
-

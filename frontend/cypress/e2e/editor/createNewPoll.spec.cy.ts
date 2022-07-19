@@ -28,8 +28,6 @@ describe('Create a new Poll', () => {
     cy.addEmails(["mail1@test.com", "mail2@test.com", "mail3@test.com", "mail4@test.com"]);
 
     cy.get('button[name="trySubmitPoll"]').click();
-    //cy.get('button[name="submitPoll"]').click();
-
-
+    cy.get('button[name="submitPoll"]').click();
   });
-})
+});

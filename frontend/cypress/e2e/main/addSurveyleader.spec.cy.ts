@@ -1,6 +1,6 @@
 describe('Create a new Surveyleader', () => {
   it('Should navigate the Main menue to add a new Admin', () => {
-    cy.visit("localhost:4200")
+    cy.visit("localhost:4200");
     cy.login("@cypress.test", "CypressTest");
 
     cy.get("button[title='Options']").click();
@@ -11,7 +11,6 @@ describe('Create a new Surveyleader', () => {
     cy.get('input[matTooltip="Username of new Surveyleader"]').type("Cypress Test Leader");
 
     cy.get('.add').click();
-
   });
 });
 
