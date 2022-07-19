@@ -18,8 +18,7 @@ import java.security.spec.KeySpec;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Filters.or;
+import static com.mongodb.client.model.Filters.*;
 
 public class DBInstance {
     private static DBInstance INSTANCE;
@@ -32,17 +31,10 @@ public class DBInstance {
     private static MongoCollection<Document> sessIDCol;
     private static MongoCollection<Document> loginAttemptCol;
 
-
-    private static ArrayList<String> pollNames;
-
     private static ArrayList<String> userNames;
 
     public static MongoCollection<Document> getCollection() {
         return pollCol;
-    }
-
-    public static ArrayList<String> getPollNames() {
-        return pollNames;
     }
 
     public static DBInstance getDBInstance() {
@@ -54,7 +46,6 @@ public class DBInstance {
     }
 
     private DBInstance() {
-        // The Mongo Connection URI is mostly provided by the mongodb cloud. It can change depending on what DB user logs into the DB from the application
         // client = MongoClients.create("mongodb://localhost:27017");
         client = MongoClients.create("mongodb+srv://sampleUser:GeheimeAbstimmung@cluster0.eobux.mongodb.net/TestDB?retryWrites=true&w=majority");
         db = client.getDatabase("DB");
@@ -66,6 +57,13 @@ public class DBInstance {
         //  sessIDCol.dropIndex(Indexes.ascending("created at"));
         sessIDCol.createIndex(Indexes.ascending("created at"), new IndexOptions().expireAfter(60L, TimeUnit.MINUTES));
         loginAttemptCol = db.getCollection("LoginAttempts");
+
+        Document initialUser = new Document("name", "initialUser")
+                .append("email", "initialUser@mail.com")
+                .append("password", "Geheime Abstimmung")
+                .append("role", "admin");
+
+        createUser(initialUser);
     }
 
     public Optional<Document> getPollAsOptDocumentByID(final String id) {
@@ -101,13 +99,8 @@ public class DBInstance {
 
     public void deleteAllPolls() {
         pollCol.deleteMany(new Document());
-        pollNames = new ArrayList<>();
     }
 
-
-    // This method also returns the username + password hash
-
-    // This method also returns the username + password hash
     public Optional<Document> getUserAsOptDocumentByName(final String name) {
         Optional<Document> optDoc = getSingleDocFromCollection(userCol, Projections.fields(Projections.fields()), "name", name);
         return optDoc;
@@ -158,7 +151,7 @@ public class DBInstance {
         String email = user.getString("email");
 
         if (checkUserNameExistence(name) || checkEmailExistence(email)) {
-            System.out.println("User with identical name/email already exists. You have to choose a different Username");
+        //    System.out.println("User with identical name/email already exists. You have to choose a different Username");
             return false;
         } else {
 
@@ -173,7 +166,7 @@ public class DBInstance {
             user.put("salt", saltString);
             user.put("pwHash", pwHash);
 
-            userCol.insertOne(user);        // Sicherheitsluecke da PW in PlainText in DB aber ich weiss gerade nicht wie es anders geht ¯\_(ツ)_/¯
+            userCol.insertOne(user);
 
             Bson query = Filters.eq("name", name);
             Bson update = Updates.unset("password");
@@ -194,51 +187,24 @@ public class DBInstance {
     public void updateUserInUserCol(String originalUserID, Document updatedInfo) {
         Bson filter = Filters.eq("_id", new ObjectId(originalUserID));
         BasicDBObject update = new BasicDBObject("$set", updatedInfo);
-        userCol.updateOne(filter, update);                  // TODO: Test if this works
-
-        //TODO: createUser(update) HAS TO INCLUDE the _id from the oldUser Doc. Otherwise the _id of the updated SurveyLeader
-        //does not match the _id of the original one!
+        userCol.updateOne(filter, update);
     }
 
     public void updateUserInPollCol(String originalUserName, String newUserName) {
-        Bson filter = Filters.eq("created by", originalUserName);       // TODO: Test if this deletes all other content in array or just adds the new UserName
+        Bson filter = Filters.eq("created by", originalUserName);
         BasicDBObject update = new BasicDBObject("$set", new Document("created by", newUserName));
         pollCol.updateMany(filter, update);
-
-        /*
-        Bson deleteOldUserName = Updates.pull("created by", originalUserName);
-        pollCol.updateOne(filter, deleteOldUserName);
-         */
-    /*
-        Bson deleteOldUserName = Updates.pull("accessible by", originalUserName);
-        pollCol.updateMany(filter, deleteOldUserName);
-
-        filter = Filters.eq("accessible by", originalUserName);       // TODO: Test if this deletes all other content in array or just adds the new UserName
-        update = new BasicDBObject("$push", new Document("accessible by", newUserName));
-        pollCol.updateMany(filter, update);
-
-     */
 
     }
 
     public void updateUserInSessIDCol(Document originalUser, Document updatedInfo) {
-        Bson filter = Filters.eq("name", originalUser.getString("name"));       // TODO: Test if this deletes all other content in array or just adds the new UserName
+        Bson filter = Filters.eq("name", originalUser.getString("name"));
         BasicDBObject updateName = new BasicDBObject("$set", new Document("name", updatedInfo.getString("name")));
         sessIDCol.updateOne(filter, updateName);
 
-        /*
-        Bson deleteOldUserName = Updates.pull("name", originalUser.getString("name"));
-        sessIDCol.updateOne(filter, deleteOldUserName);
-         */
-
-        filter = Filters.eq("pwHash", originalUser.getString("pwHash"));       // TODO: Test if this deletes all other content in array or just adds the new UserName
+        filter = Filters.eq("pwHash", originalUser.getString("pwHash"));
         BasicDBObject updatePWHash = new BasicDBObject("$set", new Document("pwHash", updatedInfo.getString("pwHash")));
         sessIDCol.updateOne(filter, updatePWHash);
-
-        /*
-        Bson deleteOldUPWHash = Updates.pull("pwHash", originalUser.getString("pwHash"));
-        sessIDCol.updateOne(filter, deleteOldUPWHash);
-         */
     }
 
     public void removeFieldFromUserInUserCol(String userID, Document fieldToBeDeleted) {
@@ -304,9 +270,6 @@ public class DBInstance {
 
 
     public boolean createAnswer(Document answer, String pollID, String token) {
-        // TODO: Answer MUSS ein Attribut namens poll_id UND ein Attribut question_id UND ein Attribut content enthalten!!!
-        // + Attribut namens "token"
-        // Konstruktion des Answer-JSON muss mit FrontEnd abgestimmt werden
         Optional<Document> optPoll = getPollAsOptDocumentByID(pollID);
 
         if (!optPoll.isPresent()) {
@@ -317,7 +280,7 @@ public class DBInstance {
         Document poll = optPoll.get();
         ArrayList<String> tokens = (ArrayList<String>) poll.get("tokens");
 
-        answer.append("token", token); // For test purposes
+        answer.append("token", token);
 
         if (tokens.contains(token)) {
             Bson filter = Filters.eq("_id", new ObjectId(pollID));
@@ -363,8 +326,7 @@ public class DBInstance {
     }
 
     public boolean createQuestion(Document question) {
-        // TODO: question MUSS ein Attribut namens poll_id enthalten!!!
-        // Konstruktion des question-JSON muss mit FrontEnd abgestimmt werden
+
         Optional<Document> optPoll = getPollAsOptDocumentByID(question.getString("poll_id"));
 
         if (!optPoll.isPresent()) {
@@ -377,24 +339,6 @@ public class DBInstance {
         Bson pushToQuestList = new BasicDBObject("$push", listItem);
 
         pollCol.updateOne(filter, pushToQuestList);
-        return true;
-    }
-
-
-    public boolean saveKeys(String email, String privateKeyServer, String publicKeyClient) {
-
-        Optional<Document> optUser = getUserAsOptDocumentByEmail(email);
-        if (!optUser.isPresent()) {
-            return false;
-        }
-
-        Document user = optUser.get();
-
-        user.put("Public Key Client", publicKeyClient);
-        user.put("Private Key Server", privateKeyServer);
-
-        updateUserInUserCol(user.get("_id").toString(), user);
-
         return true;
     }
 
@@ -493,9 +437,7 @@ public class DBInstance {
             if (diff >= 0)                                                                                    // if a Timeout is still active
             {
                 return TimeUnit.MILLISECONDS.toMinutes(diff) + 1;                                             // TimeUnit.MILLISECONDS.toMinutes automatically return cuts away a minute
-                // if it hast already started. This causes issues because then this method will
-                // return 0 even if there is 1 minute of the Timeout left. Therefore 1 minute is added
-                // to the return value here.
+
             } else if (currAttempt == 5)                                                          // check if this is the first Timeout
             {
                 newTimeout.add(Calendar.MINUTE, 2);
@@ -542,6 +484,15 @@ public class DBInstance {
         loginAttemptCol.insertOne(newLog);
     }
 
+    public static boolean checkIfUserWantsToChangePW(Document existingUser, Document newUser)
+    {
+        return (existingUser.getString("name").equals(newUser.getString("name")) && !existingUser.getString("pwHash").equals(newUser.getString("pwHash")));
+    }
+
+    public static boolean checkIfUserWantsToChangeUserName(Document existingUser, Document newUser, String newUserPWHash)
+    {
+        return (!existingUser.getString("name").equals(newUser.getString("name")) && existingUser.getString("pwHash").equals(newUserPWHash));
+    }
 
 }
 

@@ -15,8 +15,7 @@ import java.util.*;
 
 import org.apache.commons.codec.binary.Base64;
 
-import static main.java.app.Cryptography.*;
-import static main.java.app.database.DBInstance.getDBInstance;
+import static main.java.app.database.DBInstance.*;
 
 @Path( "polls" )
 public class Service
@@ -25,30 +24,6 @@ public class Service
 
 	@Context
 	protected UriInfo uriInfo;
-
-	@POST
-	@Path("/connect")
-	@Consumes( MediaType.APPLICATION_JSON )
-	@Produces( MediaType.APPLICATION_JSON )
-	public Response keyExchange(final String json)	// This method will be used to send exchange the public keys between client and server
-	{
-		Document doc = Document.parse(json);
-		String publicKeyClient = doc.getString("Public Key");
-		String email = doc.getString("email");
-
-		HashMap<String, String> keyPair = generateKeyPair();
-
-		String privateKeyServer = keyPair.get("privateKey");
-		String publicKeyServer= keyPair.get("publicKey");
-
-		if(!INSTANCE.saveKeys(email, privateKeyServer, publicKeyClient))
-		{
-			return Response.status(404).build();
-		}
-
-		return Response.ok(new Document("Public Key", publicKeyServer).toJson()).build();
-	}
-
 
 	@GET
 	@Path("{pollID}")
@@ -60,8 +35,7 @@ public class Service
 
 		if(!optUser.isPresent())
 		{
-			throw new WebApplicationException(Response.status(401).build()); // 401 = Authentifizierung notwendig da SessID abgelaufen
-																			 // Mit FrontEnd absprechen wie Weiterleitung AUF und NACH Login funktioniert
+			throw new WebApplicationException(Response.status(401).build());
 		}
 
 		Document user = optUser.get();
@@ -69,14 +43,10 @@ public class Service
 		if(optPoll.isPresent())
 		{
 			Document poll = optPoll.get();
-			poll.append("Session ID", user.getString("session ID"));	// Neue Session ID des Users wird mitgesendet und muss von FrontEnd ausgelesen und gespeichert werden
-
-			// TODO: Decrypt JSON
+			poll.append("Session ID", user.getString("session ID"));
 
 			return Response.ok( poll ).build( );
 		}
-
-		// TODO: Decrypt JSON
 
 		Document error = new Document("Session ID", user.getString("Session ID"));
 		return Response.status(404).entity(error.toJson()).build();
@@ -101,12 +71,9 @@ public class Service
 		{
 			ArrayList<Document> polls = optPolls.get();
 			Document res = new Document("polls", polls).append("Session ID", user.getString("Session ID"));
-			// TODO: encrypt JSON
 
 			return Response.ok( res ).build( );
 		}
-
-		// TODO: encrypt JSON
 
 		Document error = new Document("Session ID", user.getString("Session ID"));
 		return Response.status(404).entity(error.toJson()).build();
@@ -152,7 +119,6 @@ public class Service
 		for(String email : emails)
 		{
 			String answerLink = baseUri + "?pollID=" + poll.get("_id").toString() + "&token=" + tokens.get(counter);
-		//	System.out.println(answerLink);
 			emailsAndLinks.add(new String[] {emails.get(counter), answerLink});
 			counter++;
 		}
@@ -190,8 +156,6 @@ public class Service
 
 		Document newSessID = new Document().append("Session ID", user.getString("Session ID"));
 
-		// TODO: encrypt Response
-
 		return Response.ok(newSessID).build();
 	}
 
@@ -206,7 +170,7 @@ public class Service
 
 		if(!optUser.isPresent())
 		{
-			throw new WebApplicationException(Response.status(401).build());  	// Session ID doesn't exist
+			throw new WebApplicationException(Response.status(401).build());
 		}
 
 		Document user = optUser.get();
@@ -224,7 +188,7 @@ public class Service
 	}
 
 
-	@POST	// TODO: Email mit Zugangsdaten (UserName, PW, Email an Email Adresse wenn ein neuer User erstellt wird
+	@POST
 	@Path("/users")
 	@Consumes( MediaType.APPLICATION_JSON )
 	@Produces( MediaType.APPLICATION_JSON )
@@ -236,7 +200,7 @@ public class Service
 
 		if(!optUser.isPresent())
 		{
-			throw new WebApplicationException(Response.status(401).build());  	// Session ID doesn't exist
+			throw new WebApplicationException(Response.status(401).build());
 		}
 
 		Document user = optUser.get();
@@ -250,9 +214,8 @@ public class Service
 		if((newUser.getString("role").equals("admin") && !user.getString("role").equals("admin")))
 		{
 			Document error = new Document("Session ID", user.getString("Session ID"));
-			return Response.status(401).entity(error.toJson()).build();
+			return Response.status(403).entity(error.toJson()).build();
 		}
-
 
 		if(!INSTANCE.createUser(newUser))
 		{
@@ -262,9 +225,7 @@ public class Service
 
 		UserEmail userEmail = new UserEmail();
 		userEmail.sendUserEmail(newUser.getString("email"), newUser.getString("email"), newUser.getString("password"));		// sends the login data to the email account of the
-																																// newly created user
-		System.out.println(newUser.getString("email") + newUser.getString("password"));
-
+																																			// newly created user
 		newUser.append("Session ID", user.getString("Session ID")).append("_id", newUser.get("_id").toString());
 
 		return Response.ok(newUser).build();
@@ -281,7 +242,7 @@ public class Service
 
 		if(!optUser.isPresent())
 		{
-			throw new WebApplicationException(Response.status(401).build()); // Session ID doesn't exist. User has to login on website again
+			throw new WebApplicationException(Response.status(401).build());
 		}
 
 		Document user = optUser.get();
@@ -306,18 +267,20 @@ public class Service
 		Document existingUser = opt.get();
 
 		if(existingUser.getString("email").equals(user.getString("email"))) {
-			if ((existingUser.getString("name").equals(newUser.getString("name")) && !existingUser.getString("pwHash").equals(newUser.getString("pwHash"))) || (!existingUser.getString("name").equals(newUser.getString("name")) && existingUser.getString("pwHash").equals(newUserPWHash))) {
+			if (checkIfUserWantsToChangePW(existingUser, newUser) || checkIfUserWantsToChangeUserName(existingUser, newUser, newUserPWHash)) {
 				String userID = user.get("_id").toString();
-				Document update = new Document("_id", user.get("_id")).append("name", newUser.getString("name")).append("role", user.getString("role"));
-				update.append("salt", user.getString("salt")).append("pwHash", INSTANCE.generatePWHash(newUser.getString("password"), Base64.decodeBase64(user.getString("salt"))));
+				Document update = new Document("_id", user.get("_id"))
+						.append("name", newUser.getString("name"))
+						.append("role", user.getString("role"));
+
+				update.append("salt", user.getString("salt"))
+						.append("pwHash", INSTANCE.generatePWHash(newUser.getString("password"), Base64.decodeBase64(user.getString("salt"))));
 
 				INSTANCE.updateUserInPollCol(user.getString("name"), update.getString("name"));
-				INSTANCE.updateUserInSessIDCol(user, update);        // TODO: pwHash wird nicht aktualisiert???
+				INSTANCE.updateUserInSessIDCol(user, update);
 				INSTANCE.updateUserInUserCol(userID, update);
 
-				// TODO: encrypt Response
-
-				return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();        // TODO: Test
+				return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();
 			}
 		}
 		System.out.println("Either UserName already exists or you attempted to change userName and PW at the same time which is not allowed");
@@ -430,20 +393,6 @@ public class Service
 			throw new WebApplicationException(Response.status(401).entity(new Document("attempt", curAttempt)).build());
 		}
 
-		// Der ganze Abschnitt hier ist Schwachsinn oder?
-
-		// Moves the Keys exchanged between Server and Browser from UserCol to SessIDCol now that a SessID exists, so that the Keys will be deleted upon
-		// logout of the user (and 60 minutes passing)
-/*		String sessID = INSTANCE.generateAndSetSessID(user);
-		Document sessUser = INSTANCE.getUserBySessionID(sessID).get();
-		sessUser.put("Public Key Client", user.getString("Public Key Client"));
-		sessUser.put("Private Key Server", user.getString("Private Key Server"));
-		INSTANCE.updateKeysInSessIDCol(sessID, user.getString("Public Key Client"), user.getString("Private Key Server"));
-
-		Document fieldsToDelete = new Document("Public Key Client", user.getString("Public Key Client")).append("Private Key Server", user.getString("Private Key Server"));
-		INSTANCE.removeFieldFromUserInUserCol(user.get("_id").toString(), fieldsToDelete);
-
-	 */
 		INSTANCE.removeFailedLoginHistory(email); 		// Clear failed login attempts upon successful login
 
 		String sessID = INSTANCE.generateAndSetSessID(user);
@@ -558,43 +507,8 @@ public class Service
 		return Response.ok(new Document().append("Session ID", user.getString("Session ID")).toJson()).build();
 	}
 
-	/*
-
-	// Diese Methode ist überflüssig oder? Da die Fragen schon im FrontEnd in den Poll embedded werden
-	@POST
-	@Path("/questions")
-	@Consumes( MediaType.APPLICATION_JSON )
-	@Produces( MediaType.APPLICATION_JSON )
-	public Response createQuestion(final String json, @DefaultValue("") @QueryParam("pollID") final String pollID, @DefaultValue("") @QueryParam("sessionID") final String sessID)
-	{
-		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
-
-		if(!optUser.isPresent())
-		{
-			throw new WebApplicationException(Response.status(401).build());
-		}
-
-		Document user = optUser.get();
-
-		if(!json.contains("title") || !json.contains("description") || !json.contains("type") || !json.contains("poll ID"))
-		{
-			Document error = new Document("Session ID", user.getString("Session ID"));
-			return Response.status(422).entity(error.toJson()).build();
-		}
-
-		Document question = Document.parse(json);
-
-		if(!this.INSTANCE.createQuestion(question))
-		{
-			Document error = new Document("Session ID", user.getString("Session ID"));
-			return Response.status(404).entity(error.toJson()).build();
-		}
-
-
-		return Response.ok(new Document().append("Session ID", user.getString("Session ID"))).build();
-	}
-*/
-
+	// Saves the Email adresses that were used in the last poll that was created by the user
+	// The saved email adresses are overwritten with each new poll created by the user
 	@GET
 	@Path("/emails")
 	@Produces( MediaType.APPLICATION_JSON )
@@ -613,38 +527,4 @@ public class Service
 
 		return Response.ok( result.toJson() ).build( );
 	}
-
-	// Ueberschreiben der Emails bei Erstellung neuer Umfrage
-	// mappen auf User
-
-/*
-	@POST
-	@Path("/emails")
-	@Produces( MediaType.APPLICATION_JSON )
-	public Response saveLastUsedEmails(final String json, @DefaultValue("") @QueryParam("sessionID") final String sessID)
-	{
-		final Optional<Document> optUser = INSTANCE.authenticate(sessID);
-
-		if(!optUser.isPresent())
-		{
-			throw new WebApplicationException(Response.status(401).build());
-		}
-
-		Document user = optUser.get();
-
-		if(!json.contains("emails"))
-		{
-			Document error = new Document("Session ID", user.getString("Session ID"));
-			return Response.status(422).entity(error.toJson()).build();
-		}
-
-		Document emails = Document.parse(json);
-		INSTANCE.saveLastUsedEmails( (ArrayList<String>) emails.get("emails"), user.getString("email"));
-
-		return Response.ok(new Document("Session ID", user.getString("Session ID"))).build();
-
-	}
-
- */
-
 }
