@@ -104,12 +104,12 @@ public class Distributor {
         ArrayList<String[]> recipients = new ArrayList<>();
 
         recipients.add(new String[]
-                {"tim.braunger@gmx.de", "https://localhost:4200/"}
+                {"tim.braunger@gmx.de", "http://localhost:4200/"}
         );
 
 
         recipients.add(new String[]
-                {"blablacaodg@gmail.com","https://localhost:4200/"}
+                {"blablacaodg@gmail.com","http://localhost:4200/"}
         );
 
         Distributor test = new Distributor();

@@ -146,7 +146,7 @@ public class Service
 		INSTANCE.createPoll(poll);
 
 		ArrayList<String[]> emailsAndLinks = new ArrayList<>();
-		String baseUri = "https://localhost:4200/survey";		// TODO: BASE URI HAS TO BE CHANGED TO ACTUAL WEBSITE URI BEFORE RELEASE!!!!!!!!!!!!
+		String baseUri = "http://localhost:4200/survey";		// TODO: BASE URI HAS TO BE CHANGED TO ACTUAL WEBSITE URI BEFORE RELEASE!!!!!!!!!!!!
 
 		int counter = 0;
 		for(String email : emails)

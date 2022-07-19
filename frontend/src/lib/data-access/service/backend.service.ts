@@ -11,7 +11,7 @@ import {EncryptedData} from "../models/encryptedData";
 })
 export class BackendService {
 
-  readonly url = 'https://localhost:4200';
+  readonly url = 'http://localhost:4200';
 
   constructor(private httpClient: HttpClient, private encryptionService: EncryptionService) {
   }
