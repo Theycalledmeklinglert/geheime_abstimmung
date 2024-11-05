@@ -32,6 +32,3 @@
 3. Commit changes.
 4. Open a pull request.
 
-## License
-
-This project is licensed under the MIT License. See `LICENSE` for details.
